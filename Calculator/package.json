@@ -1,0 +1,15 @@
+{
+  "name": "Calculator",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.1",
+    "favicon": "0.0.2",
+    "jade": "*",
+    "method-override": "^2.3.10"
+  }
+}
