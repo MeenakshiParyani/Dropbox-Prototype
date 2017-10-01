@@ -1,15 +1,16 @@
 {
-  "name": "Calculator",
-  "version": "0.0.1",
-  "private": true,
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "Calculator REST API",
+  "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "Meenakshi",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.1",
-    "favicon": "0.0.2",
-    "jade": "*",
-    "method-override": "^2.3.10"
+    "node-restful": "^0.2.6"
   }
 }
