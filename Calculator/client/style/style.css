@@ -43,3 +43,39 @@ button{
 
   flex: 1;
 }
+
+.keypad {
+  height: 400px;
+  display: flex;
+}
+
+.input-keys {
+  width: 240px;
+}
+
+.clear-key {
+  display: flex;
+  width: 240px;
+  height: 80px;
+  border-top: 1px solid #777;
+  border-right: 1px solid #666;
+  text-align: center;
+  line-height: 80px;
+  font-size: 2em;
+}
+
+.calculator .digit-keys {
+  background: #e0e0e7;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+}
+
+.key {
+  width: 80px;
+  height: 80px;
+  border-top: 1px solid #777;
+  border-right: 1px solid #666;
+  text-align: center;
+  line-height: 80px;
+}
