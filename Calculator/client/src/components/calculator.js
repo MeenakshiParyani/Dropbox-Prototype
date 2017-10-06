@@ -7,12 +7,12 @@ export default class Calculator extends Component {
         <div className="display">0</div>
         <div className="keypad">
           <div className="input-keys">
-            <div className ="clear-key">
-              <button className="key key-clear">AC</button>
+            <div className ="function-keys">
+              <button className="key-clear">AC</button>
             </div>
             <div className ="digit-keys">
               <button className="key key-0">0</button>
-              <button className="key key-dit">●</button>
+              <button className="key key-dot">●</button>
               <button className="key key-1">1</button>
               <button className="key key-2">2</button>
               <button className="key key-3">3</button>

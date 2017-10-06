@@ -12,7 +12,24 @@
 button{
   display: block;
   background: none;
+  border : none;
+  padding: 0;
   font-family: inherit;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+button:active {
+  box-shadow: inset 0px 0px 80px 0px rgba(0,0,0,0.25);
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #wrapper {
@@ -49,16 +66,19 @@ button{
   width: 240px;
 }
 
-.clear-key {
+.calculator .function-keys {
+  background: linear-gradient(to bottom, rgba(202,202,204,1) 0%, rgba(196,194,204,1) 100%);
+}
+
+.key-clear {
   display: flex;
   width: 240px;
   height: 80px;
-  border-top: 1px solid #777;
-  border-right: 1px solid #666;
+  /*border-top: 1px solid #666;
+  border-right: 1px solid #666;*/
   text-align: center;
-  line-height: 80px;
+  /*line-height: 80px;*/
   font-size: 2em;
-  background: linear-gradient(to bottom, rgba(202,202,204,1) 0%, rgba(196,194,204,1) 100%);
 }
 
 .calculator .digit-keys {
@@ -71,10 +91,10 @@ button{
 .key {
   width: 80px;
   height: 80px;
-  border-top: 1px solid #777;
-  border-right: 1px solid #666;
+  /*border-top: 1px solid #777;
+  border-right: 1px solid #777;*/
   text-align: center;
-  line-height: 80px;
+  /*line-height: 80px;*/
 }
 
 .key-0 {
@@ -83,11 +103,18 @@ button{
   padding-left: 32px;
 }
 
+
+.calculator .input-keys {
+  width: 240px;
+}
+
+
 .calculator .operation-keys .key {
   color: white;
   border-right: 0;
   font-size: 3em;
 }
+
 
 .calculator .operation-keys {
   background:  linear-gradient(to bottom, rgba(252,156,23,1) 0%, rgba(247,126,27,1) 100%);
