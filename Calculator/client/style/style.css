@@ -67,6 +67,7 @@ button:active {
 }
 
 .calculator .function-keys {
+  display: flex;
   background: linear-gradient(to bottom, rgba(202,202,204,1) 0%, rgba(196,194,204,1) 100%);
 }
 
@@ -74,11 +75,12 @@ button:active {
   display: flex;
   width: 240px;
   height: 80px;
-  /*border-top: 1px solid #666;
-  border-right: 1px solid #666;*/
+  border-top: 1px solid #666;
+  border-right: 1px solid #666;
   text-align: center;
-  /*line-height: 80px;*/
+  line-height: 80px;
   font-size: 2em;
+  padding-left: 110px;
 }
 
 .calculator .digit-keys {
@@ -88,13 +90,17 @@ button:active {
   flex-wrap: wrap-reverse;
 }
 
+.calculator .digit-keys .key {
+  font-size: 2.25em;
+}
+
 .key {
   width: 80px;
   height: 80px;
-  /*border-top: 1px solid #777;
-  border-right: 1px solid #777;*/
+  border-top: 1px solid #777;
+  border-right: 1px solid #777;
   text-align: center;
-  /*line-height: 80px;*/
+  line-height: 80px;
 }
 
 .key-0 {
@@ -103,18 +109,19 @@ button:active {
   padding-left: 32px;
 }
 
+.calculator .digit-keys .key-dot {
+  font-size: 0.75em;
+}
 
 .calculator .input-keys {
   width: 240px;
 }
-
 
 .calculator .operation-keys .key {
   color: white;
   border-right: 0;
   font-size: 3em;
 }
-
 
 .calculator .operation-keys {
   background:  linear-gradient(to bottom, rgba(252,156,23,1) 0%, rgba(247,126,27,1) 100%);
