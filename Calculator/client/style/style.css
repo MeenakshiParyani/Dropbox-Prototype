@@ -58,6 +58,7 @@ button{
   text-align: center;
   line-height: 80px;
   font-size: 2em;
+  background: linear-gradient(to bottom, rgba(202,202,204,1) 0%, rgba(196,194,204,1) 100%);
 }
 
 .calculator .digit-keys {
@@ -80,4 +81,14 @@ button{
   width: 160px;
   text-align: left;
   padding-left: 32px;
+}
+
+.calculator .operation-keys .key {
+  color: white;
+  border-right: 0;
+  font-size: 3em;
+}
+
+.calculator .operation-keys {
+  background:  linear-gradient(to bottom, rgba(252,156,23,1) 0%, rgba(247,126,27,1) 100%);
 }
