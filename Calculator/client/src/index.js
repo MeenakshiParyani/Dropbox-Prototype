@@ -6,4 +6,7 @@ import { createStore, applyMiddleware } from 'redux';
 import Calculator from './components/calculator';
 import reducers from './reducers';
 
-ReactDOM.render(<Calculator />, document.querySelector('.container'));
+ReactDOM.render(
+  <div id="wrapper">
+    <Calculator />
+  </div> , document.querySelector('.container'));
