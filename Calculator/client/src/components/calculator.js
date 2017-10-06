@@ -12,6 +12,7 @@ export default class Calculator extends Component {
             </div>
             <div className ="digit-keys">
               <button className="key key-0">0</button>
+              <button className="key key-dit">●</button>
               <button className="key key-1">1</button>
               <button className="key key-2">2</button>
               <button className="key key-3">3</button>
