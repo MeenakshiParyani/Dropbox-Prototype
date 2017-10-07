@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
+import $ from 'jquery';
 
 export default class Calculator extends Component {
 
@@ -8,6 +9,13 @@ export default class Calculator extends Component {
     displayValue : '0',
     waitingForOperand : false,
     operator: null
+  }
+
+  operations = {
+    '+' : 'add',
+    '-' : 'sub',
+    '/' : 'div',
+    '*' : 'mul'
   }
 
   inputValue(digit){
@@ -68,22 +76,23 @@ export default class Calculator extends Component {
     const value = parseFloat(displayValue);
     if(op1 && operator){
       console.log('operand 1 ' + op1 + ' operand 2 ' + value);
-      const computedValue = this.getComputedValue(op1,operator,value);
-      console.log('comouted value is ' + computedValue);
-      this.setState({
-        displayValue : computedValue,
-        op1: parseFloat(computedValue),
-        waitingForOperand : true
-      })
+      this.getComputedValue(op1,operator,value);
     }
 
   }
 
   getComputedValue(op1,operator,op2){
-    axios.get('http://localhost:3000')
+    var self = this;
+    operator = this.operations[operator];
+    axios.get('http://localhost:3000/api/operate/'+op1+'/'+op2+'/'+operator)
     .then(function (response) {
-      console.log(response);
-    })
+      console.log(response.data.result);
+      self.setState({
+        displayValue : response.data.result,
+        op1: parseFloat(response.data.result),
+        waitingForOperand : true
+      });
+    });
   }
 
   render() {

@@ -1,7 +1,18 @@
+var self = this;
+
+exports.operate = function(req, res){
+	var operator = req.params.operator;
+	console.log('opearator is ' + req.params.operator + req.params.op1 + req.params.op2);
+	switch(operator){
+		case 'add' : self.add(req,res);break;
+		case 'sub' : self.subtract(req,res);break;
+		case 'div' : self.divide(req,res);break;
+		case 'mul' : self.multiply(req,res);
+	}
+}
 
 exports.add = function(req, res){
-	var result;
-	// console.log('req is' + req);
+	var result, response;
 	try{
 		var op1 = parseInt(req.params.op1);
 		var op2 = parseInt(req.params.op2);
@@ -10,13 +21,12 @@ exports.add = function(req, res){
 	}catch(err){
 		res.send({'error' : err});
 	}
-
+	return response;
 }
 
 
 exports.subtract = function(req, res){
 	var result;
-	// console.log('req is' + req);
 	try{
 		var op1 = parseInt(req.params.op1);
 		var op2 = parseInt(req.params.op2);
@@ -31,7 +41,6 @@ exports.subtract = function(req, res){
 
 exports.multiply = function(req, res){
 	var result;
-	// console.log('req is' + req);
 	try{
 		var op1 = parseInt(req.params.op1);
 		var op2 = parseInt(req.params.op2);
@@ -51,11 +60,12 @@ exports.divide = function(req, res){
 	var op2 = parseInt(req.params.op2);
 	try{
 		if(op2 == 0)
-			throw Error('Can not Divide By 0');
-		result = op1 / op2;
+			result = '∞';
+		else
+			result = op1 / op2;
+		res.send({'result' : result});
 	}catch(err){
 		console.log('Error is' + err);
 		res.send({'error' : err.message});
 	}
-	res.send({'result' : result});
 }
