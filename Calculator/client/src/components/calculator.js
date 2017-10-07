@@ -3,29 +3,53 @@ import React, { Component } from 'react';
 export default class Calculator extends Component {
 
   state = {
-    displayValue : '0'
+    displayValue : '0',
+    waitingForOperand : false,
+    operator: null
   }
 
   inputValue(digit){
-    const { displayValue } = this.state;
-    this.setState({
-      displayValue : displayValue === '0' ? String(digit) : displayValue + digit
-    })
+    const { displayValue, waitingForOperand } = this.state;
+    if(waitingForOperand){
+      this.setState({
+        displayValue :  String(digit),
+        waitingForOperand :false
+      })
+    }else{
+      this.setState({
+        displayValue : displayValue === '0' ? String(digit) : displayValue + digit
+      })
+    }
   }
 
   inputDecimal(){
-    const { displayValue } = this.state;
-      if(displayValue.indexOf('.') === -1){
-        this.setState({
-          displayValue : displayValue + '.'
-        })
-      }
+    const { displayValue, waitingForOperand } = this.state;
+    if(waitingForOperand){
+      this.setState({
+          displayValue : '.',
+          waitingForOperand: false
+      });
+    }else if(displayValue.indexOf('.') === -1){
+      this.setState({
+        displayValue : displayValue + '.',
+        waitingForOperand : false
+      })
+    }
+
+
 
   }
 
   clearDisplay(){
     this.setState({
       displayValue : '0'
+    })
+  }
+
+  performOperation(operator){
+    this.setState({
+        waitingForOperand: true,
+        operator : operator
     })
   }
 
@@ -55,11 +79,11 @@ export default class Calculator extends Component {
             </div>
           </div>
           <div className="operation-keys">
-            <button className="key key-divide">÷</button>
-            <button className="key key-multiply">×</button>
-            <button className="key key-subtract">-</button>
-            <button className="key key-add">+</button>
-            <button className="key key-equals">=</button>
+            <button className="key key-divide" onClick={ () => this.performOperation('/')}>÷</button>
+            <button className="key key-multiply" onClick={ () => this.performOperation('*')}>×</button>
+            <button className="key key-subtract" onClick={ () => this.performOperation('-')}>-</button>
+            <button className="key key-add" onClick={ () => this.performOperation('+')}>+</button>
+            <button className="key key-equals" onClick={ () => this.performOperation('=')}>=</button>
           </div>
         </div>
       </div>
