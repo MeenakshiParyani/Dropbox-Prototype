@@ -68,6 +68,11 @@ export default class Calculator extends Component {
         waitingForOperand: true,
         operator : operation
       })
+    }else{
+      this.setState({
+        operator : operation,
+        waitingForOperand : true
+      })
     }
   }
 
@@ -90,7 +95,8 @@ export default class Calculator extends Component {
       self.setState({
         displayValue : response.data.result,
         op1: parseFloat(response.data.result),
-        waitingForOperand : true
+        opearator : null,
+        waitingForOperand : false
       });
     });
   }
