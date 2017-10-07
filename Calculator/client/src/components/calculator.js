@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
 
 export default class Calculator extends Component {
 
   state = {
+    op1: null,
     displayValue : '0',
     waitingForOperand : false,
     operator: null
@@ -42,14 +44,45 @@ export default class Calculator extends Component {
 
   clearDisplay(){
     this.setState({
-      displayValue : '0'
+      displayValue : '0',
+      op1 : null,
+      waitingForOperand : false,
+      operator : null
     })
   }
 
-  performOperation(operator){
-    this.setState({
+  performOperation(operation){
+    const { displayValue, operator , op1} = this.state;
+    const value = parseFloat(displayValue);
+    if(op1 == null){
+      this.setState({
+        op1 : value,
         waitingForOperand: true,
-        operator : operator
+        operator : operation
+      })
+    }
+  }
+
+  performEquals(){
+    const {displayValue, operator, op1} = this.state;
+    const value = parseFloat(displayValue);
+    if(op1 && operator){
+      console.log('operand 1 ' + op1 + ' operand 2 ' + value);
+      const computedValue = this.getComputedValue(op1,operator,value);
+      console.log('comouted value is ' + computedValue);
+      this.setState({
+        displayValue : computedValue,
+        op1: parseFloat(computedValue),
+        waitingForOperand : true
+      })
+    }
+
+  }
+
+  getComputedValue(op1,operator,op2){
+    axios.get('http://localhost:3000')
+    .then(function (response) {
+      console.log(response);
     })
   }
 
@@ -83,7 +116,7 @@ export default class Calculator extends Component {
             <button className="key key-multiply" onClick={ () => this.performOperation('*')}>×</button>
             <button className="key key-subtract" onClick={ () => this.performOperation('-')}>-</button>
             <button className="key key-add" onClick={ () => this.performOperation('+')}>+</button>
-            <button className="key key-equals" onClick={ () => this.performOperation('=')}>=</button>
+            <button className="key key-equals" onClick={ () => this.performEquals()}>=</button>
           </div>
         </div>
       </div>
