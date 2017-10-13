@@ -1,0 +1,22 @@
+{
+  "name": "dropbox",
+  "version": "1.0.0",
+  "description": "Dropbox prototype",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm start app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeenakshiParyani/Dropbox-Prototype.git"
+  },
+  "keywords": [
+    "Dropbox"
+  ],
+  "author": "Meenakshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MeenakshiParyani/Dropbox-Prototype/issues"
+  },
+  "homepage": "https://github.com/MeenakshiParyani/Dropbox-Prototype#readme"
+}
