@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import {Button} from 'react-bootstrap';
 
 export default class Signup extends Component {
   render() {
     return (
       <div className="signup">
       <form className="form-horizontal signup-form" role="form">
-              <h2>Sign Up</h2>
+              <h2 className="align-left">Sign Up</h2>
               <div className="form-group">
                   <div className="col-sm-9">
                       <input type="text" id="firstName" placeholder="First Name" className="form-control" autofocus/>
@@ -36,8 +37,8 @@ export default class Signup extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-9 col-sm-offset-3">
-                        <button type="submit" className="btn btn-primary btn-block btn-sign">Sign up</button>
+                    <div className="col-sm-9">
+                        <Button bsStyle="primary" bsSize="large" block>Sign up</Button>
                     </div>
                 </div>
               <br/><br/><br/><br/><br/><br/><br/><br/>

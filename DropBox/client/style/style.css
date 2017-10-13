@@ -31,7 +31,6 @@
 }
 
 *[role="form"] h2 {
-    margin-left: 5em;
     margin-bottom: 1em;
 }
 
@@ -70,4 +69,12 @@
 .btn-sign{
   width: 40px;
   align-self:flex-start;
+}
+
+.signup-form{
+  margin: '0 auto 10px'
+}
+
+.align-left{
+  text-align: left;
 }
