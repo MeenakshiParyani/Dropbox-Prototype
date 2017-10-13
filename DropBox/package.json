@@ -4,7 +4,7 @@
   "description": "Dropbox prototype",
   "main": "app.js",
   "scripts": {
-    "test": "npm start app.js"
+    "start": "npm start app.js"
   },
   "repository": {
     "type": "git",
