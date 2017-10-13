@@ -25,6 +25,8 @@ router.get('/', function(req,res){
 			if(err){
 				if(err.code =='ER_DUP_ENTRY'){
 					res.status(300).send({'error' : 'User already exists, please choose another email'});
+				}else if(err.code == 'ECONNREFUSED'){
+					res.status(500).send({'error' : 'Server is down, please try again'});
 				}
 			}else{
 				res.status(200).send({'result' : 'User signed up successfully'});
