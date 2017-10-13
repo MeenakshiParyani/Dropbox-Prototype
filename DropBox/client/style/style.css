@@ -1,0 +1,73 @@
+.jumbo{
+  color: #BAD0E5;
+}
+
+.container-fluid .row{
+  background-color: #57132B;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0
+}
+
+.jumbotron{
+  color: #BAD0E5;
+}
+
+.white-font{
+  color: white;
+}
+
+.signup{
+  background-color: white
+}
+
+*[role="form"] {
+    max-width: 530px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+*[role="form"] h2 {
+    margin-left: 5em;
+    margin-bottom: 1em;
+}
+
+.with-container-fluid{
+   padding-right:0;
+   padding-left:0;
+   margin-right:auto;
+   margin-left:auto
+}
+
+.row {
+  position: relative;
+  padding-top: 30px;
+  background: orange;
+  margin: 0
+}
+
+.main.padding {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.p.absolute-example {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  background: yellow;
+}
+
+.section {
+  padding: 30px 0;
+  margin: 20px 0;
+}
+
+.btn-sign{
+  width: 40px;
+  align-self:flex-start;
+}
