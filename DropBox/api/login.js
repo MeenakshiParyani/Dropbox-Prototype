@@ -19,7 +19,7 @@ router.get('/', function(req,res){
 	try{
 		mysql.fetchData(function(err,results){
 			if(err){
-				// console.log('error2');
+				//console.log('error2');
 				if(err.code == 'ECONNREFUSED')
 					res.status(500).send({'error' : 'Server is down, please try again'});
 			}else{

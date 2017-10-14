@@ -9,7 +9,8 @@ var mkdirp = require('mkdirp');
 
 // app variables
 var mainFolder = "./user_files";
-
+var mysql = require('./mysql');
+var folderFiles = [];
 
 router.use(cors());
 // Upload the given files
@@ -17,33 +18,33 @@ router.post('/upload', function(req,res){
   console.log(req.headers);
   var userId = req.headers.userid;
   var folderPath = req.headers.path;
-  createDirectory(userId, folderPath, function(success,dir){
-    if(success){ // success creating the folder
-      // Specify where to store files
-      var Storage = multer.diskStorage({
-           destination: function(req, file, callback) {
-               callback(null, dir);
-           },
-           filename: function(req, file, callback) {
-               callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-           }
-      });
-      // create multer object to save files
-      var upload = multer({
-        storage: Storage
-      }).array("files", 10); // specify max number of allowed files
-      upload(req, res, function(err) {
-        if (err) {
-          console.log('error is ' + err);
-          res.status(300).send({'error' : 'Files Could not be uploaded'});
-        }else{
-          res.status(200).send({'result' : 'File uploaded sucessfully'});
-        }
-      });
-    }else{ // If folder could not be created
+  var dir = mainFolder + path.sep + userId + path.sep + folderPath;
+  var filename = '';
+  // Specify where to store files
+  var Storage = multer.diskStorage({
+       destination: function(req, file, callback) {
+           filename = file.fieldname + "_" + Date.now() + "_" + file.originalname;
+           console.log('filename is ' + filename);
+           callback(null, dir);
+       },
+       filename: function(req, file, callback) {
+           saveFileFolderToDB(filename, dir, 0, userId);
+           callback(null, filename);
+       }
+  });
+  // create multer object to save files
+  var upload = multer({
+    storage: Storage
+  }).array("files", 10);// specify max number of allowed files
+  upload(req, res, function(err) {
+    if (err) {
+      console.log('error is ' + err);
       res.status(300).send({'error' : 'Files Could not be uploaded'});
+    }else{
+      res.status(200).send({'result' : 'File uploaded sucessfully'});
     }
   });
+
 });
 
 
@@ -54,7 +55,7 @@ router.post('/newFolder', function(req,res){
   var folderPath = req.body.path.replace('/', path.sep);
   folderPath = req.body.path.replace('\\', path.sep);
   console.log("path recieved is " + folderPath);
-  createDirectory(userId,folderPath, function(success){
+  createDirectory(userId,folderPath, 1, function(success){
       if(success){
         res.status(200).send({'result' : 'Folder created sucessfully'});
       }else{
@@ -64,26 +65,44 @@ router.post('/newFolder', function(req,res){
 
 });
 
-function createDirectory(userId, folderPath, callback){
-  var dir = path.resolve(mainFolder + path.sep + userId + path.sep + folderPath);
+function createDirectory(userId, folderPath, saveDir, callback){
+  var dir = mainFolder + path.sep + userId + path.sep + folderPath;
+  var absoluteDir = path.resolve(dir);
+  var folder = dir.substring(dir.lastIndexOf(path.sep) + 1);
+  var folderPath = dir.substring(0,dir.lastIndexOf(path.sep));
   console.log(dir);
-  mkdirp(dir, function (err) {
+  mkdirp(absoluteDir, function (err) {
     if (err){
       console.error(err);
       callback(false,dir);
     }
     else {
-      console.log('pow!');
+      console.log('Folder created!');
+      if(saveDir)
+        saveFileFolderToDB(folder, folderPath, 1, userId);
       callback(true,dir);
     }
   });
 }
 
-function
-
-
-
-
+// Save file to database
+function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
+  console.log('Saving file to db');
+  var insertFile="INSERT INTO `files` (`file_name`, `file_path`, `is_dir`, `owner_id`)" +
+			" VALUES ('"+ fileName + "', '" + filePath + "', '" + isDir + "', '" + ownerId + "');";
+  console.log(insertFile);
+  try{
+		mysql.fetchData(function(err,results){
+			if(err){
+				return false;
+			}else{
+				return true;
+			}
+		},insertFile);
+	}catch(err){
+		return false;
+	}
+}
 
 // Return Router
 module.exports = router;

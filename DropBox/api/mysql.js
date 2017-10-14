@@ -22,7 +22,7 @@ function fetchData(callback,sqlQuery){
 
 	connection.query(sqlQuery, function(err, rows, fields) {
 		if(err){
-			console.log("ERROR: " + err.code);
+			console.log("ERROR: " + err);
       callback(err);
 		}
 		else
