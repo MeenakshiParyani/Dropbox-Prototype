@@ -14,11 +14,12 @@ router.use(cors());
 router.get('/', function(req,res){
 	var email = req.query.email;
 	var password = req.query.password;
-  var getUser="select * from `user` where email='"+email+"' and password='" + password +"'";
+  var getUser="select * from `" + mysql.database + "`.`user` where email='"+email+"' and password='" + password +"'";
 	console.log("Query is: "+ getUser);
 	try{
 		mysql.fetchData(function(err,results){
 			if(err){
+				console.log('error2');
 				if(err.code == 'ECONNREFUSED')
 					res.status(500).send({'error' : 'Server is down, please try again'});
 			}else{
@@ -27,6 +28,7 @@ router.get('/', function(req,res){
 			}
 		},getUser);
 	}catch(err){
+		console.log('error1');
 		res.status(500).send({'error' : 'Server is down, please try again'});
 	}
 

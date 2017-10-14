@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var database = 'dropbox';
 
 //Put your mysql configuration settings - user, password, database and port
 function getConnection(){
@@ -6,7 +7,7 @@ function getConnection(){
 	    host     : 'localhost',
 	    user     : 'root',
 	    password : '',
-	    database : 'dropbox',
+	    database : database,
 	    port	 : 3306
 	});
 	return connection;
@@ -35,3 +36,4 @@ function fetchData(callback,sqlQuery){
 }
 
 exports.fetchData=fetchData;
+exports.database=database;

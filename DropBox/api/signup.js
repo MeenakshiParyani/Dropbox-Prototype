@@ -20,7 +20,7 @@ router.post('/', function(req,res){
 
   // console.log(req.body);
 	var insertUser="INSERT INTO `user` (`first_name`, `last_name`, `email`, `password`)" +
-			" VALUES ('"+ firstName + "', '" + lastName + "', ' " + email + "', ' " + password + "');";
+			" VALUES ('"+ firstName + "', '" + lastName + "', '" + email + "', '" + password + "');";
 	console.log(insertUser);
 	try{
 		mysql.fetchData(function(err,results){

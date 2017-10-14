@@ -3,7 +3,7 @@ import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
 import { withRouter } from 'react-router';
 
-export default class Login extends Component {
+class Login extends Component {
 
   state = {
     email      : null,
@@ -20,8 +20,8 @@ export default class Login extends Component {
     const signUp = this;
     axios.get('http://localhost:3000/api/login',{
       params: {
-        userName  : firstName,
-        password  : lastName
+        email  : email,
+        password  : password
       }
     })
     .then(function (response) {
@@ -96,3 +96,5 @@ export default class Login extends Component {
   }
 
 }
+
+export default withRouter(Login)
