@@ -11,8 +11,8 @@ export default class App extends Component {
     return (
       <div className = "container-fluid">
         <div className="row">
-          <div className="col-md-8">< Landing /></div>
-          <div className="col-md-4">< Signup /></div>
+          <div className="col-md-6">< Landing /></div>
+          <div className="col-md-6">< Signup /></div>
         </div>
       </div>
     );

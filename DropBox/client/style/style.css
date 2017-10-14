@@ -7,7 +7,8 @@
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
-  margin-bottom: 0
+  margin-bottom: 0;
+  float: left;
 }
 
 .jumbotron{
@@ -44,6 +45,7 @@
 .row {
   position: relative;
   padding-top: 30px;
+  margin-right: 0px;
   background: orange;
   margin: 0
 }
@@ -82,4 +84,12 @@
 .signin{
   float: right;
   font-size: 20px;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  float: left;
 }
