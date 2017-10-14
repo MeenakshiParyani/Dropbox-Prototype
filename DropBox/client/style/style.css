@@ -78,3 +78,8 @@
 .align-left{
   text-align: left;
 }
+
+.signin{
+  float: right;
+  font-size: 20px;
+}

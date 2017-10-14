@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router';
 
 export default class Signup extends Component {
 
@@ -9,7 +10,8 @@ export default class Signup extends Component {
     lastName  : null,
     email     : null,
     password  : null,
-    error     : ''
+    error     : '',
+    success   : ''
   }
 
   signUp(e){
@@ -18,8 +20,8 @@ export default class Signup extends Component {
     const {firstName, lastName, email, password} = this.state;
     console.log('state is ' + firstName + ' ' + lastName + ' ' + email + ' ' + password);
     const signUp = this;
-    axios.get('http://localhost:3000/api/signup',{
-      params: {
+    axios.post('http://localhost:3000/api/signup',{
+      data: {
         firstName : firstName,
         lastName  : lastName,
         email     : email,
@@ -27,16 +29,20 @@ export default class Signup extends Component {
       }
     })
     .then(function (response) {
-      console.log('result is ' + response.data.result); 
+      console.log('result is ' + response.data.result);
+      signUp.handleInputChange({
+        success : true,
+        error   : ''
+      });
     })
     .catch(function(response){
-      console.log('result is ' + response.response.data.error);
+      console.log('error is ' + response);
       signUp.handleInputChange({
-        error : response.response.data.error
+        error : response.response.data.error,
+        success : false
       });
     });
   }
-
 
   handleInputChange(newPartialInput) {
     this.setState(state => ({
@@ -51,7 +57,7 @@ export default class Signup extends Component {
     return (
       <div className="signup">
       <form className="form-horizontal signup-form" role="form" onSubmit={ (e) => this.signUp(e) } >
-              <h2 className="align-left">Sign Up</h2>
+              <h2 className="align-left">Sign Up <span><a className="signin" href="/login">Sign In</a></span></h2>
               <div className="form-group">
                   <div className="col-sm-9">
                       <input type="text" id="firstName" placeholder="First Name" value = {this.state.firstName}
@@ -90,6 +96,11 @@ export default class Signup extends Component {
                   <p> {this.state.error} </p>
                 </HelpBlock>
               }
+              {this.state.success &&
+                <HelpBlock>
+                  <p> Sign up completed, use sign in to use the app</p>
+                </HelpBlock>
+              }
               <div className="form-group">
                   <div className="col-sm-9">
                       <Button type="submit" bsStyle="primary" bsSize="large" block>Sign up</Button>
@@ -100,4 +111,5 @@ export default class Signup extends Component {
       </div>
     );
   }
+
 }

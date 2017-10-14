@@ -11,23 +11,24 @@ var mysql = require('./mysql');
 // });
 
 router.use(cors());
-router.get('/', function(req,res){
-  var firstName = req.query.firstName;
-	var lastName = req.query.lastName;
-	var email = req.query.email;
-	var password = req.query.password;
+router.post('/', function(req,res){
+  console.log('request is ' + JSON.stringify(req.body));
+  var firstName = req.body.data.firstName;
+	var lastName = req.body.data.lastName;
+	var email = req.body.data.email;
+	var password = req.body.data.password;
+
+  // console.log(req.body);
 	var insertUser="INSERT INTO `user` (`first_name`, `last_name`, `email`, `password`)" +
-			" VALUES ('"+ req.param("firstName") + "', '" + req.param("lastName") + "', ' " +
-			req.param("email") + "', ' " + req.param("password") + "');";
+			" VALUES ('"+ firstName + "', '" + lastName + "', ' " + email + "', ' " + password + "');";
 	console.log(insertUser);
 	try{
 		mysql.fetchData(function(err,results){
 			if(err){
-				if(err.code =='ER_DUP_ENTRY'){
+				if(err.code =='ER_DUP_ENTRY')
 					res.status(300).send({'error' : 'User already exists, please choose another email'});
-				}else if(err.code == 'ECONNREFUSED'){
+				else if(err.code == 'ECONNREFUSED')
 					res.status(500).send({'error' : 'Server is down, please try again'});
-				}
 			}else{
 				res.status(200).send({'result' : 'User signed up successfully'});
 			}
