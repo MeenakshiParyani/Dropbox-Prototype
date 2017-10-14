@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 
 //Routes
-app.use('/signup', signup);
+app.use('/api/signup', signup);
 
 
 // Start Server
