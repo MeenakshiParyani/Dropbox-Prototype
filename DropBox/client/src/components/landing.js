@@ -10,6 +10,7 @@ export default class Landing extends Component {
           </div>
           <div>
             <p className="white-font">Dropbox is a modern workspace designed to reduce busywork-so you can focus on the things that matter</p>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
           </div>
         </div>
     );
