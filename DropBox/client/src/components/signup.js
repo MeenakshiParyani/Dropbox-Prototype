@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 export default class Signup extends Component {
 

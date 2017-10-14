@@ -19,16 +19,18 @@ router.get('/', function(req,res){
 	try{
 		mysql.fetchData(function(err,results){
 			if(err){
-				console.log('error2');
+				// console.log('error2');
 				if(err.code == 'ECONNREFUSED')
 					res.status(500).send({'error' : 'Server is down, please try again'});
 			}else{
         if(results.length > 0)
 				    res.status(200).send({'result' : 'Logged In!!'});
+				else
+						res.status(300).send({'error' : 'User does not exist'});
 			}
 		},getUser);
 	}catch(err){
-		console.log('error1');
+		// console.log('error1');
 		res.status(500).send({'error' : 'Server is down, please try again'});
 	}
 

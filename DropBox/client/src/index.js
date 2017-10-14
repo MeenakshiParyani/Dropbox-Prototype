@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Link, hashHistory, Switch } from 'react
 
 import App from './components/app';
 import Login from './components/login';
+import Home from './components/home';
 import reducers from './reducers';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
@@ -15,6 +16,7 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/" component={App}/>
       <Route exact path="/login" component={Login}/>
+      <Route exact path="/Home" component={Home}/>
     </Switch>
   </Router>
   , document.querySelector('.container'));

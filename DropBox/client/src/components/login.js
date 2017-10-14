@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 class Login extends Component {
+
+  constructor(props){
+    super(props);
+    console.log(this);
+  }
 
   state = {
     email      : null,
@@ -17,7 +22,7 @@ class Login extends Component {
     console.log('state is ' + JSON.stringify(this.state));
     const { email, password } = this.state;
     console.log('state is ' + email + ' ' + password);
-    const signUp = this;
+    const login = this;
     axios.get('http://localhost:3000/api/login',{
       params: {
         email  : email,
@@ -26,21 +31,24 @@ class Login extends Component {
     })
     .then(function (response) {
       console.log('result is ' + response.data.result);
-      signUp.handleInputChange({
+      login.handleInputChange({
         isLoggedIn : true,
         error   : ''
       });
+      login.displayHome();
     })
     .catch(function(err){
-      console.log('result is ' + err.response.data.error);
-      signUp.handleInputChange({
+      console.log('error is ' + err.response.data.error);
+      login.handleInputChange({
+        isLoggedIn : false,
         error : err.response.data.error
       });
     });
   }
 
   displayHome(){
-    this.props.router.push('/home');
+    this.props.history.push('/home');
+    console.log(this.props.router);
   }
 
 
