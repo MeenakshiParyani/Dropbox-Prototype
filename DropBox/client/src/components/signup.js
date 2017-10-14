@@ -27,9 +27,7 @@ export default class Signup extends Component {
       }
     })
     .then(function (response) {
-      console.log('result is ' + response.data.result);
-      console.log('error is ' + response.data.error);
-
+      console.log('result is ' + response.data.result); 
     })
     .catch(function(response){
       console.log('result is ' + response.response.data.error);
