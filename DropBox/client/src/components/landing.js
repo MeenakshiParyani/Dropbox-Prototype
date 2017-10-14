@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export default class Landing extends Component {
   render() {
     return (
-        <div className="container-fluid">
+        <div className="container-fluid1">
           <h1 className="white-font">Dropbox</h1>
           <div className="jumbotron">
             <p>Put creative <br/> energy to work, <br/> with Dropbox</p>
