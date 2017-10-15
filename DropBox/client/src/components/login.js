@@ -16,7 +16,8 @@ class Login extends Component {
     password   : null,
     isLoggedIn : false,
     error      : '',
-    user       : {}
+    user       : {},
+    userFiles  : []
   }
 
   login(e){
@@ -49,11 +50,35 @@ class Login extends Component {
     });
   }
 
-  displayHome(){
-    this.props.history.push({
-      pathname      : '/home',
-      state         : this.state
+  getUserFiles(callback) {
+    var login = this;
+    console.log(this.state.user.id);
+    axios.get('http://localhost:3000/api/file/list',{
+      params: {
+        userid  : this.state.user.id
+      }
+    })
+    .then(function (response) {
+      console.log(response.data.result);
+      login.handleInputChange({
+        userFiles : response.data.result
+      });
+      callback();
+    })
+    .catch(function(err){
+      console.log('error is ' + err);
+        callback();
     });
+  }
+
+  displayHome(){
+    var login = this;
+    this.getUserFiles(function(){
+      login.props.history.push({
+        pathname      : '/home',
+        state         : login.state
+      });
+    })
   }
 
 

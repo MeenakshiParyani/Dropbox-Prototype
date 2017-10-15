@@ -11,7 +11,7 @@ class Home extends Component {
   render() {
     console.log(this.props);
     const userId = this.props.history.location.state.user.id;
-
+    const userFiles = this.props.history.location.state.userFiles;
     return (
       <div className = "container-fluid">
       <TabContainer id="left-tabs-example" defaultActiveKey="first">
@@ -30,7 +30,7 @@ class Home extends Component {
           <Col sm={8}>
             <TabContent animation>
               <TabPane eventKey="first">
-                <HomeView userId={userId}/>
+                <HomeView userId={userId} userFiles={userFiles}/>
               </TabPane>
               <TabPane eventKey="second">
                 Tab 2 content {userId}
