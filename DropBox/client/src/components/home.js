@@ -12,18 +12,20 @@ class Home extends Component {
       <div className = "container-fluid">
       <TabContainer id="left-tabs-example" defaultActiveKey="first">
         <Row className="clearfix">
-          <Col sm={4}>
+          <Col sm={2}>
+          <br/><br/><br/><br/><br/><br/>
             <Nav bsStyle="pills" stacked>
               <NavItem eventKey="first">
-                Tab 1
+                Home
               </NavItem>
               <NavItem eventKey="second">
-                Tab 2
+                Files
               </NavItem>
             </Nav>
           </Col>
           <Col sm={8}>
             <TabContent animation>
+              <br/><br/>
               <TabPane eventKey="first">
                 Tab 1 content
               </TabPane>
@@ -31,6 +33,9 @@ class Home extends Component {
                 Tab 2 content
               </TabPane>
             </TabContent>
+          </Col>
+          <Col sm={2}>
+            right
           </Col>
         </Row>
       </TabContainer>
