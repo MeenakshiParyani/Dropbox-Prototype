@@ -11,7 +11,8 @@ class HomeView extends Component {
   constructor(props){
       super(props);
       this.state = {
-        userFiles : []
+        userFiles : [],
+        userId    : null
       };
   }
 
@@ -42,7 +43,7 @@ class HomeView extends Component {
 
   overlayFormatter(cell, row) {
     return (
-      <button className="overlay-btn" onClick={ () => this.downloadFile(row)}>Download</button>
+      <button className="overlay-btn" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
     );
   }
 
@@ -52,21 +53,28 @@ class HomeView extends Component {
     );
   }
 
-  dowloadFile(row){
-    var fileName = row.name;
-    console.log(fileName);
-    if(row.isDir){
-      // update userFiles
-
-
-    }else{
-
-    }
+  dowloadFile(homeView, row){
+    axios.get('http://localhost:3000/api/file/download',{
+      params: {
+        userid  : homeView.state.userId,
+        filename : row.name,
+        isDir    : row.isDir
+      }
+    })
+    .then(function (response) {
+      console.log(response.data.result);
+      homeView.handleInputChange({
+        userFiles : response.data.result
+      });
+    })
+    .catch(function(err){
+      console.log('error is ' + err);
+    });
 
   }
 
   componentWillReceiveProps(nextProps){
-    this.handleInputChange({'userFiles' : nextProps.userFiles});
+    this.handleInputChange({'userFiles' : nextProps.userFiles, 'userId' : nextProps.userId});
   }
 
   render() {
@@ -81,7 +89,7 @@ class HomeView extends Component {
               <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
               <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
               <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
-              <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter }></TableHeaderColumn>
+              <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
             </BootstrapTable>
         </div>
       );
