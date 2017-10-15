@@ -3,6 +3,7 @@ import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
+
 class Login extends Component {
 
   constructor(props){
@@ -14,7 +15,8 @@ class Login extends Component {
     email      : null,
     password   : null,
     isLoggedIn : false,
-    error      : ''
+    error      : '',
+    user       : {}
   }
 
   login(e){
@@ -35,6 +37,7 @@ class Login extends Component {
         isLoggedIn : true,
         error   : ''
       });
+      login.handleInputChange({ 'user' : response.data.user});
       login.displayHome();
     })
     .catch(function(err){
@@ -47,8 +50,10 @@ class Login extends Component {
   }
 
   displayHome(){
-    this.props.history.push('/home');
-    console.log(this.props.router);
+    this.props.history.push({
+      pathname      : '/home',
+      state         : this.state
+    });
   }
 
 

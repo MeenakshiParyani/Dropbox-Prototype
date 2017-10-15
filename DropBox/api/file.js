@@ -10,7 +10,6 @@ var mkdirp = require('mkdirp');
 // app variables
 var mainFolder = "./user_files";
 var mysql = require('./mysql');
-var folderFiles = [];
 
 router.use(cors());
 // Upload the given files

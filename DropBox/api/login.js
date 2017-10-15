@@ -24,7 +24,11 @@ router.get('/', function(req,res){
 					res.status(500).send({'error' : 'Server is down, please try again'});
 			}else{
         if(results.length > 0)
-				    res.status(200).send({'result' : 'Logged In!!'});
+				    res.status(200).send({'result' : 'Logged In!!',
+						'user' : {
+						  'id'   : results[0].id,
+						  'name' : results[0].first_name
+						}});
 				else
 						res.status(300).send({'error' : 'User does not exist'});
 			}
