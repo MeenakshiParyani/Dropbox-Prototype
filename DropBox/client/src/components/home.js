@@ -9,7 +9,7 @@ class Home extends Component {
     console.log(this.props);
     return (
       <div className = "container-fluid">
-        MY HOME!!
+        MY HOME!! Welcome {this.props.location.state.user.name}
       </div>
     );
   }
