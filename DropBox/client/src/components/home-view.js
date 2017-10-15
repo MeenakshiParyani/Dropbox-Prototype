@@ -6,7 +6,12 @@ import {PageHeader, Grid, Row, Col} from 'react-bootstrap'
 
 class HomeView extends Component {
 
+  getUserFiles() {
+    console.log(this.props.userId);
+  }
+
   render() {
+    // this.getUserFiles();
     return (
       <div className = "container-fluid">
           <PageHeader className="header"><h3>Home</h3></PageHeader>
@@ -34,6 +39,8 @@ class HomeView extends Component {
 }
 
 
-
+HomeView.PropTypes = {
+  userId : PropTypes.string
+}
 
 export default withRouter(HomeView)

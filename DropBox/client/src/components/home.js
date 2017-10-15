@@ -7,8 +7,11 @@ import HomeView from './home-view';
 
 class Home extends Component {
 
+
   render() {
     console.log(this.props);
+    const userId = this.props.history.location.state.user.id;
+
     return (
       <div className = "container-fluid">
       <TabContainer id="left-tabs-example" defaultActiveKey="first">
@@ -27,10 +30,10 @@ class Home extends Component {
           <Col sm={8}>
             <TabContent animation>
               <TabPane eventKey="first">
-                <HomeView />
+                <HomeView userId={userId}/>
               </TabPane>
               <TabPane eventKey="second">
-                Tab 2 content
+                Tab 2 content {userId}
               </TabPane>
             </TabContent>
           </Col>
