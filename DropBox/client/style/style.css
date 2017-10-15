@@ -88,14 +88,34 @@
   font-weight: normal;
 }
 
-.fileGrid{
-  border: hidden !important;
+.borderless td, .borderless th {
+    border: none;
 }
+
 
 .react-bs-container-body tr {
   border-top-style: hidden !important;
+  border-bottom-style: hidden !important;
 }
 
-.react-bs-container-header tr {
-  border-bottom-style: hidden !important;
+.react-bs-container-body td {
+  width : 10%;
+  border-left-style: hidden !important;
+  border-right-style: hidden !important;
+}
+
+.react-bs-container-body td .slim-width{
+  width : 10%;
+}
+
+.react-bs-container-body td .wide-width{
+  width : 80%;
+}
+
+
+.dir-btn {
+    background: url(/src/resources/images/favicon3.ico) no-repeat;
+    border: 0px;
+    width: 60px;
+    height: 50px;
 }
