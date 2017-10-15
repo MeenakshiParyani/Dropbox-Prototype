@@ -119,3 +119,29 @@
     width: 60px;
     height: 50px;
 }
+
+.file-btn {
+    background: url(/src/resources/images/favicon7.ico) no-repeat;
+    border: 0px;
+    width: 60px;
+    height: 50px;
+}
+
+.file-name{
+  float:left;
+  width: 30px;
+}
+
+.share-btn {
+    border: 2px;
+    width: 73px;
+    height: 34px;
+    float:right;
+}
+
+.overlay-btn {
+    float:right;
+    border: 2px;
+    width: 32px;
+    height: 32px;
+}

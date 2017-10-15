@@ -26,10 +26,27 @@ class HomeView extends Component {
       );
     }else{
       return (
-        <button>normal</button>
+        <button className="file-btn"></button>
       );
     }
+  }
 
+  shareFormatter(cell, row) {
+    return (
+      <button className="share-btn">Share</button>
+    );
+  }
+
+  overlayFormatter(cell, row) {
+    return (
+      <button className="overlay-btn">...</button>
+    );
+  }
+
+  fileNameFormatter(cell, row) {
+    return (
+      <span className="file-name">{cell}</span>
+    );
   }
 
   render() {
@@ -41,8 +58,10 @@ class HomeView extends Component {
             <PageHeader className="header"><h3>Home</h3></PageHeader>
             <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
              striped={false} sortable={true} data={this.props.userFiles} keyField='name'>
-              <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }>Active</TableHeaderColumn>
-              <TableHeaderColumn className="wide-width" dataField='name'>Name</TableHeaderColumn>
+              <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
+              <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
+              <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
+              <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter }></TableHeaderColumn>
             </BootstrapTable>
         </div>
       );
