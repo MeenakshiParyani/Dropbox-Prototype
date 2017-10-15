@@ -6,6 +6,7 @@ var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var mime = require('mime');
 
 // app variables
 var mainFolder = "./user_files";
@@ -131,3 +132,38 @@ router.get('/list', function(req,res){
 
 // Return Router
 module.exports = router;
+
+
+// Download the file
+router.get('/download', function(req, res){
+  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
+  var mimetype = mime.getType('jpg');
+  console.log(file);
+  var file = path.resolve(file);
+  res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
+  res.setHeader('Content-type', mimetype);
+  // var s = fs.createReadStream(af);
+  // s.on('open', function () {
+  //     res.set('Content-Type', 'image/jpeg');
+  //     s.pipe(res);
+  // });
+  // s.on('error', function () {
+  //       res.set('Content-Type', 'text/plain');
+  //       res.status(404).end('Not found');
+  //   });
+  res.download(file); // Set disposition and send it.
+
+  //read the image using fs and send the image content back in the response
+    // fs.readFile(file, function (err, content) {
+    //     if (err) {
+    //         res.writeHead(400, {'Content-type':'text/html'})
+    //         console.log(err);
+    //         res.end("No such file");
+    //     } else {
+    //         //specify Content will be an attachment
+    //         // res.setHeader('Content-type', 'application/octet-stream');
+    //         // res.setHeader('Content-disposition', 'attachment; filename='+req.query.filename);
+    //         res.end(content);
+    //     }
+    // });
+});

@@ -5,6 +5,7 @@ import createHistory from 'history/createBrowserHistory'
 import {PageHeader, Grid, Row, Col, Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import axios from 'axios';
+import fileDownlaoder from 'react-file-download';
 
 class HomeView extends Component {
 
@@ -54,22 +55,21 @@ class HomeView extends Component {
   }
 
   dowloadFile(homeView, row){
-    axios.get('http://localhost:3000/api/file/download',{
-      params: {
-        userid  : homeView.state.userId,
-        filename : row.name,
-        isDir    : row.isDir
-      }
-    })
-    .then(function (response) {
-      console.log(response.data.result);
-      homeView.handleInputChange({
-        userFiles : response.data.result
-      });
-    })
-    .catch(function(err){
-      console.log('error is ' + err);
-    });
+    const url = 'http://localhost:3000/api/file/download?userid=' + homeView.state.userId + '&filename=' + row.name + '&isDir=' + row.isDir;
+    window.open(url, "_blank");
+    // axios.get('http://localhost:3000/api/file/download',{
+    //   params: {
+    //     userid  : homeView.state.userId,
+    //     filename : row.name,
+    //     isDir    : row.isDir
+    //   }
+    // })
+    // .then(function (response) {
+    //   fileDownlaoder(response.data, row.name);
+    // })
+    // .catch(function(err){
+    //   console.log('error is ' + err);
+    // });
 
   }
 
