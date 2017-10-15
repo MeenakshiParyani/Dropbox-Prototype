@@ -7,6 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var mime = require('mime');
+var zipFolder = require('zip-folder');
 
 // app variables
 var mainFolder = "./user_files";
@@ -85,6 +86,8 @@ function createDirectory(userId, folderPath, saveDir, callback){
   });
 }
 
+
+
 // Save file to database
 function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
   console.log('Saving file to db');
@@ -130,40 +133,61 @@ router.get('/list', function(req,res){
 });
 
 
+
+
 // Return Router
 module.exports = router;
 
+function getFile(req, callback) {
+  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
+  if(req.query.isDir) {
+    var zipfileName = './tmp/'+req.query.filename+'.zip';
+    console.log(zipfileName);
+    zipFolder(file,zipfileName , function(err) {
+      if(err) {
+          console.log('oh no!', err);
+          callback(err, null);
+      } else {
+          callback(null, zipfileName);
+      }
+    });
+  } else {
+    callback(null, file);
+  }
+}
 
 // Download the file
 router.get('/download', function(req, res){
-  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
-  var mimetype = mime.getType('jpg');
-  console.log(file);
-  var file = path.resolve(file);
-  res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
-  res.setHeader('Content-type', mimetype);
-  // var s = fs.createReadStream(af);
-  // s.on('open', function () {
-  //     res.set('Content-Type', 'image/jpeg');
-  //     s.pipe(res);
-  // });
-  // s.on('error', function () {
-  //       res.set('Content-Type', 'text/plain');
-  //       res.status(404).end('Not found');
-  //   });
-  res.download(file); // Set disposition and send it.
+  console.log('entering');
+  getFile(req, function(err, file) {
+    if(err) {
+      console.log(err);
+    } else {
+      var file = path.resolve(file);
+      res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
+      res.download(file);
+    }
+  })
 
-  //read the image using fs and send the image content back in the response
-    // fs.readFile(file, function (err, content) {
-    //     if (err) {
-    //         res.writeHead(400, {'Content-type':'text/html'})
-    //         console.log(err);
-    //         res.end("No such file");
-    //     } else {
-    //         //specify Content will be an attachment
-    //         // res.setHeader('Content-type', 'application/octet-stream');
-    //         // res.setHeader('Content-disposition', 'attachment; filename='+req.query.filename);
-    //         res.end(content);
-    //     }
-    // });
+  // var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
+  // var mimetype = mime.getType('jpg');
+  // console.log(file);
+  // var files = [];
+  // var zipfileName = '';
+  // if(req.query.isDir){
+  //   var zipfileName = './tmp/'+req.query.filename+'.zip';
+  //   console.log(zipfileName);
+  //   zipFolder(file,zipfileName , function(err) {
+  //   if(err) {
+  //       console.log('oh no!', err);
+  //   } else {
+  //       file = path.resolve(zipfileName);
+  //       console.log(file);
+  //   }
+  // });
+  // }
+  // file = path.resolve(file);
+  // res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
+  // res.download(file); // Set disposition and send it.
+
 });
