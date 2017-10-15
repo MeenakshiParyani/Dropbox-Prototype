@@ -9,7 +9,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className = "container-fluid">
+      <div className = "container-fluid1">
         <div className="row row1">
           <div className="col-md-8">< Landing /></div>
           <div className="col-md-4">< Signup /></div>
