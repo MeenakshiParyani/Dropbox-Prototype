@@ -22,17 +22,14 @@ class HomeView extends Component {
   render() {
 
     if(this.props.userFiles.length > 0){
-      const columns = ["name", "dir"];
+      const columns = ["name", "isDir"];
       return (
         <div className = "container-fluid">
             <PageHeader className="header"><h3>Home</h3></PageHeader>
-            <BootstrapTable data={this.props.userFiles} keyField='name'>
-              {columns.map(column =>
-                  <Row>
-                  <TableHeaderColumn dataField={column}>{column}</TableHeaderColumn>
-                  </Row>
-              )}
-          </BootstrapTable>
+            <BootstrapTable className="fileGrid" striped={true} data={this.props.userFiles} keyField='name'>
+              <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+              <TableHeaderColumn dataField='isDir'>Dir</TableHeaderColumn>
+            </BootstrapTable>
         </div>
       );
     }
