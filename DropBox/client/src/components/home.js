@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory'
 import {TabContainer, Tab, Row, Col, NavItem, TabContent, TabPane, Nav} from 'react-bootstrap'
+import HomeView from './home-view';
+
 
 class Home extends Component {
 
@@ -25,9 +26,8 @@ class Home extends Component {
           </Col>
           <Col sm={8}>
             <TabContent animation>
-              <br/><br/>
               <TabPane eventKey="first">
-                Tab 1 content
+                <HomeView />
               </TabPane>
               <TabPane eventKey="second">
                 Tab 2 content
