@@ -103,5 +103,31 @@ function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
 	}
 }
 
+router.get('/list', function(req,res){
+  var userId = req.query.userid;
+  var dir = path.resolve(mainFolder + path.sep + userId);
+  foldersFiles = [];
+  try{
+    fs.readdir(dir, (err, files) => {
+      if(files){
+        files.forEach(file => {
+          var isDir = fs.lstatSync(path.resolve(dir+path.sep+file)).isDirectory();
+          var fileObject = {
+            'name'  : file,
+            'isDir' : isDir
+          }
+          foldersFiles.push(fileObject);
+        });
+        res.status(200).send({'result' : foldersFiles});
+      }else{
+        res.status(300).send({'error' : 'No files found for user'});
+      }
+    })
+  }catch(err){
+    res.status(300).send({'error' : 'No files found for user'});
+  }
+});
+
+
 // Return Router
 module.exports = router;
