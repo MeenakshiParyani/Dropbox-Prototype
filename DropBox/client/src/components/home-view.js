@@ -8,8 +8,11 @@ import axios from 'axios';
 
 class HomeView extends Component {
 
-  state = {
-    userfiles : []
+  constructor(props){
+      super(props);
+      this.state = {
+        userFiles : []
+      };
   }
 
   handleInputChange(newPartialInput) {
@@ -39,7 +42,7 @@ class HomeView extends Component {
 
   overlayFormatter(cell, row) {
     return (
-      <button className="overlay-btn">...</button>
+      <button className="overlay-btn" onClick={ () => this.downloadFile(row)}>Download</button>
     );
   }
 
@@ -49,15 +52,32 @@ class HomeView extends Component {
     );
   }
 
+  dowloadFile(row){
+    var fileName = row.name;
+    console.log(fileName);
+    if(row.isDir){
+      // update userFiles
+
+
+    }else{
+
+    }
+
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.handleInputChange({'userFiles' : nextProps.userFiles});
+  }
+
   render() {
 
-    if(this.props.userFiles.length > 0){
+    if(this.state.userFiles.length > 0){
       const columns = ["name", "isDir"];
       return (
         <div className = "container-fluid ">
             <PageHeader className="header"><h3>Home</h3></PageHeader>
             <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
-             striped={false} sortable={true} data={this.props.userFiles} keyField='name'>
+             striped={false} sortable={true} data={this.state.userFiles} keyField='name'>
               <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
               <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
               <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
@@ -65,6 +85,8 @@ class HomeView extends Component {
             </BootstrapTable>
         </div>
       );
+    }else{
+      return <div></div>
     }
   }
 }
