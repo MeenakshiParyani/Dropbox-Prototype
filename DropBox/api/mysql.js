@@ -1,16 +1,27 @@
 var mysql = require('mysql');
 var database = 'dropbox';
 
+
+var pool  = mysql.createPool({
+    host     : 'localhost',
+    user     : 'root',
+    password : '',
+    database : database,
+		connectionLimit : 10000,
+});
+
 //Put your mysql configuration settings - user, password, database and port
 function getConnection(){
-	var connection = mysql.createConnection({
-	    host     : 'localhost',
-	    user     : 'root',
-	    password : '',
-	    database : database,
-	    port	 : 3306
-	});
-	return connection;
+	console.log(pool);
+	var connection = pool.getConnection(function(err, connection) {
+				if(err)
+			  	console.log('err is ' +err);
+				//else
+					//console.log(connection);
+        return connection;
+    });
+		return connection;
+
 }
 
 
@@ -18,22 +29,23 @@ function fetchData(callback,sqlQuery){
 
 	console.log("\nSQL Query::"+sqlQuery);
 
-	var connection=getConnection();
-
-	connection.query(sqlQuery, function(err, rows, fields) {
-		if(err){
-			console.log("ERROR: " + err);
-      callback(err);
-		}
-		else
-		{	// return err or result
-			console.log("DB Results:"+rows);
-			callback(err, rows);
-		}
-	});
-	console.log("\nConnection closed..");
-	connection.end();
+	var connection= pool.getConnection(function(err, connection) {
+			if(err)
+		  	console.log('err is ' +err);
+			connection.query(sqlQuery, function(err, rows, fields) {
+				if(err){
+					console.log("ERROR: " + err);
+		      callback(err);
+				}
+				else
+				{	// return err or result
+					console.log("DB Results:"+rows);
+					callback(err, rows);
+				}
+			});
+  });
 }
 
 exports.fetchData=fetchData;
 exports.database=database;
+exports.pool = pool;
