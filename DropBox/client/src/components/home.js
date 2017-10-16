@@ -11,18 +11,26 @@ class Home extends Component {
   constructor(props){
       super(props);
       this.state = {
-        userFiles : [],
-        userId    : null
+        userId    : null,
+        path      : '/'
       };
+      this.handleFileUpload = this.handleFileUpload.bind(this);
   }
 
+componentDidMount() {
+  const userId = this.props.history.location.state.user.id;
+  this.setState({
+    userId : userId,
+    path: "/"
+  });
+}
   // Component method
-handleFileUpload(e) {
-
+handleFileUpload() {
+  var home = this;
   var options = {
     headers : {
-    path: "",
-    userid: 100
+    path: home.state.path,
+    userid: home.state.userId
   }}
 
   var imageFiles = document.querySelector("#files");
@@ -31,9 +39,7 @@ handleFileUpload(e) {
     if(imgFiles.hasOwnProperty(file)) {
       var data = new FormData();
       data.append('files', imgFiles[file]);
-      axios.post('http://localhost:3000/api/file/upload',data, {
-
-      })
+      axios.post('http://localhost:3000/api/file/upload',data, options)
       .then(response => {
         console.log(response);
       })
@@ -45,7 +51,9 @@ handleFileUpload(e) {
   }
   }
 
-
+  componentWillReceiveProps(nextProps){
+    // this.handleInputChange({'userId' : nextProps.userId, 'path' : nextProps.path});
+  }
 
   render() {
     console.log(this.props);
@@ -88,6 +96,8 @@ handleFileUpload(e) {
     );
   }
 }
+
+
 
 Home.PropTypes ={
   state : PropTypes.object
