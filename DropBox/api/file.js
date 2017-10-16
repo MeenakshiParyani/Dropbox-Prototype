@@ -43,7 +43,18 @@ router.post('/upload', function(req,res){
       console.log('error is ' + err);
       res.status(300).send({'error' : 'Files Could not be uploaded'});
     }else{
-      res.status(200).send({'result' : 'File uploaded sucessfully'});
+      //res.status(200).send({'result' : 'File uploaded sucessfully'});
+      getFilesList(userId, function (err, result) {
+        if(err) {
+          res.status(300).send({'error' : 'No files found for user'});
+        } else {
+          //res.status(200).send({'result' : result});
+          res.status(200).send({
+            result : 'File uploaded sucessfully',
+            files : result
+          });
+        }
+      });
     }
   });
 
@@ -108,10 +119,9 @@ function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
 	}
 }
 
-router.get('/list', function(req,res){
-  var userId = req.query.userid;
+function getFilesList(userId, callback) {
   var dir = path.resolve(mainFolder + path.sep + userId);
-  foldersFiles = [];
+  var foldersFiles = [];
   try{
     fs.readdir(dir, (err, files) => {
       if(files){
@@ -123,14 +133,48 @@ router.get('/list', function(req,res){
           }
           foldersFiles.push(fileObject);
         });
-        res.status(200).send({'result' : foldersFiles});
-      }else{
-        res.status(300).send({'error' : 'No files found for user'});
+        callback(null, foldersFiles);
+      } else{
+        callback({'error' : 'No files found for user'}, null);
       }
-    })
-  }catch(err){
-    res.status(300).send({'error' : 'No files found for user'});
+    });
+  } catch(err){
+    callback(err, null);
   }
+}
+
+router.get('/list', function(req,res){
+  var userId = req.query.userid;
+  getFilesList(userId, function (err, result) {
+    if(err) {
+      res.status(300).send({'error' : 'No files found for user'});
+    } else {
+      res.status(200).send({'result' : result});
+    }
+  });
+
+
+  // var dir = path.resolve(mainFolder + path.sep + userId);
+  // foldersFiles = [];
+  // try{
+  //   fs.readdir(dir, (err, files) => {
+  //     if(files){
+  //       files.forEach(file => {
+  //         var isDir = fs.lstatSync(path.resolve(dir+path.sep+file)).isDirectory();
+  //         var fileObject = {
+  //           'name'  : file,
+  //           'isDir' : isDir
+  //         }
+  //         foldersFiles.push(fileObject);
+  //       });
+  //       res.status(200).send({'result' : foldersFiles});
+  //     }else{
+  //       res.status(300).send({'error' : 'No files found for user'});
+  //     }
+  //   })
+  // }catch(err){
+  //   res.status(300).send({'error' : 'No files found for user'});
+  // }
 });
 
 

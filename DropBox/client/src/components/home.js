@@ -12,16 +12,18 @@ class Home extends Component {
       super(props);
       this.state = {
         userId    : null,
-        path      : '/'
+        path      : '/',
+        userFiles : []
       };
       this.handleFileUpload = this.handleFileUpload.bind(this);
   }
 
-componentDidMount() {
+componentWillMount() {
   const userId = this.props.history.location.state.user.id;
   this.setState({
     userId : userId,
-    path: "/"
+    path: "/",
+    userFiles: this.props.history.location.state.userFiles
   });
 }
   // Component method
@@ -42,6 +44,9 @@ handleFileUpload() {
       axios.post('http://localhost:3000/api/file/upload',data, options)
       .then(response => {
         console.log(response);
+        home.setState({
+          userFiles : response.data.files
+        });
       })
       .catch(err => {
         console.log(err);
@@ -58,7 +63,7 @@ handleFileUpload() {
   render() {
     console.log(this.props);
     const userId = this.props.history.location.state.user.id;
-    const userFiles = this.props.history.location.state.userFiles;
+    const userFiles = this.state.userFiles;
     return (
       <div className = "container-fluid">
       <TabContainer id="left-tabs-example" defaultActiveKey="first">
