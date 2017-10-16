@@ -21,6 +21,7 @@ router.post('/upload', function(req,res){
   var folderPath = req.headers.path;
   var dir = mainFolder + path.sep + userId + path.sep + folderPath;
   var filename = '';
+  console.log(userId + ' ' + folderPath + ' ' + dir );
   // Specify where to store files
   var Storage = multer.diskStorage({
        destination: function(req, file, callback) {
