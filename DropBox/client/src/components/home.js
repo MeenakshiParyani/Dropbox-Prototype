@@ -16,15 +16,19 @@ class Home extends Component {
         userFiles : []
       };
       this.handleFileUpload = this.handleFileUpload.bind(this);
+      this.handleLogout = this.handleLogout.bind(this);
   }
 
 componentWillMount() {
-  const userId = this.props.history.location.state.user.id;
-  this.setState({
-    userId : userId,
-    path: "/",
-    userFiles: this.props.history.location.state.userFiles
-  });
+  var state = this.props.history.location.state;
+  if(state){
+    const userId = this.props.history.location.state.user.id;
+    this.setState({
+      userId : userId,
+      path: "/",
+      userFiles: this.props.history.location.state.userFiles
+    });
+  }
 }
   // Component method
 handleFileUpload() {
@@ -56,49 +60,77 @@ handleFileUpload() {
   }
   }
 
+  handleLogout(event){
+    var home = this;
+    event.preventDefault();
+    axios.get('http://localhost:3000/api/logout')
+    .then(function (response) {
+      console.log(response.data.result);
+      home.setState({
+        userId    : null,
+        path      : '/',
+        userFiles : []
+      });
+      home.props.history.push({
+        pathname      : '/login'
+      });
+    });
+
+  }
+
   componentWillReceiveProps(nextProps){
     // this.handleInputChange({'userId' : nextProps.userId, 'path' : nextProps.path});
   }
 
   render() {
     console.log(this.props);
-    const userId = this.props.history.location.state.user.id;
+    const userId = this.state.userId;
     const userFiles = this.state.userFiles;
-    return (
-      <div className = "container-fluid">
-      <TabContainer id="left-tabs-example" defaultActiveKey="first">
-        <Row className="clearfix">
-          <Col sm={2}>
-          <br/><br/><br/><br/><br/><br/>
-            <Nav bsStyle="pills" stacked>
-              <NavItem eventKey="first">
-                Home
-              </NavItem>
-              <NavItem eventKey="second">
-                Files
-              </NavItem>
-            </Nav>
-          </Col>
-          <Col sm={8}>
-            <TabContent animation>
-              <TabPane eventKey="first">
-                <HomeView userId={userId} userFiles={userFiles}/>
-              </TabPane>
-              <TabPane eventKey="second">
-                Tab 2 content {userId}
-              </TabPane>
-            </TabContent>
-          </Col>
-          <Col sm={2}>
+    if(userId){
+      return (
+        <div className = "container-fluid">
+        <TabContainer id="left-tabs-example" defaultActiveKey="first">
+          <Row className="clearfix">
+            <Col sm={2}>
             <br/><br/><br/><br/><br/><br/>
+              <Nav bsStyle="pills" stacked>
+                <NavItem eventKey="first">
+                  Home
+                </NavItem>
+                <NavItem eventKey="second">
+                  Files
+                </NavItem>
+              </Nav>
+            </Col>
+            <Col sm={8}>
+              <TabContent animation>
+                <TabPane eventKey="first">
+                  <HomeView userId={userId} userFiles={userFiles}/>
+                </TabPane>
+                <TabPane eventKey="second">
+                  Tab 2 content {userId}
+                </TabPane>
+              </TabContent>
+            </Col>
+            <Col sm={2}>
+              <a href="#" onClick={this.handleLogout}>Signout</a>
+              <br/><br/><br/><br/><br/><br/>
 
-            <input type="file" id="files" multiple={true}/>
-            <button onClick={this.handleFileUpload}>Upload</button>
-          </Col>
-        </Row>
-      </TabContainer>
-      </div>
-    );
+              <input type="file" id="files" multiple={true}/>
+              <button onClick={this.handleFileUpload}>Upload</button>
+            </Col>
+          </Row>
+        </TabContainer>
+        </div>
+      );
+    }else{
+      return (
+        <div>
+             &nbsp;Unauthorized access
+        </div>
+      );
+    }
+
   }
 }
 
