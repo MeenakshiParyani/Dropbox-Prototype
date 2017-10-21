@@ -16,9 +16,17 @@ function encrypt(plainText, callback){
   });
 }
 
-function compareHash(plainTextPassword, hash){
-  bcrypt.compare(plainTextPassword, hash).then(function(res) {
-      return res;
+function compareHash(plainTextPassword, hash, callback){
+  bcrypt.compare(plainTextPassword, hash, function(err, res) {
+    console.log('plain ' + plainTextPassword);
+    console.log('hash ' + hash);
+    if(err){
+      console.log('err is----' + err);
+      callback(err, null);
+    }else{
+      console.log('comparing ' + res);
+      callback(null, res);
+    }
   });
 }
 
