@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var signup = require('./api/signup');
 var login = require('./api/login');
 var file = require('./api/file');
+var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 // Express
 var app = express();
