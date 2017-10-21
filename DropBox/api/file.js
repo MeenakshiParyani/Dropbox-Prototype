@@ -63,18 +63,23 @@ router.post('/upload', function(req,res){
 
 // Create a new directory
 router.post('/newFolder', function(req,res){
-  console.log(req.body);
-  var userId = req.body.userID;
-  var folderPath = req.body.path.replace('/', path.sep);
-  folderPath = req.body.path.replace('\\', path.sep);
-  console.log("path recieved is " + folderPath);
-  createDirectory(userId,folderPath, 1, function(success){
-      if(success){
-        res.status(200).send({'result' : 'Folder created sucessfully'});
-      }else{
-        res.status(300).send({'error' : 'Folder could not be created'});
-      }
-  });
+  if(req.session.user){
+    console.log(req.body);
+    var userId = req.body.userID;
+    var folderPath = req.body.path.replace('/', path.sep);
+    folderPath = req.body.path.replace('\\', path.sep);
+    console.log("path recieved is " + folderPath);
+    createDirectory(userId,folderPath, 1, function(success){
+        if(success){
+          res.status(200).send({'result' : 'Folder created sucessfully'});
+        }else{
+          res.status(300).send({'error' : 'Folder could not be created'});
+        }
+    });
+  }else{
+    res.status(401).send({'error' : 'Unauthorized access'});
+  }
+
 
 });
 

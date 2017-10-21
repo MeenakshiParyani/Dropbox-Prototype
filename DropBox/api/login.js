@@ -29,6 +29,7 @@ router.get('/', function(req,res){
 					console.log(password);
 					bcrypt.compareHash(password,  results[0].password,function(err, passed){
 						if(passed){
+							req.session.user = results[0].first_name;
 							res.status(200).send({'result' : 'Logged In!!',
 							'user' : {
 								'id'   : results[0].id,
