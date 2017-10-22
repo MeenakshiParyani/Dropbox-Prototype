@@ -73,7 +73,7 @@ handleFileUpload() {
       });
       home.props.history.replace({
         pathname      : '/login',
-        state         : null
+        state         : home.state
       });
     });
 
