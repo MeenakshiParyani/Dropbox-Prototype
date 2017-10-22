@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 import { withRouter } from 'react-router-dom';
 
 
@@ -26,19 +27,19 @@ class Login extends Component {
     const { email, password } = this.state;
     console.log('state is ' + email + ' ' + password);
     const login = this;
-    axios.get('http://localhost:3000/api/login',{
-      params: {
+    axios.post('http://localhost:3000/api/login',{
+
         email  : email,
         password  : password
-      }
+
     })
     .then(function (response) {
-      console.log('result is ' + response.data.result);
+      console.log('result is ' + response.data);
       login.handleInputChange({
         isLoggedIn : true,
         error   : ''
       });
-      login.handleInputChange({ 'user' : response.data.user});
+      login.handleInputChange({ 'user' : response.data});
       login.displayHome();
     })
     .catch(function(err){

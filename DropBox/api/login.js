@@ -5,51 +5,64 @@ var cors = require('cors');
 var router = express.Router();
 var mysql = require('./mysql');
 var bcrypt = require('./bcrypt');
-
+var passport = require('passport');
+var User = require('../models/user.js');
+var LocalStrategy = require('passport-local').Strategy;
 
 // router.get('/', function(req,res){
 // 	res.send('Testing!!');
 // });
 
-router.use(cors());
-router.get('/', function(req,res){
-	var email = req.query.email;
-	var password = req.query.password;
-  var getUser="select * from `" + mysql.database + "`.`user` where email='"+email+"'";
-	console.log("Query is: "+ getUser);
-	try{
-		mysql.fetchData(function(err,results){
-			if(err){
-				//console.log('error2');
-				if(err.code == 'ECONNREFUSED')
-					res.status(500).send({'error' : 'Server is down, please try again'});
-			}else{
-        if(results.length > 0){
-					console.log(results[0]);
-					console.log(password);
-					bcrypt.compareHash(password,  results[0].password,function(err, passed){
-						if(passed){
-							req.session.user = results[0].first_name;
-							res.status(200).send({'result' : 'Logged In!!',
-							'user' : {
-								'id'   : results[0].id,
-								'name' : results[0].first_name
-							}});
-						}else{
-							console.log('password doesnt match');
-							res.status(401).send({'error' : 'Unauthorized access'});
-						}
-					});
-				}else{
-					res.status(300).send({'error' : 'User does not exist'});
-				}
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+	function(req, email, password, done) {
+		//console.log(req);
+		//console.log(password);
+		User.getUserByEmail(email, function(err, user){
+			if(err)
+				console.log(err);
+			if(!user){
+				return done(null, false, {message : 'User does not exist'});
 			}
-		},getUser);
-	}catch(err){
-		// console.log('error1');
-		res.status(500).send({'error' : 'Server is down, please try again'});
-	}
+			User.comparePassword(password, user.password,function(err, isMatch){
+				if(err)
+					console.log(err);
+				if(isMatch){
+					return done(null, user);
+				}else{
+					console.log("passwoerd mismatch");
+					return done(null, false, {message : 'Password does not match'})
+				}
+			})
+		});
+}));
 
+passport.serializeUser(function(user,done){
+	done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done){
+	User.getUserById(function(err, user){
+		done(err, user);
+	})
+})
+
+//router.use(cors());
+router.post('/', function(req, res, next ){
+    passport.authenticate('local', function(err, user, info) {
+      if (err) { return next(err) }
+      if (!user) { return res.json( { message: info.message }) }
+      req.session.userId = user._id;
+      //res.cookie('userId', user._id, { httpOnly: true });
+      res.json({
+				id : user._id,
+				email : user.email,
+				firstname : user.firstname
+			});
+    })(req, res, next);
 });
 
 // Return Router

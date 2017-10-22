@@ -13,7 +13,7 @@ var zipFolder = require('zip-folder');
 var mainFolder = "./user_files";
 var mysql = require('./mysql');
 
-router.use(cors());
+//router.use(cors());
 // Upload the given files
 router.post('/upload', function(req,res){
   console.log(req.headers);
@@ -150,8 +150,10 @@ function getFilesList(userId, callback) {
 }
 
 router.get('/list', function(req,res){
+  console.log('hi');
   console.log(req.session);
-  if(req.session.user){
+  //var userId = req.cookies.userId;
+  if(req.session.userId){
     console.log('user is ' + req.session.user);
     var userId = req.query.userid;
     getFilesList(userId, function (err, result) {
