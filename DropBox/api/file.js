@@ -77,6 +77,7 @@ router.post('/newFolder', function(req,res){
         }
     });
   }else{
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.status(401).send({'error' : 'Unauthorized access'});
   }
 
@@ -149,14 +150,23 @@ function getFilesList(userId, callback) {
 }
 
 router.get('/list', function(req,res){
-  var userId = req.query.userid;
-  getFilesList(userId, function (err, result) {
-    if(err) {
-      res.status(300).send({'error' : 'No files found for user'});
-    } else {
-      res.status(200).send({'result' : result});
-    }
-  });
+  console.log(req.session);
+  if(req.session.user){
+    console.log('user is ' + req.session.user);
+    var userId = req.query.userid;
+    getFilesList(userId, function (err, result) {
+      if(err) {
+        res.status(300).send({'error' : 'No files found for user'});
+      } else {
+        res.status(200).send({'result' : result});
+      }
+    });
+  }else{
+    console.log("not logged in!!");
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.status(401).send({'error' : 'Unauthorized access'});
+  }
+
 
 
   // var dir = path.resolve(mainFolder + path.sep + userId);
@@ -181,12 +191,6 @@ router.get('/list', function(req,res){
   //   res.status(300).send({'error' : 'No files found for user'});
   // }
 });
-
-
-
-
-// Return Router
-module.exports = router;
 
 function getFile(req, callback) {
   var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
@@ -241,3 +245,6 @@ router.get('/download', function(req, res){
   // res.download(file); // Set disposition and send it.
 
 });
+
+// Return Router
+module.exports = router;

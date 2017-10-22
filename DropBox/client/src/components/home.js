@@ -71,8 +71,9 @@ handleFileUpload() {
         path      : '/',
         userFiles : []
       });
-      home.props.history.push({
-        pathname      : '/login'
+      home.props.history.replace({
+        pathname      : '/login',
+        state         : null
       });
     });
 

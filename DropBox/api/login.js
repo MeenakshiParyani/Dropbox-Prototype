@@ -36,6 +36,7 @@ router.get('/', function(req,res){
 								'name' : results[0].first_name
 							}});
 						}else{
+							console.log('password doesnt match');
 							res.status(401).send({'error' : 'Unauthorized access'});
 						}
 					});

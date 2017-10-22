@@ -53,7 +53,9 @@ class Login extends Component {
   getUserFiles(callback) {
     var login = this;
     console.log(this.state.user.id);
-    axios.get('http://localhost:3000/api/file/list',{
+    axios('http://localhost:3000/api/file/list',{
+      method: 'get',
+      withCredentials : true,
       params: {
         userid  : this.state.user.id
       }
@@ -74,7 +76,7 @@ class Login extends Component {
   displayHome(){
     var login = this;
     this.getUserFiles(function(){
-      login.props.history.push({
+      login.props.history.replace({
         pathname      : '/home',
         state         : login.state
       });
