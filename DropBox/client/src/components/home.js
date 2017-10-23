@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import {TabContainer, Tab, Row, Col, NavItem, TabContent, TabPane, Nav} from 'react-bootstrap'
 import HomeView from './home-view';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 
 class Home extends Component {
@@ -34,6 +35,7 @@ componentWillMount() {
 handleFileUpload() {
   var home = this;
   var options = {
+    withCredentials : true,
     headers : {
     path: home.state.path,
     userid: home.state.userId
