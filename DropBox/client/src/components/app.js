@@ -1,11 +1,29 @@
 import React, { Component } from 'react';
+import {connect} from  "react-redux";
+
 import Signup from './signup';
 import Login from './login';
 import Landing from './landing';
 import {Button} from 'react-bootstrap';
 
 
-export default class App extends Component {
+const mapStateToProps = (state) => {
+  return {
+    state: state
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleClick: () => {
+      dispatch({type: "update", data: []});
+    }
+  };
+};
+
+
+
+class AppContainer extends Component {
 
   render() {
     return (
@@ -18,3 +36,9 @@ export default class App extends Component {
     );
   }
 }
+
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppContainer);
+export default App;

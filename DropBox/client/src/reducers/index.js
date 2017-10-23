@@ -1,7 +1,21 @@
 import { combineReducers } from 'redux';
+import {routerReducer} from "react-router-redux";
+import update from "./main-reducer";
 
-const rootReducer = combineReducers({
-  state: (state = {}) => state
-});
+function appReducers() {
+  return {
+    update : update
+  };
 
-export default rootReducer;
+}
+
+export default function createReducers() {
+  const allReducers = combineReducers({
+    ...appReducers(),
+    router: routerReducer
+  });
+  const rootReducer = (state, action) => {
+    return allReducers(state, action);
+  }
+  return rootReducer;
+}

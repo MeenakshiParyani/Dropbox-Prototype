@@ -33,6 +33,7 @@
     "node-zip": "^1.1.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "react-router-redux": "^4.0.8",
     "zip-folder": "^1.0.0"
   }
 }

@@ -10,17 +10,20 @@ axios.defaults.withCredentials = true;
 class Home extends Component {
 
   constructor(props){
-      super(props);
-      this.state = {
-        userId    : null,
-        path      : '/',
-        userFiles : []
-      };
-      this.handleFileUpload = this.handleFileUpload.bind(this);
-      this.handleLogout = this.handleLogout.bind(this);
+    super(props);
+    this.state = {
+      userId    : null,
+      path      : '/',
+      userFiles : []
+    };
+    this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
 componentWillMount() {
+  // get list of files
+  this.props.getFilesList();
+
   var state = this.props.history.location.state;
   if(state){
     const userId = this.props.history.location.state.user.id;
