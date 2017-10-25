@@ -41,4 +41,5 @@ const App = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AppContainer);
+
 export default App;

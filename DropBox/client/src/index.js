@@ -26,14 +26,15 @@ const store = createStore(
 );
 
 const LoginWrapper = (props) => <Login {...props} />;
+const HomeWrapper = (props) => <Home {...props} />;
 
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <div>
-        <Route exact path="/" component={App}/>
-        <Route exact path="/login" component={LoginWrapper}/>
-        <Route exact path="/Home" component={Home}/>
+        <Route exact={true} path="/" component={<App history={history}/>} />
+        <Route exact={true} path="/login" component={<LoginWrapper history={history}/>}/>
+        <Route exact={true} path="/home" component={<HomeWrapper history={history}/>}/>
       </div>
     </ConnectedRouter>
   </Provider>

@@ -1,38 +1,63 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import {TabContainer, Tab, Row, Col, NavItem, TabContent, TabPane, Nav} from 'react-bootstrap'
 import HomeView from './home-view';
+import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.update.user
+  };
+};
 
-class Home extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      userId    : null,
-      path      : '/',
-      userFiles : []
-    };
-    this.handleFileUpload = this.handleFileUpload.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleShowFiles: (userId) => {
+      console.log('state is userid' + userId);
+      axios('http://localhost:3000/api/file/list',{
+        method: 'get',
+        withCredentials : true,
+        params: {
+          userid  : userId
+        }
+      })
+      .then(function (response) {
+        console.log(response.data.result);
+        dispatch({
+          type : "updateFiles",
+          userFiles : response.data.result
+        });
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({type: "error", errorMessage: err.response.data.error});
+      });
+    }
+  };
+};
+
+
+class HomeComponent extends Component {
+
+  showFiles = () => {
+    this.props.handleShowFiles(this.props.user.id);
   }
 
 componentWillMount() {
-  // get list of files
-  this.props.getFilesList();
-
-  var state = this.props.history.location.state;
-  if(state){
-    const userId = this.props.history.location.state.user.id;
-    this.setState({
-      userId : userId,
-      path: "/",
-      userFiles: this.props.history.location.state.userFiles
-    });
-  }
+  console.log('Mounting home!!');
+  this.showFiles();
+  // var state = this.props.history.location.state;
+  // if(state){
+  //   const userId = this.props.history.location.state.user.id;
+  //   this.setState({
+  //     userId : userId,
+  //     path: "/",
+  //     userFiles: this.props.history.location.state.userFiles
+  //   });
+  // }
 }
   // Component method
 handleFileUpload() {
@@ -84,14 +109,10 @@ handleFileUpload() {
 
   }
 
-  componentWillReceiveProps(nextProps){
-    // this.handleInputChange({'userId' : nextProps.userId, 'path' : nextProps.path});
-  }
-
   render() {
-    console.log(this.props);
-    const userId = this.state.userId;
-    const userFiles = this.state.userFiles;
+    console.log(this.props.user);
+    const userId = this.props.userId;
+    const userFiles = this.props.userFiles;
     if(userId){
       return (
         <div className = "container-fluid">
@@ -142,9 +163,14 @@ handleFileUpload() {
 
 
 
-Home.PropTypes ={
-  state : PropTypes.object
-}
+HomeComponent.PropTypes = {
+  handleShowFiles : PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
+};
 
+const Home = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeComponent);
 
-export default withRouter(Home)
+export default Home;

@@ -34,8 +34,9 @@ const mapDispatchToProps = (dispatch) => {
           type : "updateUser",
           user : {
             id: response.data.id,
-            emial: response.data.email,
-            firstname: response.data.firstname
+            email: response.data.email,
+            firstname: response.data.firstname,
+            password: password
           },
           isLoggedIn : true
         });
