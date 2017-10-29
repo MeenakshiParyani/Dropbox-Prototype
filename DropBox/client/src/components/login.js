@@ -80,8 +80,9 @@ class LoginComponent extends Component {
               <div className="form-group">
                     <div className="col-sm-9">
                         <div className="checkbox">
+                            <input type="checkbox" id="terms" value="terms" />
                             <label>
-                                <input type="checkbox" id="terms" value="terms">Remember me</input>
+                                Remember me
                             </label>
                         </div>
                     </div>

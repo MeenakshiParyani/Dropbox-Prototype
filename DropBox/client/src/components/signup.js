@@ -61,7 +61,7 @@ export default class Signup extends Component {
               <div className="form-group">
                   <div className="col-sm-9">
                       <input type="text" id="firstName" placeholder="First Name" value = {this.state.firstName}
-                      className="form-control"  onChange={e => this.handleInputChange({firstName: e.target.value})} required autofocus/>
+                      className="form-control"  onChange={e => this.handleInputChange({firstName: e.target.value})} required autoFocus={true}/>
                   </div>
               </div>
               <div className="form-group">
@@ -85,8 +85,9 @@ export default class Signup extends Component {
               <div className="form-group">
                     <div className="col-sm-9">
                         <div className="checkbox">
+                            <input type="checkbox" id="terms" value="terms" />
                             <label>
-                                <input type="checkbox" id="terms" value="terms">Agree to Dropbox Terms</input>
+                                Agree to Dropbox Terms
                             </label>
                         </div>
                     </div>

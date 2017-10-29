@@ -9,10 +9,6 @@ var passport = require('passport');
 var User = require('../models/user.js');
 var LocalStrategy = require('passport-local').Strategy;
 
-// router.get('/', function(req,res){
-// 	res.send('Testing!!');
-// });
-
 passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
@@ -56,7 +52,6 @@ router.post('/', function(req, res, next ){
       if (err) { return next(err) }
       if (!user) { return res.json( { message: info.message }) }
       req.session.userId = user._id;
-      //res.cookie('userId', user._id, { httpOnly: true });
       res.json({
 				id : user._id,
 				email : user.email,

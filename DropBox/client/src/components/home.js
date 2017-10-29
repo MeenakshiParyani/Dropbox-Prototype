@@ -5,10 +5,12 @@ import HomeView from './home-view';
 import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
+import {push} from "react-router-redux";
 
 const mapStateToProps = (state) => {
   return {
-    user: state.update.user
+    user: state.update.user,
+    files: state.update.files
   };
 };
 
@@ -19,10 +21,7 @@ const mapDispatchToProps = (dispatch) => {
       console.log('state is userid' + userId);
       axios('http://localhost:3000/api/file/list',{
         method: 'get',
-        withCredentials : true,
-        params: {
-          userid  : userId
-        }
+        withCredentials : true
       })
       .then(function (response) {
         console.log(response.data.result);
@@ -35,6 +34,17 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err);
         dispatch({type: "error", errorMessage: err.response.data.error});
       });
+    },
+    handleLogout: () => {
+      var home = this;
+      event.preventDefault();
+      axios.get('http://localhost:3000/api/logout')
+      .then(function (response) {
+        console.log(response.data.result);
+        dispatch(push(
+          {pathname : "/login"}
+        ));
+      });
     }
   };
 };
@@ -46,18 +56,13 @@ class HomeComponent extends Component {
     this.props.handleShowFiles(this.props.user.id);
   }
 
+  logout = () => {
+    this.props.handleLogout();
+  }
+
 componentWillMount() {
   console.log('Mounting home!!');
   this.showFiles();
-  // var state = this.props.history.location.state;
-  // if(state){
-  //   const userId = this.props.history.location.state.user.id;
-  //   this.setState({
-  //     userId : userId,
-  //     path: "/",
-  //     userFiles: this.props.history.location.state.userFiles
-  //   });
-  // }
 }
   // Component method
 handleFileUpload() {
@@ -90,30 +95,11 @@ handleFileUpload() {
   }
   }
 
-  handleLogout(event){
-    var home = this;
-    event.preventDefault();
-    axios.get('http://localhost:3000/api/logout')
-    .then(function (response) {
-      console.log(response.data.result);
-      home.setState({
-        userId    : null,
-        path      : '/',
-        userFiles : []
-      });
-      home.props.history.replace({
-        pathname      : '/login',
-        state         : home.state
-      });
-    });
-
-  }
-
   render() {
     console.log(this.props.user);
     const userId = this.props.userId;
-    const userFiles = this.props.userFiles;
-    if(userId){
+    const userFiles = this.props.files;
+    if(userFiles){
       return (
         <div className = "container-fluid">
         <TabContainer id="left-tabs-example" defaultActiveKey="first">
@@ -140,7 +126,7 @@ handleFileUpload() {
               </TabContent>
             </Col>
             <Col sm={2}>
-              <a href="#" onClick={this.handleLogout}>Signout</a>
+              <a href="#" onClick={this.logout}>Signout</a>
               <br/><br/><br/><br/><br/><br/>
 
               <input type="file" id="files" multiple={true}/>
@@ -165,7 +151,9 @@ handleFileUpload() {
 
 HomeComponent.PropTypes = {
   handleShowFiles : PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  handleLogout    : PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  files: PropTypes.array
 };
 
 const Home = connect(

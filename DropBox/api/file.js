@@ -155,7 +155,7 @@ router.get('/list', function(req,res){
   //var userId = req.cookies.userId;
   if(req.session.userId){
     console.log('user is ' + req.session.user);
-    var userId = req.query.userid;
+    var userId = req.session.userId;
     getFilesList(userId, function (err, result) {
       if(err) {
         res.status(300).send({'error' : 'No files found for user'});

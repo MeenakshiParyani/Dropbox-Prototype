@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 import  createHistory from 'history/createBrowserHistory';
 import {routerMiddleware} from 'react-router-redux';
 import {ConnectedRouter} from 'react-router-redux';
@@ -27,14 +27,15 @@ const store = createStore(
 
 const LoginWrapper = (props) => <Login {...props} />;
 const HomeWrapper = (props) => <Home {...props} />;
+const AppWrapper = (props) => <App {...props} />;
 
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <div>
-        <Route exact={true} path="/" component={<App history={history}/>} />
-        <Route exact={true} path="/login" component={<LoginWrapper history={history}/>}/>
-        <Route exact={true} path="/home" component={<HomeWrapper history={history}/>}/>
+        <Route exact path="/" component={AppWrapper} />
+        <Route exact path="/login" component={LoginWrapper}/>
+        <Route exact path="/home" component={HomeWrapper}/>
       </div>
     </ConnectedRouter>
   </Provider>

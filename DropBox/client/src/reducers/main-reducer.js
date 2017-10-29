@@ -14,7 +14,9 @@ export const initialState = {
 
 export default function update(state = initialState, action = null) {
   if(action.type === "updateFiles") {
-    state.files = action.files;
+    const nextState = R.clone(state);
+    nextState.files = action.userFiles;
+    return nextState;
   } else if(action.type === "updateUser") {
     const nextState = R.clone(state);
     nextState.user = action.user;
