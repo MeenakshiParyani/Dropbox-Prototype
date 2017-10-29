@@ -3,10 +3,12 @@ import R from "ramda";
 export const initialState = {
   isLoggedIn: false,
   errors: [],
+  success: false,
   user : {
     id: "",
     email: "",
     firstname: "",
+    lastname: "",
     password: ""
   },
   files: []
@@ -23,14 +25,20 @@ export default function update(state = initialState, action = null) {
     nextState.isLoggedIn = action.isLoggedIn;
     return nextState;
   } else if(action.type === "login") {
-    return {
-      ...state,
-      isLoggedIn : action.isLoggedIn
-    };
+    const nextState = R.clone(state);
+    nextState.isLoggedIn = action.isLoggedIn;
+    return nextState;
   } else if(action.type === "error") {
-    state.errors.push(action.errorMessage);
-    state.isLoggedIn = action.isLoggedIn;
+    const nextState = R.clone(state);
+    nextState.errors.push(action.errorMessage);
+    nextState.isLoggedIn = action.isLoggedIn;
+    return nextState;
   } else if(action.type === "loginFormChange") {
+    const nextState = R.clone(state);
+    const data = action.data;
+    nextState.user[data.field] = data.value;
+    return nextState;
+  }else if(action.type === "signupFormChange") {
     const nextState = R.clone(state);
     const data = action.data;
     nextState.user[data.field] = data.value;
@@ -38,6 +46,10 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "updateFiles") {
     const nextState = R.clone(state);
     nextState.userFiles = action.userFiles;
+    return nextState;
+  }else if(action.type === "success") {
+    const nextState = R.clone(state);
+    nextState.success = true;
     return nextState;
   }
   return state;

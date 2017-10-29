@@ -60,5 +60,19 @@ router.post('/', function(req, res, next ){
     })(req, res, next);
 });
 
+router.get('/isLoggedIn', function(req, res, next ){
+  if(req.session.userId){
+    res.status(200).send({
+      isLoggedIn :  true,
+      userId     :  req.session.userId
+    });
+  }else{
+    res.status(401).send({
+      isLoggedIn :  false,
+      userId     :  null
+    })
+  }
+});
+
 // Return Router
 module.exports = router;

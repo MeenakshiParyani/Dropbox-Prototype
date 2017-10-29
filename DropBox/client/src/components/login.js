@@ -4,7 +4,6 @@ import {connect} from  "react-redux";
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-import { withRouter } from 'react-router-dom';
 import {push} from "react-router-redux";
 
 const mapStateToProps = (state) => {
