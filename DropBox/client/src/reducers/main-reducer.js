@@ -11,11 +11,13 @@ export const initialState = {
     lastname: "",
     password: ""
   },
+  currentPath: "/",
   files: []
 };
 
 export default function update(state = initialState, action = null) {
   if(action.type === "updateFiles") {
+    console.log('updaing files!!')
     const nextState = R.clone(state);
     nextState.files = action.userFiles;
     return nextState;
@@ -42,10 +44,6 @@ export default function update(state = initialState, action = null) {
     const nextState = R.clone(state);
     const data = action.data;
     nextState.user[data.field] = data.value;
-    return nextState;
-  }else if(action.type === "updateFiles") {
-    const nextState = R.clone(state);
-    nextState.userFiles = action.userFiles;
     return nextState;
   }else if(action.type === "success") {
     const nextState = R.clone(state);

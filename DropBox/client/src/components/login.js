@@ -4,7 +4,7 @@ import {connect} from  "react-redux";
 import {Button, HelpBlock} from 'react-bootstrap';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-import {push} from "react-router-redux";
+import {push, replace} from "react-router-redux";
 
 const mapStateToProps = (state) => {
   return {
@@ -22,10 +22,8 @@ const mapDispatchToProps = (dispatch) => {
       console.log('state is ' + email + ' ' + password);
       const login = this;
       axios.post('http://localhost:3000/api/login',{
-
           email  : email,
           password  : password
-
       })
       .then(function (response) {
         console.log('result is ' + response.data);
@@ -39,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
           },
           isLoggedIn : true
         });
-        dispatch(push(
+        dispatch(replace(
           {pathname : "/home"}
         ));
       })

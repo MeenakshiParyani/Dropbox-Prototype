@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     navigateToHome: () => {
-      dispatch(push(
+      dispatch(replace(
         {pathname : "/home"}
       ));
     }

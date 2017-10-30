@@ -5,12 +5,13 @@ import HomeView from './home-view';
 import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-import {push} from "react-router-redux";
+import {replace} from "react-router-redux";
 
 const mapStateToProps = (state) => {
   return {
     user: state.update.user,
-    files: state.update.files
+    files: state.update.files,
+    currentPath: state.update.currentPath
   };
 };
 
@@ -36,15 +37,38 @@ const mapDispatchToProps = (dispatch) => {
       });
     },
     handleLogout: () => {
-      var home = this;
-      event.preventDefault();
       axios.get('http://localhost:3000/api/logout')
       .then(function (response) {
         console.log(response.data.result);
-        dispatch(push(
+        dispatch(replace(
           {pathname : "/login"}
         ));
       });
+    },
+    handleFileUpload: (currentPath) => {
+      var options = {
+        withCredentials : true,
+        headers: {
+          currentpath : currentPath
+        }
+      }
+      var imageFiles = document.querySelector("#files");
+      var imgFiles = imageFiles.files;
+      for(var file in imgFiles) {
+        if(imgFiles.hasOwnProperty(file)) {
+          var data = new FormData();
+          data.append('files', imgFiles[file]);
+          axios.post('http://localhost:3000/api/file/upload',data, options)
+          .then(response => {
+            console.log(response);
+            dispatch({ type: "updateFiles", userFiles: response.data.files});
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        }
+
+      }
     }
   };
 };
@@ -60,40 +84,14 @@ class HomeComponent extends Component {
     this.props.handleLogout();
   }
 
+  uploadFile = () => {
+    this.props.handleFileUpload(this.props.currentPath);
+  }
+
 componentWillMount() {
   console.log('Mounting home!!');
   this.showFiles();
 }
-  // Component method
-handleFileUpload() {
-  var home = this;
-  var options = {
-    withCredentials : true,
-    headers : {
-    path: home.state.path,
-    userid: home.state.userId
-  }}
-
-  var imageFiles = document.querySelector("#files");
-  var imgFiles = imageFiles.files;
-  for(var file in imgFiles) {
-    if(imgFiles.hasOwnProperty(file)) {
-      var data = new FormData();
-      data.append('files', imgFiles[file]);
-      axios.post('http://localhost:3000/api/file/upload',data, options)
-      .then(response => {
-        console.log(response);
-        home.setState({
-          userFiles : response.data.files
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    }
-
-  }
-  }
 
   render() {
     console.log(this.props.user);
@@ -130,7 +128,7 @@ handleFileUpload() {
               <br/><br/><br/><br/><br/><br/>
 
               <input type="file" id="files" multiple={true}/>
-              <button onClick={this.handleFileUpload}>Upload</button>
+              <button onClick={this.uploadFile}>Upload</button>
             </Col>
           </Row>
         </TabContainer>
@@ -147,13 +145,12 @@ handleFileUpload() {
   }
 }
 
-
-
 HomeComponent.PropTypes = {
   handleShowFiles : PropTypes.func.isRequired,
   handleLogout    : PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  files: PropTypes.array
+  files: PropTypes.array,
+  currentPath: PropTypes.string.isRequired
 };
 
 const Home = connect(

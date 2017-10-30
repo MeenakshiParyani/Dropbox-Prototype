@@ -16,21 +16,23 @@ var mysql = require('./mysql');
 //router.use(cors());
 // Upload the given files
 router.post('/upload', function(req,res){
-  console.log(req.headers);
-  var userId = req.headers.userid;
-  var folderPath = req.headers.path;
+  console.log('--------req-----');
+  console.log(req.headers.currentpath);
+  var userId = req.session.userId;
+  var folderPath = req.headers.currentpath;
   var dir = mainFolder + path.sep + userId + path.sep + folderPath;
   var filename = '';
   console.log(userId + ' ' + folderPath + ' ' + dir );
   // Specify where to store files
   var Storage = multer.diskStorage({
        destination: function(req, file, callback) {
+           console.log('Doing~!!!');
            filename = file.fieldname + "_" + Date.now() + "_" + file.originalname;
            console.log('filename is ' + filename);
            callback(null, dir);
        },
        filename: function(req, file, callback) {
-           saveFileFolderToDB(filename, dir, 0, userId);
+          //  saveFileFolderToDB(filename, dir, 0, userId);
            callback(null, filename);
        }
   });
