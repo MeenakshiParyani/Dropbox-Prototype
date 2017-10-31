@@ -29,8 +29,8 @@ app.use(session({
   secret : "nwkjndxhoiwjp[qp[]]",
   resave : true,
   saveUninitialized : true,
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000
+  cookie: { maxAge: 60000 },
+  rolling: true
 }));
 
 app.use(passport.initialize());
