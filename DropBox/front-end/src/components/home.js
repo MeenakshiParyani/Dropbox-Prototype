@@ -47,13 +47,11 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({type: "error", errorMessage: err.response.data.error});
       });
     },
-    handleLogout: () => {
+    handleLogout: (callback) => {
       axios.get('http://localhost:3000/api/logout')
       .then(function (response) {
         console.log(response.data.result);
-        dispatch(push(
-          {pathname : "/login"}
-        ));
+        callback();
       });
     },
     handleFileUpload: (currentPath) => {
@@ -80,6 +78,39 @@ const mapDispatchToProps = (dispatch) => {
         }
 
       }
+    },
+    isLoggedIn: (callback, errCallback) => {
+      axios.get('http://localhost:3000/api/login/isLoggedIn')
+      .then(function (res) {
+        console.log('result is ' + res.data);
+        dispatch({
+          type : "updateUser",
+          user : {
+            id: res.response.data.userId
+          }
+        });
+        if(res.status == 200){
+          callback();
+        }else{
+          errCallback();
+        }
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({
+          type : "updateUser",
+          user : {
+            id: err.response.data.userId
+          }
+        });
+        errCallback();
+      });
+    },
+
+    navigateToLogin: () => {
+      dispatch(push(
+        {pathname : "/login"}
+      ));
     }
   };
 };
@@ -92,7 +123,7 @@ class HomeComponent extends Component {
   }
 
   logout = () => {
-    this.props.handleLogout();
+    this.props.handleLogout(this.props.navigateToLogin);
   }
 
   uploadFile = () => {
@@ -101,6 +132,7 @@ class HomeComponent extends Component {
 
 componentWillMount() {
   console.log('Mounting home!!');
+  this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
   this.showFiles();
 }
 
@@ -135,7 +167,7 @@ componentWillMount() {
               </TabContent>
             </Col>
             <Col sm={2}>
-              <a href="#" onClick={this.logout}>Signout</a>
+              <a href="" onClick={this.logout}>Signout</a>
               <br/><br/><br/><br/><br/><br/>
 
               <input type="file" id="files" multiple={true}/>
@@ -161,7 +193,9 @@ HomeComponent.PropTypes = {
   handleLogout    : PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   files: PropTypes.array,
-  currentPath: PropTypes.string.isRequired
+  currentPath: PropTypes.string.isRequired,
+  isLoggedIn: PropTypes.func.isRequired,
+  navigateToLogin: PropTypes.func.isRequired
 };
 
 const Home = connect(

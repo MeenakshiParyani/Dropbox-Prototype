@@ -23,7 +23,7 @@ export default function update(state = initialState, action = null) {
     return nextState;
   } else if(action.type === "updateUser") {
     const nextState = R.clone(state);
-    nextState.user = action.user;
+    nextState.user.id = action.user.id;
     nextState.isLoggedIn = action.isLoggedIn;
     return nextState;
   } else if(action.type === "login") {

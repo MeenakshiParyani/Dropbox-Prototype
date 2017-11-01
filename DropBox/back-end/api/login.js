@@ -62,11 +62,13 @@ router.post('/', function(req, res, next ){
 
 router.get('/isLoggedIn', function(req, res, next ){
   if(req.session.userId){
+    console.log('session found!!');
     res.status(200).send({
       isLoggedIn :  true,
       userId     :  req.session.userId
     });
   }else{
+    console.log('session not found!!');
     res.status(401).send({
       isLoggedIn :  false,
       userId     :  null

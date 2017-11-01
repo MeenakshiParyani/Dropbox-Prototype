@@ -45,12 +45,58 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err.response.data.error);
         dispatch({type: "error", errorMessage: err.response.data.error, isLoggedIn : false});
       });
+    },
+
+    isLoggedIn: (callback, errCallback) => {
+      axios.get('http://localhost:3000/api/login/isLoggedIn')
+      .then(function (response) {
+        console.log('result is ' + response.data);
+        dispatch({
+          type : "updateUser",
+          user : {
+            id: response.data.userId,
+            isLoggedIn: response.data.isLoggedIn
+          }
+        });
+        if(response.status == 200){
+          callback();
+        }else{
+          errCallback();
+        }
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({
+          type : "updateUser",
+          user : {
+            id: err.response.data.userId,
+            isLoggedIn: err.response.data.isLoggedIn
+          }
+        });
+        errCallback();
+      });
+    },
+
+    navigateToHome: () => {
+      dispatch(push(
+        {pathname : "/home"}
+      ));
+    },
+
+    navigateToLogin: () => {
+      dispatch(push(
+        {pathname : "/login"}
+      ));
     }
   };
 };
 
 
 class LoginComponent extends Component {
+
+  componentWillMount(){
+    this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
+  }
 
   loginUser = () => {
     this.props.handleLogin(this.props.user.email, this.props.user.password);
@@ -106,7 +152,10 @@ LoginComponent.PropTypes = {
   handleLogin : PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   errors: PropTypes.array.isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.func.isRequired,
+  navigateToHome: PropTypes.func.isRequired,
+  navigateToLogin: PropTypes.func.isRequired
 };
 
 const Login = connect(
