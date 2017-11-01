@@ -72,7 +72,7 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err);
         dispatch({
           type : "error",
-          isLoggedIn: err.response.data.isLoggedIn
+          isLoggedIn: err.data.isLoggedIn
         });
       });
     },
