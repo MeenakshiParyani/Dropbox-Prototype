@@ -37,6 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(request, response, next) {
+    console.log('origin is' + request.headers.origin);
     response.header("Access-Control-Allow-Origin", request.headers.origin);
     response.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Authorization, X-Requested-With, currentpath, userid");
     response.header("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,DELETE,OPTIONS");

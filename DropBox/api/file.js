@@ -29,7 +29,13 @@ router.post('/upload', function(req,res){
            console.log('Doing~!!!');
            filename = file.fieldname + "_" + Date.now() + "_" + file.originalname;
            console.log('filename is ' + filename);
-           callback(null, dir);
+           mkdirp(dir, function(err){
+             if(err)
+              console.log(err);
+             else
+              callback(null, dir);
+           });
+
        },
        filename: function(req, file, callback) {
           //  saveFileFolderToDB(filename, dir, 0, userId);
