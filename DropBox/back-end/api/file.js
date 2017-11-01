@@ -8,6 +8,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var mime = require('mime');
 var zipFolder = require('zip-folder');
+var kafka = require('../kafka/client');
 
 // app variables
 var mainFolder = "./user_files";
@@ -52,7 +53,7 @@ router.post('/upload', function(req,res){
       res.status(300).send({'error' : 'Files Could not be uploaded'});
     }else{
       //res.status(200).send({'result' : 'File uploaded sucessfully'});
-      getFilesList(userId, function (err, result) {
+      getFilesList(userId, folderPath, function (err, result) {
         if(err) {
           res.status(300).send({'error' : 'No files found for user'});
         } else {
@@ -133,8 +134,8 @@ function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
 	}
 }
 
-function getFilesList(userId, callback) {
-  var dir = path.resolve(mainFolder + path.sep + userId);
+function getFilesList(userId, currentpath, callback) {
+  var dir = path.resolve(mainFolder + path.sep + userId + path.sep + currentpath);
   var foldersFiles = [];
   try{
     fs.readdir(dir, (err, files) => {
@@ -158,102 +159,24 @@ function getFilesList(userId, callback) {
 }
 
 router.get('/list', function(req,res){
-  console.log('hi');
   console.log(req.session);
-  //var userId = req.cookies.userId;
-  if(req.session.userId){
-    console.log('user is ' + req.session.user);
-    var userId = req.session.userId;
-    getFilesList(userId, function (err, result) {
-      if(err) {
-        res.status(300).send({'error' : 'No files found for user'});
-      } else {
-        res.status(200).send({'result' : result});
-      }
-    });
-  }else{
-    console.log("not logged in!!");
+  var currentpath = req.headers.currentpath;
+  var userId = req.session.userId;
+  console.log('In Listing Files ' + currentpath + ' ' + userId);
+  if(!userId) {
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.status(401).send({'error' : 'Unauthorized access'});
-  }
-
-
-
-  // var dir = path.resolve(mainFolder + path.sep + userId);
-  // foldersFiles = [];
-  // try{
-  //   fs.readdir(dir, (err, files) => {
-  //     if(files){
-  //       files.forEach(file => {
-  //         var isDir = fs.lstatSync(path.resolve(dir+path.sep+file)).isDirectory();
-  //         var fileObject = {
-  //           'name'  : file,
-  //           'isDir' : isDir
-  //         }
-  //         foldersFiles.push(fileObject);
-  //       });
-  //       res.status(200).send({'result' : foldersFiles});
-  //     }else{
-  //       res.status(300).send({'error' : 'No files found for user'});
-  //     }
-  //   })
-  // }catch(err){
-  //   res.status(300).send({'error' : 'No files found for user'});
-  // }
-});
-
-function getFile(req, callback) {
-  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
-  if(req.query.isDir) {
-    var zipfileName = './tmp/'+req.query.filename+'.zip';
-    console.log(zipfileName);
-    zipFolder(file,zipfileName , function(err) {
-      if(err) {
-          console.log('oh no!', err);
-          callback(err, null);
-      } else {
-          callback(null, zipfileName);
-      }
+  }else{
+    kafka.make_request('list_topic',{"userid":userId,"path":currentpath}, function(err,results){
+        console.log('in result');
+        console.log(results);
+        if(err) {
+          res.status(300).send({'error' : 'No files found for user'});
+        }else{
+          res.status(200).send({'result':results});
+        }
     });
-  } else {
-    callback(null, file);
   }
-}
-
-// Download the file
-router.get('/download', function(req, res){
-  console.log('entering');
-  getFile(req, function(err, file) {
-    if(err) {
-      console.log(err);
-    } else {
-      var file = path.resolve(file);
-      res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
-      res.download(file);
-    }
-  })
-
-  // var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
-  // var mimetype = mime.getType('jpg');
-  // console.log(file);
-  // var files = [];
-  // var zipfileName = '';
-  // if(req.query.isDir){
-  //   var zipfileName = './tmp/'+req.query.filename+'.zip';
-  //   console.log(zipfileName);
-  //   zipFolder(file,zipfileName , function(err) {
-  //   if(err) {
-  //       console.log('oh no!', err);
-  //   } else {
-  //       file = path.resolve(zipfileName);
-  //       console.log(file);
-  //   }
-  // });
-  // }
-  // file = path.resolve(file);
-  // res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
-  // res.download(file); // Set disposition and send it.
-
 });
 
 // Return Router

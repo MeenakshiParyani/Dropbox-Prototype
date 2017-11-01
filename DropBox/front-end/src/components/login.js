@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
           },
           isLoggedIn : true
         });
-        dispatch(replace(
+        dispatch(push(
           {pathname : "/home"}
         ));
       })

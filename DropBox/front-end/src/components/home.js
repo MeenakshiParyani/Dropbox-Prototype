@@ -5,7 +5,7 @@ import HomeView from './home-view';
 import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-import {replace} from "react-router-redux";
+import {replace, push} from "react-router-redux";
 
 const mapStateToProps = (state) => {
   return {
@@ -18,18 +18,29 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleShowFiles: (userId) => {
+    handleShowFiles: (userId, currentPath) => {
       console.log('state is userid' + userId);
       axios('http://localhost:3000/api/file/list',{
         method: 'get',
-        withCredentials : true
+        withCredentials : true,
+        headers : {
+          currentPath : currentPath
+        }
       })
       .then(function (response) {
-        console.log(response.data.result);
-        dispatch({
-          type : "updateFiles",
-          userFiles : response.data.result
-        });
+        if(response.status == 200){
+          var files = response.data.result.files;
+          console.log(response.data.result);
+          dispatch({
+            type : "updateFiles",
+            userFiles : files
+          });
+        }else{
+          var err = response.data.error;
+          console.log('error is ' + err);
+          dispatch({type: "error", errorMessage: err.response.data.error});
+        }
+
       })
       .catch(function(err){
         console.log('error is ' + err);
@@ -40,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
       axios.get('http://localhost:3000/api/logout')
       .then(function (response) {
         console.log(response.data.result);
-        dispatch(replace(
+        dispatch(push(
           {pathname : "/login"}
         ));
       });
@@ -77,7 +88,7 @@ const mapDispatchToProps = (dispatch) => {
 class HomeComponent extends Component {
 
   showFiles = () => {
-    this.props.handleShowFiles(this.props.user.id);
+    this.props.handleShowFiles(this.props.user.id, this.props.currentPath);
   }
 
   logout = () => {
