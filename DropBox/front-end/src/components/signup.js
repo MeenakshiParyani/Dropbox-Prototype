@@ -8,7 +8,8 @@ import {connect} from  "react-redux";
 const mapStateToProps = (state) => {
   return {
     user: state.update.user,
-    errors: state.update.errors
+    errors: state.update.errors,
+    success: state.update.success
   };
 };
 
@@ -17,10 +18,7 @@ const mapDispatchToProps = (dispatch) => {
     handleInputChange: (e) => {
       dispatch({type: "signupFormChange", data: {field: e.target.name, value: e.target.value}});
     },
-    signUp: (e) => {
-      e.preventDefault();
-      console.log('state is ' + JSON.stringify(this.state));
-      const {firstname, lastname, email, password} = this.props.user;
+    signUp: (firstname, lastname, email, password) => {
       console.log('state is ' + firstname + ' ' + lastname + ' ' + email + ' ' + password);
       axios.post('http://localhost:3000/api/signup',{
         data: {
@@ -72,7 +70,7 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err);
         dispatch({
           type : "error",
-          isLoggedIn: err.data.isLoggedIn
+          isLoggedIn: err.response.data.isLoggedIn
         });
       });
     },
@@ -91,33 +89,38 @@ class SignupComponent extends Component {
     this.props.isLoggedIn(this.props.navigateToHome);
   }
 
+  signUp = () => {
+    const {firstname, lastname, email, password} = this.props.user;
+    this.props.signUp(firstname, lastname, email, password);
+  }
+
   render() {
 
     return (
       <div className="signup">
-      <form className="form-horizontal signup-form" role="form" onSubmit={ (e) => this.signUp(e) } >
+      <form className="form-horizontal signup-form" role="form" >
               <h2 className="align-left">Sign Up <span><a className="signin" href="/login">Sign In</a></span></h2>
               <div className="form-group">
                   <div className="col-sm-9">
-                      <input type="text" id="firstName" placeholder="First Name" value = {this.props.user.firstname}
-                      className="form-control"  onChange={this.props.handleInputChange} required autoFocus={true}/>
+                      <input type="text" id="firstName" name="firstname" placeholder="First Name" value = {this.props.user.firstname}
+                      className="form-control"  onChange={this.props.handleInputChange} required/>
                   </div>
               </div>
               <div className="form-group">
                   <div className="col-sm-9">
-                      <input type="text" id="lastName" placeholder="Last Name" value = {this.props.user.lastname}
+                      <input type="text" id="lastName" name="lastname" placeholder="Last Name" value = {this.props.user.lastname}
                       className="form-control" onChange={this.props.handleInputChange} required/>
                   </div>
               </div>
               <div className="form-group">
                   <div className="col-sm-9">
-                      <input type="email" id="email" placeholder="Email" value = {this.props.user.email}
+                      <input type="email" id="email" name="email" placeholder="Email" value = {this.props.user.email}
                       className="form-control" onChange={this.props.handleInputChange} required/>
                   </div>
               </div>
               <div className="form-group">
                   <div className="col-sm-9">
-                      <input type="password" id="password" placeholder="Password" value = {this.props.user.password}
+                      <input type="password" id="password" name="password" placeholder="Password" value = {this.props.user.password}
                       className="form-control" onChange={this.props.handleInputChange} required/>
                   </div>
               </div>
@@ -143,7 +146,7 @@ class SignupComponent extends Component {
               }
               <div className="form-group">
                   <div className="col-sm-9">
-                      <Button type="submit" bsStyle="primary" bsSize="large" block>Sign up</Button>
+                      <Button bsStyle="primary" bsSize="large" block onClick = {this.signUp}>Sign up</Button>
                   </div>
               </div>
               <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -157,6 +160,7 @@ class SignupComponent extends Component {
 SignupComponent.PropTypes = {
   user: PropTypes.object.isRequired,
   errors: PropTypes.array,
+  success: PropTypes.bool,
   handleInputChange: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.func.isRequired,
   navigateToHome: PropTypes.func.isRequired

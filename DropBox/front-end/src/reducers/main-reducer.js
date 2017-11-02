@@ -25,6 +25,7 @@ export default function update(state = initialState, action = null) {
     const nextState = R.clone(state);
     nextState.user.id = action.user.id;
     nextState.isLoggedIn = action.isLoggedIn;
+    nextState.success = action.success;
     return nextState;
   } else if(action.type === "login") {
     const nextState = R.clone(state);

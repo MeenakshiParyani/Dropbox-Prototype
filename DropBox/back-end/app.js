@@ -9,6 +9,7 @@ var cors = require('cors');
 var router = express.Router();
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
+var mongoStore = require("connect-mongo")(session);
 
 
 // Internal dependencies
@@ -17,6 +18,7 @@ var login = require('./api/login');
 var file = require('./api/file');
 var logout = require('./api/logout');
 var mongodb = require('./db/mongodb.js');
+var mongoSessionURL = 'mongodb://localhost:27017/sessions';
 
 // Express
 var app = express();
@@ -30,7 +32,10 @@ app.use(session({
   resave : true,
   saveUninitialized : true,
   cookie: { maxAge: 60000000 },
-  rolling: true
+  rolling: true,
+  store: new mongoStore({
+    url: mongoSessionURL
+  })
 }));
 
 app.use(passport.initialize());
@@ -48,7 +53,7 @@ app.use(function(request, response, next) {
 //Routes
 app.use('/api/signup', signup);
 app.use('/api/login', login);
-app.use('/api/logout', logout)
+app.use('/api/logout', logout);
 app.use('/api/file', file);
 
 

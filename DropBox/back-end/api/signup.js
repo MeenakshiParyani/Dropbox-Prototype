@@ -8,7 +8,7 @@ var bcrypt = require('./bcrypt');
 var User = require('../models/user.js');
 
 
-router.use(cors());
+
 router.post('/', function(req,res){
   try{
     console.log('request is ' + JSON.stringify(req.body));
