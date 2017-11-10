@@ -179,5 +179,45 @@ router.get('/list', function(req,res){
   }
 });
 
+router.get('/download', function(req, res){
+   var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
+   debugger;
+   console.log('entering');
+   var mimetype = mime.getType('jpg');
+   getFile(req, function(err, file) {
+     console.log(file);
+     if(err) {
+       var file = path.resolve(file);
+       console.log(err);
+       res.setHeader('Content-disposition', 'attachment; filename=' + req.query.filename);
+     } else {
+       res.setHeader('Content-type', mimetype);
+       var file = path.resolve(file);
+       res.download(file);
+     }
+   });
+ });
+
+function getFile(req, callback) {
+  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
+  console.log('user is ' + req.query.userid + ' ' + req.query.filename + ' ' + req.query.isDir);
+  if(req.query.isDir=='true') {
+    console.log('downloading directory');
+    var zipfileName = './tmp/'+req.query.filename+'.zip';
+    console.log(zipfileName);
+    zipFolder(file,zipfileName , function(err) {
+      if(err) {
+        console.log('oh no!', err);
+        callback(err, null);
+      } else {
+        callback(null, zipfileName);
+      }
+    });
+  } else {
+    console.log('downloading file');
+    callback(null, file);
+  }
+}
+
 // Return Router
 module.exports = router;

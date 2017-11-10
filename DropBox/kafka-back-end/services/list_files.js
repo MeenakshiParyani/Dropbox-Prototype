@@ -3,7 +3,7 @@ var path = require('path');
 var fs = require('fs');
 
 // app variables
-var mainFolder = "./user_files";
+var mainFolder = "../back-end/user_files";
 function handle_request(msg, callback){
     var res = {};
     var userId = msg.userid;

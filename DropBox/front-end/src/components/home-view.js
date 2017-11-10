@@ -4,25 +4,23 @@ import { withRouter } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory'
 import {PageHeader, Grid, Row, Col, Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import axios from 'axios';
 import fileDownlaoder from 'react-file-download';
+import {connect} from  "react-redux";
+import axios from 'axios';
+axios.defaults.withCredentials = true;
+import {replace, push} from "react-router-redux";
 
-class HomeView extends Component {
+const mapStateToProps = (state) => {
+  return {
+    user: state.update.user,
+    files: state.update.files,
+    currentPath: state.update.currentPath,
+    isLoggedIn: state.update.isLoggedIn,
+    navigateToLogin: state.update.navigateToLogin
+  };
+};
 
-  constructor(props){
-      super(props);
-      this.state = {
-        userFiles : [],
-        userId    : null
-      };
-  }
-
-  handleInputChange(newPartialInput) {
-    this.setState(state => ({
-        ...state,
-        ...newPartialInput
-    }))
-  }
+class HomeViewComponent extends Component {
 
   dirFormatter(cell, row) {
     if(cell){
@@ -55,11 +53,12 @@ class HomeView extends Component {
   }
 
   dowloadFile(homeView, row){
-    const url = 'http://localhost:3000/api/file/download?userid=' + homeView.state.userId + '&filename=' + row.name + '&isDir=' + row.isDir;
+    console.log(this.props.user);
+    const url = 'http://localhost:3000/api/file/download?userid=' + this.props.user.id + '&filename=' + row.name + '&isDir=' + row.isDir;
     window.open(url, "_blank");
     // axios.get('http://localhost:3000/api/file/download',{
     //   params: {
-    //     userid  : homeView.state.userId,
+    //     userid  : this.props.user.id,
     //     filename : row.name,
     //     isDir    : row.isDir
     //   }
@@ -73,19 +72,16 @@ class HomeView extends Component {
 
   }
 
-  componentWillReceiveProps(nextProps){
-    this.handleInputChange({'userFiles' : nextProps.userFiles, 'userId' : nextProps.userId});
-  }
 
   render() {
 
-    if(this.state.userFiles.length > 0){
+    if(this.props.files.length > 0){
       const columns = ["name", "isDir"];
       return (
         <div className = "container-fluid ">
             <PageHeader className="header"><h3>Home</h3></PageHeader>
             <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
-             striped={false} sortable={true} data={this.state.userFiles} keyField='name'>
+             striped={false} sortable={true} data={this.props.files} keyField='name'>
               <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
               <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
               <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
@@ -99,10 +95,16 @@ class HomeView extends Component {
   }
 }
 
+HomeViewComponent.PropTypes = {
+  user: PropTypes.object.isRequired,
+  files: PropTypes.array,
+  currentPath: PropTypes.string.isRequired,
+  isLoggedIn: PropTypes.func.isRequired,
+  navigateToLogin: PropTypes.func.isRequired
+};
 
-HomeView.PropTypes = {
-  userId : PropTypes.string,
-  userFiles : PropTypes.array
-}
+const HomeView = connect(
+  mapStateToProps
+)(HomeViewComponent);
 
-export default withRouter(HomeView)
+export default HomeView;

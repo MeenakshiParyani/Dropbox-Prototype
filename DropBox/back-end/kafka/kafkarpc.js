@@ -43,7 +43,6 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback){
     self.setupResponseQueue(self.producer,topic_name,function(){
         console.log('in response');
         //put the request on a topic
-
         var payloads = [
             { topic: topic_name, messages: JSON.stringify({
                 correlationId:correlationId,
