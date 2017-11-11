@@ -175,3 +175,8 @@
 .close-button{
   float: right;
 }
+
+.signout{
+  float:right;
+  padding-right: 13px;
+}

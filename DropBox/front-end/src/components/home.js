@@ -246,7 +246,7 @@ class HomeComponent extends Component {
               </TabContent>
             </Col>
             <Col sm={2}>
-              <a href="" onClick={this.logout}>Signout</a>
+              <a href="" className="signout" onClick={this.logout}>Signout</a>
               <br/><br/><br/><br/><br/><br/>
               <div className="fileinput fileinput-new" data-provides="fileinput">
                 <span className="btn btn-default btn-file btn-primary btn-block"><span>Upload files</span><input type="file" id="files" onChange={this.uploadFile}/></span>
