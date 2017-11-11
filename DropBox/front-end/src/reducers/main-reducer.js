@@ -12,7 +12,9 @@ export const initialState = {
     password: ""
   },
   currentPath: "/",
-  files: []
+  files: [],
+  createFolderActive: false,
+  newFolderName: ''
 };
 
 export default function update(state = initialState, action = null) {
@@ -49,6 +51,14 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "success") {
     const nextState = R.clone(state);
     nextState.success = true;
+    return nextState;
+  }else if(action.type === "toggleCreateFolderModal") {
+    const nextState = R.clone(state);
+    nextState.createFolderActive = action.createFolderActive;
+    return nextState;
+  }else if(action.type === "createNewFolder") {
+    const nextState = R.clone(state);
+    nextState.newFolderName = action.newFolderName;
     return nextState;
   }
   return state;

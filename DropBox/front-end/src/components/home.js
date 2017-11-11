@@ -6,20 +6,28 @@ import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 import {replace, push} from "react-router-redux";
+import Modal from 'react-modal';
+import {Button} from 'react-bootstrap';
 
 const mapStateToProps = (state) => {
   return {
     user: state.update.user,
     files: state.update.files,
-    currentPath: state.update.currentPath
+    currentPath: state.update.currentPath,
+    createFolderActive: state.update.createFolderActive,
+    newFolderName: state.update.newFolderName
   };
 };
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleShowFiles: (userId, currentPath) => {
-      console.log('state is userid' + userId);
+
+    handleInputChange: (e) => {
+      console.log('updating ' + e.target.name + ' to ' + e.target.value);
+      dispatch({type: "createNewFolder", newFolderName: e.target.value});
+    },
+    handleShowFiles: (currentPath) => {
       axios('http://localhost:3000/api/file/list',{
         method: 'get',
         withCredentials : true,
@@ -111,6 +119,42 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(push(
         {pathname : "/login"}
       ));
+    },
+    handleCreateNewFolder: (currentPath, folderName, isActive) => {
+      axios('http://localhost:3000/api/file/newFolder',{
+        method: 'post',
+        withCredentials : true,
+        headers : {
+          currentPath : currentPath,
+          folderName : folderName
+        }
+      })
+      .then(function (response) {
+        if(response.status == 200){
+          var files = response.data.result;
+          console.log(response.data.result);
+          dispatch({
+            type : "updateFiles",
+            userFiles : files
+          });
+          dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});
+        }else{
+          var err = response.data.error;
+          console.log('error is ' + err);
+          dispatch({type: "error", errorMessage: err.response.data.error});
+          dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});
+        }
+
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({type: "error", errorMessage: err.response.data.error});
+      });
+    },
+
+    toggleCreateFolderModal: (isActive) => {
+      console.log(' create folder modal is active ? ' + isActive );
+      dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});
     }
   };
 };
@@ -119,7 +163,7 @@ const mapDispatchToProps = (dispatch) => {
 class HomeComponent extends Component {
 
   showFiles = () => {
-    this.props.handleShowFiles(this.props.user.id, this.props.currentPath);
+    this.props.handleShowFiles(this.props.currentPath);
   }
 
   logout = () => {
@@ -130,11 +174,46 @@ class HomeComponent extends Component {
     this.props.handleFileUpload(this.props.currentPath);
   }
 
-componentWillMount() {
-  console.log('Mounting home!!');
-  this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
-  this.showFiles();
-}
+  createNewFolder = () => {
+    this.props.handleCreateNewFolder(this.props.currentPath, this.props.newFolderName, this.props.createFolderActive);
+  }
+
+  componentWillMount() {
+    console.log('Mounting home!!');
+    Modal.setAppElement('body');
+    this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
+    this.showFiles();
+  }
+
+  toggleCreateFolderModal = () => {
+    this.props.toggleCreateFolderModal(this.props.createFolderActive);
+  }
+
+  modalStyle = {
+    overlay : {
+      position          : 'fixed',
+      top               : 100,
+      left              : 400,
+      right             : 550,
+      bottom            : 350,
+      backgroundColor   : 'rgba(255, 255, 255, 0.75)'
+    },
+    content : {
+      position                   : 'absolute',
+      top                        : '40px',
+      left                       : '40px',
+      right                      : '40px',
+      bottom                     : '40px',
+      border                     : '1px solid #ccc',
+      background                 : '#fff',
+      overflow                   : 'auto',
+      WebkitOverflowScrolling    : 'touch',
+      borderRadius               : '4px',
+      outline                    : 'none',
+      padding                    : '20px'
+
+    }
+  };
 
   render() {
     console.log(this.props.user);
@@ -169,9 +248,35 @@ componentWillMount() {
             <Col sm={2}>
               <a href="" onClick={this.logout}>Signout</a>
               <br/><br/><br/><br/><br/><br/>
-
-              <input type="file" id="files" multiple={true}/>
-              <button onClick={this.uploadFile}>Upload</button>
+              <div className="fileinput fileinput-new" data-provides="fileinput">
+                <span className="btn btn-default btn-file btn-primary btn-block"><span>Upload files</span><input type="file" id="files" onChange={this.uploadFile}/></span>
+                <span className="fileinput-filename"></span>
+            </div>
+            <br/>
+              <button className="btn btn-default btn-file btn-block" onClick={this.toggleCreateFolderModal}>New Shared Folder</button>
+              <Modal isOpen={this.props.createFolderActive} onRequestClose={this.toggleCreateFolderModal}
+                     closeButton={true} style={this.modalStyle} modalTransition={{ timeout: 20 }}
+                     backdropTransition={{ timeout: 10 }}>
+              <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.toggleCreateFolderModal}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+                  <form className="form-horizontal" role="form">
+                          <h5 className="align-left">New Shared Folder</h5>
+                          <div className="form-group">
+                              <div className="col-sm-9">
+                                  <input type="text" id="folder-name" name="newFolderName" placeholder="folder-name" value = {this.props.newFolderName}
+                                  className="form-control" onChange={this.props.handleInputChange} required/>
+                              </div>
+                          </div>
+                          <div className="form-group">
+                              <div className="col-sm-3">
+                                  <Button bsStyle="primary" onClick = {this.createNewFolder}>Create</Button>
+                              </div>
+                          </div>
+                          <br/><br/><br/><br/><br/><br/><br/><br/>
+                      </form>
+                  <br/>
+              </Modal>
             </Col>
           </Row>
         </TabContainer>
@@ -193,9 +298,12 @@ HomeComponent.PropTypes = {
   handleLogout    : PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   files: PropTypes.array,
+  newFolderName : PropTypes.string,
   currentPath: PropTypes.string.isRequired,
   isLoggedIn: PropTypes.func.isRequired,
-  navigateToLogin: PropTypes.func.isRequired
+  navigateToLogin: PropTypes.func.isRequired,
+  createFolderActive: PropTypes.bool.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
 };
 
 const Home = connect(

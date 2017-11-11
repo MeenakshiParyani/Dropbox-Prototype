@@ -55,6 +55,7 @@ router.post('/upload', function(req,res){
       //res.status(200).send({'result' : 'File uploaded sucessfully'});
       getFilesList(userId, folderPath, function (err, result) {
         if(err) {
+          console.log(err);
           res.status(300).send({'error' : 'No files found for user'});
         } else {
           //res.status(200).send({'result' : result});
@@ -72,18 +73,23 @@ router.post('/upload', function(req,res){
 
 // Create a new directory
 router.post('/newFolder', function(req,res){
-  if(req.session.user){
+  var currentpath = req.headers.currentpath;
+  var folderName = req.headers.foldername;
+  var userId = req.session.userId;
+  console.log(currentpath + ' ' + userId);
+  if(userId){
     console.log(req.body);
-    var userId = req.body.userID;
-    var folderPath = req.body.path.replace('/', path.sep);
-    folderPath = req.body.path.replace('\\', path.sep);
-    console.log("path recieved is " + folderPath);
-    createDirectory(userId,folderPath, 1, function(success){
-        if(success){
-          res.status(200).send({'result' : 'Folder created sucessfully'});
-        }else{
-          res.status(300).send({'error' : 'Folder could not be created'});
-        }
+    currentpath = currentpath.replace('/', path.sep);
+    currentpath = currentpath.replace('\\', path.sep);
+    console.log("path recieved is " + currentpath);
+    console.log("folder yo be created is " + folderName);
+    createDirectory(userId, currentpath, folderName, 1, function(err, results){
+      if(err) {
+        console.log(err)
+        res.status(300).send({'error' : 'Could not create the directory'});
+      }else{
+        res.status(200).send({'result':results});
+      }
     });
   }else{
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -93,22 +99,29 @@ router.post('/newFolder', function(req,res){
 
 });
 
-function createDirectory(userId, folderPath, saveDir, callback){
-  var dir = mainFolder + path.sep + userId + path.sep + folderPath;
-  var absoluteDir = path.resolve(dir);
-  var folder = dir.substring(dir.lastIndexOf(path.sep) + 1);
-  var folderPath = dir.substring(0,dir.lastIndexOf(path.sep));
-  console.log(dir);
+function createDirectory(userId, currentPath, folderName, saveDir, callback){
+  console.log('currentpath ' + currentPath);
+  console.log('folderName' + folderName);
+  var dir = mainFolder + path.sep + userId + path.sep + currentPath;
+  var absoluteDir = path.resolve(dir + path.sep + folderName);
+  console.log('dir ' + dir);
+  console.log('folder ' + folderName);
+  console.log('currentPath ' + currentPath);
+  console.log('absoluteDir ' + absoluteDir);
   mkdirp(absoluteDir, function (err) {
     if (err){
       console.error(err);
-      callback(false,dir);
+      callback(err,null);
     }
     else {
       console.log('Folder created!');
-      if(saveDir)
-        saveFileFolderToDB(folder, folderPath, 1, userId);
-      callback(true,dir);
+      getFilesList(userId, currentPath, function(err,files){
+        callback(err,files);
+      })
+      // {
+      // if(saveDir)
+      //  saveFileFolderToDB(folder, folderPath, 1, userId);
+      // }
     }
   });
 }
@@ -136,6 +149,7 @@ function saveFileFolderToDB(fileName, filePath, isDir, ownerId){
 
 function getFilesList(userId, currentpath, callback) {
   var dir = path.resolve(mainFolder + path.sep + userId + path.sep + currentpath);
+  console.log('getting file list from ' + dir);
   var foldersFiles = [];
   try{
     fs.readdir(dir, (err, files) => {
