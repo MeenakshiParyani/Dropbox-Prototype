@@ -149,7 +149,7 @@
 .overlay-btn {
     float:right;
     border: 2px;
-    width: 74px;
+    width: 87px;
     height: 32px;
 }
 
@@ -164,13 +164,16 @@
     min-width: 100%;
     min-height: 100%;
     font-size: 100px;
-    text-align: right;
+    text-align: center;
     filter: alpha(opacity=0);
     opacity: 0;
     outline: none;
     background: white;
     cursor: inherit;
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .close-button{
   float: right;

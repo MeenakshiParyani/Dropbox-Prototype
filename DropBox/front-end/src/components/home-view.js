@@ -36,13 +36,13 @@ class HomeViewComponent extends Component {
 
   shareFormatter(cell, row) {
     return (
-      <button className="share-btn btn btn-default btn-file">Share</button>
+      <button className="share-btn btn btn-default">Share</button>
     );
   }
 
   overlayFormatter(cell, row) {
     return (
-      <button className="overlay-btn btn btn-default btn-file" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
+      <button className="overlay-btn btn btn-default" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
     );
   }
 
