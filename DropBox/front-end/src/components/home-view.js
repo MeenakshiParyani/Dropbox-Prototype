@@ -54,7 +54,7 @@ class HomeViewComponent extends Component {
 
   dowloadFile(homeView, row){
     console.log(this.props.user);
-    const url = 'http://localhost:3000/api/file/download?userid=' + this.props.user.id + '&filename=' + row.name + '&isDir=' + row.isDir;
+    const url = 'http://localhost:3000/api/file/download?filename=' + row.name + '&isDir=' + row.isDir;
     window.open(url, "_blank");
     // axios.get('http://localhost:3000/api/file/download',{
     //   params: {

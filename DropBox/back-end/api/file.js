@@ -194,8 +194,7 @@ router.get('/list', function(req,res){
 });
 
 router.get('/download', function(req, res){
-   var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
-   debugger;
+   var file = mainFolder + path.sep + req.session.userId + path.sep + req.query.filename;
    console.log('entering');
    var mimetype = mime.getType('jpg');
    getFile(req, function(err, file) {
@@ -213,8 +212,8 @@ router.get('/download', function(req, res){
  });
 
 function getFile(req, callback) {
-  var file = mainFolder + path.sep + req.query.userid + path.sep + req.query.filename;
-  console.log('user is ' + req.query.userid + ' ' + req.query.filename + ' ' + req.query.isDir);
+  var file = mainFolder + path.sep + req.session.userId + path.sep + req.query.filename;
+  console.log('user is ' + req.session.userId + ' ' + req.query.filename + ' ' + req.query.isDir);
   if(req.query.isDir=='true') {
     console.log('downloading directory');
     var zipfileName = './tmp/'+req.query.filename+'.zip';
