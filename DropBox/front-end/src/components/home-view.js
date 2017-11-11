@@ -36,19 +36,25 @@ class HomeViewComponent extends Component {
 
   shareFormatter(cell, row) {
     return (
-      <button className="share-btn">Share</button>
+      <button className="share-btn btn btn-default btn-file">Share</button>
     );
   }
 
   overlayFormatter(cell, row) {
     return (
-      <button className="overlay-btn" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
+      <button className="overlay-btn btn btn-default btn-file" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
     );
   }
 
   fileNameFormatter(cell, row) {
+    var temp=cell.split('_');
+    var out=[];
+    for(var i=0; i<temp.length;i=i+2)
+      out.push(temp.slice(i,i+2).join('_'));
+    var fileName = (out[1] != undefined) ? out[1] : out[0];
+    console.log(fileName);
     return (
-      <span className="file-name">{cell}</span>
+      <span className="file-name">{fileName}</span>
     );
   }
 
