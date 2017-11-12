@@ -231,7 +231,7 @@ dialogStyles = {
             <form className="form-horizontal" role="form">
                     <div className="form-group">
                         <div className="col-sm-1">
-                            <label for="username">To:</label>
+                            <label htmlFor="username">To:</label>
                         </div>
                         <div className="col-sm-11">
                             <input type="text" id="shareFileUserName" name="shareFileUserName" placeholder="Email Or Name" value = {this.props.shareFileUserName}

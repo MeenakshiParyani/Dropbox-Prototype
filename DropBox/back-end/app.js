@@ -16,6 +16,7 @@ var mongoStore = require("connect-mongo")(session);
 var signup = require('./api/signup');
 var login = require('./api/login');
 var file = require('./api/file');
+var group = require('./api/group');
 var logout = require('./api/logout');
 var mongodb = require('./db/mongodb.js');
 var mongoSessionURL = 'mongodb://localhost:27017/sessions';
@@ -55,6 +56,7 @@ app.use('/api/signup', signup);
 app.use('/api/login', login);
 app.use('/api/logout', logout);
 app.use('/api/file', file);
+app.use('/api/group', group);
 
 
 // Start Server

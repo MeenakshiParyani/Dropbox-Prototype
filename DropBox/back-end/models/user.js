@@ -42,3 +42,11 @@ module.exports.comparePassword = function(candiatePassword, hash, callback){
 		callback(err, isMatch);
 	});
 }
+
+module.exports.updateGroups = function(query, newValues, callback){
+	User.updateOne(query, newValues, function(err, res) {
+		console.log(err);
+		console.log(res);
+		callback(err, res);
+	});
+}

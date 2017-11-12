@@ -21,6 +21,10 @@ export const initialState = {
   shareFileUserName: '',
   shareLinkCreated: false,
   shareLinkCopied: false,
+  userGroups: [],
+  selectedGroup: '',
+  selectedGroupMembers: [],
+  showGroupMembers: false
 };
 
 export default function update(state = initialState, action = null) {
@@ -84,6 +88,22 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "shareWithUser") {
     const nextState = R.clone(state);
     nextState.shareFileUserName = action.shareFileUserName;
+    return nextState;
+  }else if(action.type === "updateUserGroups") {
+    const nextState = R.clone(state);
+    nextState.userGroups = action.userGroups;
+    return nextState;
+  }else if(action.type === "toggleShowGroupMembers") {
+    const nextState = R.clone(state);
+    nextState.selectedGroup = action.selectedGroup;
+    nextState.selectedGroupMembers = action.selectedGroupMembers;
+    nextState.showGroupMembers = !nextState.showGroupMembers;
+    return nextState;
+  }else if(action.type === "deleteGroupMember") {
+    const nextState = R.clone(state);
+    var members = nextState.selectedGroupMembers;
+    nextState.selectedGroupMembers.pop({'name' : action.member});
+    nextState.selectedGroupMembers = nextState.selectedGroupMembers;
     return nextState;
   }
   return state;
