@@ -14,7 +14,13 @@ export const initialState = {
   currentPath: "/",
   files: [],
   createFolderActive: false,
-  newFolderName: ''
+  newFolderName: '',
+  shareFileFolderActive: false,
+  sharedFileFolderName: '',
+  sharedFileFolderIsDir: false,
+  shareFileUserName: '',
+  shareLinkCreated: false,
+  shareLinkCopied: false,
 };
 
 export default function update(state = initialState, action = null) {
@@ -59,6 +65,25 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "createNewFolder") {
     const nextState = R.clone(state);
     nextState.newFolderName = action.newFolderName;
+    return nextState;
+  }else if(action.type === "toggleShareFileFolderModal") {
+    const nextState = R.clone(state);
+    nextState.shareFileFolderActive = action.shareFileFolderActive;
+    nextState.sharedFileFolderName = action.sharedFileFolderName;
+    nextState.sharedFileFolderIsDir = action.sharedFileFolderIsDir;
+    return nextState;
+  }else if(action.type === "toggleShareLinkCreated"){
+    const nextState = R.clone(state);
+    nextState.shareLinkCreated = action.shareLinkCreated;
+    return nextState;
+  }else if(action.type === "toggleShareLinkCopied"){
+    const nextState = R.clone(state);
+    nextState.shareLinkCopied = action.shareLinkCopied;
+    nextState.shareLinkCreated = !nextState.shareLinkCreated;
+    return nextState;
+  }else if(action.type === "shareWithUser") {
+    const nextState = R.clone(state);
+    nextState.shareFileUserName = action.shareFileUserName;
     return nextState;
   }
   return state;

@@ -257,24 +257,24 @@ class HomeComponent extends Component {
               <Modal isOpen={this.props.createFolderActive} onRequestClose={this.toggleCreateFolderModal}
                      closeButton={true} style={this.modalStyle} modalTransition={{ timeout: 20 }}
                      backdropTransition={{ timeout: 10 }}>
-              <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.toggleCreateFolderModal}>
-                <span aria-hidden="true">&times;</span>
-              </button>
+                  <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.toggleCreateFolderModal}>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                   <form className="form-horizontal" role="form">
-                          <h5 className="align-left">New Shared Folder</h5>
-                          <div className="form-group">
-                              <div className="col-sm-9">
-                                  <input type="text" id="folder-name" name="newFolderName" placeholder="folder-name" value = {this.props.newFolderName}
-                                  className="form-control" onChange={this.props.handleInputChange} required/>
-                              </div>
+                      <h5 className="align-left">New Shared Folder</h5>
+                      <div className="form-group">
+                          <div className="col-sm-9">
+                              <input type="text" id="folder-name" name="newFolderName" placeholder="folder-name" value = {this.props.newFolderName}
+                              className="form-control" onChange={this.props.handleInputChange} required/>
                           </div>
-                          <div className="form-group">
-                              <div className="col-sm-3">
-                                  <Button bsStyle="primary" onClick = {this.createNewFolder}>Create</Button>
-                              </div>
+                      </div>
+                      <div className="form-group">
+                          <div className="col-sm-3">
+                              <Button bsStyle="primary" onClick = {this.createNewFolder}>Create</Button>
                           </div>
-                          <br/><br/><br/><br/><br/><br/><br/><br/>
-                      </form>
+                      </div>
+                      <br/><br/><br/><br/><br/><br/><br/><br/>
+                  </form>
                   <br/>
               </Modal>
             </Col>

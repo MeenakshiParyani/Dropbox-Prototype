@@ -183,3 +183,8 @@
   float:right;
   padding-right: 13px;
 }
+
+.shareModal{
+  width: 100px,auto;
+  height: 500px;
+}
