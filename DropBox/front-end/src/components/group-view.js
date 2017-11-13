@@ -231,10 +231,7 @@ addMemberToGroup(){
           <ModalClose onClick={this.toggleShowMembersModal}/>
           <ModalTitle>
           <div>
-            <div className="col-sm-2">
-                {this.groupFormatter()}
-            </div>
-            <div className="col-sm-10">
+            <div className="col-sm-12">
                  {this.groupNameFormatter(this.props.selectedGroup)}
             </div>
           </div>
@@ -261,10 +258,7 @@ addMemberToGroup(){
           <ModalClose onClick={this.toggleShowAddGroupMemberModal}/>
           <ModalTitle>
           <div>
-            <div className="col-sm-2">
-                {this.groupFormatter()}
-            </div>
-            <div className="col-sm-10">
+            <div className="col-sm-12">
                  {this.groupNameFormatter(this.props.selectedGroup)}
             </div>
           </div>
