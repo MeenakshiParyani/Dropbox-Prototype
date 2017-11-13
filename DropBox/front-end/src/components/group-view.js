@@ -111,7 +111,14 @@ class GroupViewComponent extends Component {
 
   groupNameFormatter(cell, row) {
     return (
-      <span>{cell}</span>
+      <div>
+        <div className="col-sm-3">
+          <button className="group-btn"></button>
+        </div>
+        <div className="col-sm-9">
+          <a herf='#'>{cell}</a>
+        </div>
+      </div>
     );
   }
 
@@ -122,7 +129,7 @@ class GroupViewComponent extends Component {
   groupMembersFormatter(cell, row){
 
     return (
-      <button className="group-btn" onClick = { () => {this.toggleShowMembersModal(row.groupName,row.members)}}>Members</button>
+      <a href="#"  onClick = { () => {this.toggleShowMembersModal(row.groupName,row.members)}}>Members</a>
     );
   }
 
