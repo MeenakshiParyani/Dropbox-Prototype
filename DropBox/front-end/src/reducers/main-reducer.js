@@ -24,7 +24,9 @@ export const initialState = {
   userGroups: [],
   selectedGroup: '',
   selectedGroupMembers: [],
-  showGroupMembers: false
+  showGroupMembers: false,
+  showAddGroupMemberModal: false,
+  newGroupMember: ''
 };
 
 export default function update(state = initialState, action = null) {
@@ -105,6 +107,25 @@ export default function update(state = initialState, action = null) {
     nextState.selectedGroupMembers.pop({'name' : action.member});
     nextState.selectedGroupMembers = nextState.selectedGroupMembers;
     return nextState;
+  }else if(action.type === "deleteGroup") {
+    const nextState = R.clone(state);
+    nextState.userGroups.pop({'groupName' : action.groupName});
+    return nextState;
+  }else if(action.type === "addGroupMember") {
+    const nextState = R.clone(state);
+    nextState.selectedGroupMembers.push({'name' : nextState.newGroupMember});
+    nextState.selectedGroupMembers = nextState.selectedGroupMembers;
+    return nextState;
+  }else if(action.type === "toggleShowAddGroupMemberModal") {
+    const nextState = R.clone(state);
+    nextState.showAddGroupMemberModal = !nextState.showAddGroupMemberModal;
+    nextState.selectedGroup = action.selectedGroup;
+    nextState.selectedGroupMembers = action.selectedGroupMembers
+    return nextState;
+  }else if(action.type === "changeNewGroupMember") {
+    const nextState = R.clone(state);
+    nextState.newGroupMember = action.member;
+    return nextState;
   }
-  return state;
+  return state;changeNewGroupMember
 }
