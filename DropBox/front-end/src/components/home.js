@@ -16,7 +16,9 @@ const mapStateToProps = (state) => {
     files: state.update.files,
     currentPath: state.update.currentPath,
     createFolderActive: state.update.createFolderActive,
-    newFolderName: state.update.newFolderName
+    newFolderName: state.update.newFolderName,
+    createGroupActive: state.update.createGroupActive,
+    newGroupName: state.update.newGroupName
   };
 };
 
@@ -28,6 +30,12 @@ const mapDispatchToProps = (dispatch) => {
       console.log('updating ' + e.target.name + ' to ' + e.target.value);
       dispatch({type: "createNewFolder", newFolderName: e.target.value});
     },
+
+    handleGroupChange: (e) => {
+      console.log('updating ' + e.target.name + ' to ' + e.target.value);
+      dispatch({type: "createNewGroup", newGroupName: e.target.value});
+    },
+
     handleShowFiles: (currentPath) => {
       axios('http://localhost:3000/api/file/list',{
         method: 'get',
@@ -156,6 +164,11 @@ const mapDispatchToProps = (dispatch) => {
     toggleCreateFolderModal: (isActive) => {
       console.log(' create folder modal is active ? ' + isActive );
       dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});
+    },
+
+    toggleCreateGroupModal: (isActive) => {
+      console.log(' create group modal is active ? ' + isActive );
+      dispatch({type: "toggleCreateGroupModal", createGroupActive: !isActive});
     }
   };
 };
@@ -190,13 +203,17 @@ class HomeComponent extends Component {
     this.props.toggleCreateFolderModal(this.props.createFolderActive);
   }
 
+  toggleCreateGroupModal = () => {
+    this.props.toggleCreateGroupModal(this.props.createGroupActive);
+  }
+
   modalStyle = {
     overlay : {
       position          : 'fixed',
       top               : 100,
       left              : 400,
       right             : 550,
-      bottom            : 350,
+      bottom            : 300,
       backgroundColor   : 'rgba(255, 255, 255, 0.75)'
     },
     content : {
@@ -291,29 +308,25 @@ class HomeComponent extends Component {
                 <TabContent animation>
                   <TabPane eventKey="third">
                     <br/><br/><br/><br/><br/><br/>
-                    <div className="fileinput fileinput-new" data-provides="fileinput">
-                      <span className="btn btn-default btn-file btn-primary btn-block"><span>Upload files</span><input type="file" id="files" onChange={this.uploadFile}/></span>
-                      <span className="fileinput-filename"></span>
-                    </div>
-                    <br/>
-                      <button className="btn btn-default btn-file btn-block" onClick={this.toggleCreateFolderModal}>New Shared Folder</button>
-                      <Modal isOpen={this.props.createFolderActive} onRequestClose={this.toggleCreateFolderModal}
+                    <br/><br/>
+                      <button className="btn btn-default btn-file btn-block" onClick={this.toggleCreateGroupModal}>New Group</button>
+                      <Modal isOpen={this.props.createGroupActive} onRequestClose={this.toggleCreateGroupModal}
                              closeButton={true} style={this.modalStyle} modalTransition={{ timeout: 20 }}
                              backdropTransition={{ timeout: 10 }}>
-                          <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.toggleCreateFolderModal}>
+                          <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.toggleCreateGroupModal}>
                             <span aria-hidden="true">&times;</span>
                           </button>
                           <form className="form-horizontal" role="form">
-                              <h5 className="align-left">New Shared Folder</h5>
+                              <h5 className="align-left">New Group Name</h5>
                               <div className="form-group">
                                   <div className="col-sm-9">
-                                      <input type="text" id="folder-name" name="newFolderName" placeholder="folder-name" value = {this.props.newFolderName}
-                                      className="form-control" onChange={this.props.handleInputChange} required/>
+                                      <input type="text" id="group-name" name="newGroupName" placeholder="Group name" value = {this.props.newGroupName}
+                                      className="form-control" onChange={this.props.handleGroupChange} required/>
                                   </div>
                               </div>
                               <div className="form-group">
                                   <div className="col-sm-3">
-                                      <Button bsStyle="primary" onClick = {this.createNewFolder}>Create</Button>
+                                      <Button bsStyle="primary" onClick = {this.createNewGroup}>Create</Button>
                                   </div>
                               </div>
                               <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -349,6 +362,10 @@ HomeComponent.PropTypes = {
   navigateToLogin: PropTypes.func.isRequired,
   createFolderActive: PropTypes.bool.isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  newGroupName: PropTypes.string.isRequired,
+  handleGroupChange: PropTypes.func.isRequired,
+  toggleCreateGroupModal: PropTypes.func.isRequired,
+  createGroupActive: PropTypes.bool.isRequired
 };
 
 const Home = connect(

@@ -26,7 +26,9 @@ export const initialState = {
   selectedGroupMembers: [],
   showGroupMembers: false,
   showAddGroupMemberModal: false,
-  newGroupMember: ''
+  newGroupMember: '',
+  newGroupName: '',
+  createGroupActive: false
 };
 
 export default function update(state = initialState, action = null) {
@@ -71,6 +73,10 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "createNewFolder") {
     const nextState = R.clone(state);
     nextState.newFolderName = action.newFolderName;
+    return nextState;
+  }else if(action.type === "createNewGroup") {
+    const nextState = R.clone(state);
+    nextState.newGroupName = action.newGroupName;
     return nextState;
   }else if(action.type === "toggleShareFileFolderModal") {
     const nextState = R.clone(state);
@@ -125,6 +131,10 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "changeNewGroupMember") {
     const nextState = R.clone(state);
     nextState.newGroupMember = action.member;
+    return nextState;
+  }else if(action.type === "toggleCreateGroupModal") {
+    const nextState = R.clone(state);
+    nextState.createGroupActive = !nextState.createGroupActive;
     return nextState;
   }
   return state;changeNewGroupMember
