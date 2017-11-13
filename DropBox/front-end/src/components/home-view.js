@@ -109,6 +109,11 @@ class HomeViewComponent extends Component {
     var isDir = row.isDir;
     console.log(row);
     // var filename = row.
+    if(fileName=="Shared-Folder"){
+      return (
+        <a className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir) }}>Shared</a>
+      );
+    }
     return (
       <button className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir) }}>Share</button>
     );
