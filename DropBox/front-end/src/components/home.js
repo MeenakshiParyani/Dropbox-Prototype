@@ -243,7 +243,18 @@ class HomeComponent extends Component {
         <TabContainer id="left-tabs-example" defaultActiveKey="first">
           <Row className="clearfix">
             <Col sm={2}>
-            <br/><br/><br/><br/><br/><br/>
+            <br/><br/>
+              <Row sm={2}>
+                <Col className="col-sm-3">
+                </Col>
+                <Col className="col-sm-6">
+                  <button className="dropbox-btn"></button>
+                </Col>
+                <Col className="col-sm-3">
+                </Col>
+              </Row>
+              <br/><br/>
+              <Row sm={8}>
               <Nav bsStyle="pills" stacked>
                 <NavItem eventKey="first">
                   Home
@@ -255,6 +266,8 @@ class HomeComponent extends Component {
                   Group Sharing
                 </NavItem>
               </Nav>
+              </Row>
+
             </Col>
             <Col sm={8}>
               <TabContent animation>
