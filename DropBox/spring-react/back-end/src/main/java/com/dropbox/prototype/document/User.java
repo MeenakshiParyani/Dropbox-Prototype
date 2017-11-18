@@ -2,6 +2,7 @@ package com.dropbox.prototype.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class User {
 
     @Id
-    private BigInteger id;
+    private String id;
 
     @JsonProperty("firstname")
     private String firstname;
@@ -35,7 +36,7 @@ public class User {
     public User(){
     }
 
-    public User(BigInteger id, String firstname, String lastname, String email, String password) {
+    public User(String id, String firstname, String lastname, String email, String password) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -43,11 +44,11 @@ public class User {
         this.password = password;
     }
 
-    public BigInteger getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(String id) {
         this.id = id;
     }
 
