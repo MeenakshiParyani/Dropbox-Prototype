@@ -1,0 +1,211 @@
+.jumbo{
+  color: #BAD0E5;
+}
+
+.container-fluid1 .row1{
+  background-color: #57132B;
+  margin:0px;
+  float: left;
+}
+
+.jumbotron{
+  color: #BAD0E5;
+}
+
+.white-font{
+  color: white;
+}
+
+.signup{
+  background-color: white
+}
+
+*[role="form"] {
+    max-width: 530px;
+    padding: 15px;
+    padding-bottom: 0px;
+    margin: 0;
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+*[role="form"] h2 {
+    margin-bottom: 1em;
+}
+
+.with-container-fluid{
+   padding-right:0;
+   padding-left:0;
+   margin-right:auto;
+   margin-left:auto
+}
+
+.row1 {
+  position: relative;
+  padding-top: 30px;
+  background: orange;
+  margin: 0;
+  width: 100%;
+}
+
+.main.padding {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.p.absolute-example {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  background: yellow;
+}
+
+/*.section {
+  padding: 30px 0;
+  margin: 20px 0;
+}*/
+
+.btn-sign{
+  width: 40px;
+  align-self:flex-start;
+}
+
+/*.signup-form{
+  margin: '0 auto 10px'
+}*/
+
+.align-left{
+  text-align: left;
+}
+
+.signin{
+  float: right;
+  font-size: 20px;
+}
+
+.header{
+  font-weight: normal;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+
+.react-bs-container-body tr {
+  border-top-style: hidden !important;
+  border-bottom-style: hidden !important;
+}
+
+.react-bs-container-body td {
+  width : 10%;
+  border-left-style: hidden !important;
+  border-right-style: hidden !important;
+}
+
+/*.react-bs-container-body td .slim-width{
+  width : 10%;
+}
+
+.react-bs-container-body td .wide-width{
+  width : 60%;
+}*/
+
+
+.dir-btn {
+    background: url(/src/resources/images/favicon3.ico) no-repeat;
+    border: 0px;
+    width: 50px;
+    height: 50px;
+}
+
+.file-btn {
+    background: url(/src/resources/images/favicon7.ico) no-repeat;
+    border: 0px;
+    width: 60px;
+    height: 50px;
+}
+
+.group-btn {
+    background: url(/src/resources/images/User-Group-icon.png) no-repeat;
+    border: 0px;
+    width: 50px;
+    height: 50px;
+}
+
+.dropbox-btn{
+  background: url(/src/resources/images/dropbox.svg) no-repeat;
+  border: 0px;
+  width: 50px;
+  height: 50px;
+}
+
+.file-name{
+  float:none;
+  width: 10px;
+  border: 0px;
+  margin:0px
+  padding:0px;
+}
+
+.share-btn {
+    border: 2px;
+    width: 73px;
+    height: 34px;
+    float:right;
+}
+
+.add-member-btn{
+  border: 2px;
+  width: 110px;
+  height: 34px;
+  float:right;
+}
+
+.overlay-btn {
+    float:right;
+    border: 2px;
+    width: 87px;
+    height: 32px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: center;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.close-button{
+  float: right;
+}
+
+.signout{
+  float:right;
+  padding-right: 13px;
+}
+
+.shareModal{
+  width: 100px,auto;
+  height: 500px;
+}

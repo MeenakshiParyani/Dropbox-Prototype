@@ -16,3 +16,22 @@
  
  > cd kafka-backend
  > npm start
+
+
+#### List of Kafka Topics to be created
+> login_topic
+> signup_topic
+> file_list_topic
+> file_download_topic
+> new_folder_topic
+> sign_out_topic
+> upload_file_topic
+> share_file_topic
+> star_topic
+> create_group_topic
+> add_member_topic
+> remove_member_topic
+> show_grouo_member_topic
+> delete_group_topic
+
+> rensponse_topic
