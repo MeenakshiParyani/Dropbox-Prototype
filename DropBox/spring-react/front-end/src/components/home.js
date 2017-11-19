@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     handleShowFiles: (currentPath) => {
-      axios('http://localhost:3000/api/file/list',{
+      axios('http://localhost:8080/api/files/list',{
         method: 'get',
         withCredentials : true,
         headers : {
@@ -46,8 +46,8 @@ const mapDispatchToProps = (dispatch) => {
       })
       .then(function (response) {
         if(response.status == 200){
-          var files = response.data.result.files;
-          console.log(response.data.result);
+          var files = response.data;
+          console.log(response.data);
           dispatch({
             type : "updateFiles",
             userFiles : files
