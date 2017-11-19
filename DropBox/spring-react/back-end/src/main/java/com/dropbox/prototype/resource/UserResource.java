@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/user")
 public class UserResource {
 
     @Autowired

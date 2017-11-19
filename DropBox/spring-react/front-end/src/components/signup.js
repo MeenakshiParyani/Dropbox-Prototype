@@ -20,13 +20,11 @@ const mapDispatchToProps = (dispatch) => {
     },
     signUp: (firstname, lastname, email, password) => {
       console.log('state is ' + firstname + ' ' + lastname + ' ' + email + ' ' + password);
-      axios.post('http://localhost:3000/api/signup',{
-        data: {
-          firstName : firstname,
-          lastName  : lastname,
+      axios.post('http://localhost:8080/api/user/signup',{
+          firstname : firstname,
+          lastname  : lastname,
           email     : email,
           password  : password
-        }
       })
       .then(function (response) {
         console.log('result is ' + response.data.result);

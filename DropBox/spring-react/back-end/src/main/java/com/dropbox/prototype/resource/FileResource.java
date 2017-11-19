@@ -13,7 +13,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileResource {
 
     @Autowired
