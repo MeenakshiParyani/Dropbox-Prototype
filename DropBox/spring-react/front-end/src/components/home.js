@@ -97,7 +97,7 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     isLoggedIn: (callback, errCallback) => {
-      axios.get('http://localhost:3000/api/login/isLoggedIn')
+      axios.get('http://localhost:8080/api/login/isLoggedIn')
       .then(function (res) {
         console.log('result is ' + res.data);
         dispatch({
@@ -195,7 +195,7 @@ class HomeComponent extends Component {
   componentWillMount() {
     console.log('Mounting home!!');
     Modal.setAppElement('body');
-    this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
+    //this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
     this.showFiles();
   }
 
