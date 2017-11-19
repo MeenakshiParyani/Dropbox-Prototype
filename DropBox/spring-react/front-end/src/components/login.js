@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     handleLogin: (email, password) => {
       console.log('state is ' + email + ' ' + password);
       const login = this;
-      axios.post('http://localhost:3000/api/login',{
+      axios.post('http://localhost:8080/api/user/login',{
           email  : email,
           password  : password
       })
