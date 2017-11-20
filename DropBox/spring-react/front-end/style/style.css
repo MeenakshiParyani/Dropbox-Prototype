@@ -209,3 +209,7 @@
   width: 100px,auto;
   height: 500px;
 }
+
+input[name="react-star-rating"] {
+    display: none !important;
+}

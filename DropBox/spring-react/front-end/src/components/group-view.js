@@ -116,7 +116,7 @@ class GroupViewComponent extends Component {
           <button className="group-btn"></button>
         </div>
         <div className="col-sm-9">
-          <a herf='#'>{cell}</a>
+          <a href='#'>{cell}</a>
         </div>
       </div>
     );

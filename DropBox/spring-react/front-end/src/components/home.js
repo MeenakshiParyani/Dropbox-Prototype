@@ -65,9 +65,9 @@ const mapDispatchToProps = (dispatch) => {
       });
     },
     handleLogout: (callback) => {
-      axios.get('http://localhost:3000/api/logout')
+      axios.get('http://localhost:8080/api/user/logout')
       .then(function (response) {
-        console.log(response.data.result);
+        console.log(response);
         callback();
       });
     },
@@ -97,31 +97,31 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     isLoggedIn: (callback, errCallback) => {
-      axios.get('http://localhost:8080/api/login/isLoggedIn')
+      axios.get('http://localhost:8080/api/user/isLoggedIn')
       .then(function (res) {
         console.log('result is ' + res.data);
         dispatch({
           type : "updateUser",
           user : {
-            id: res.response.data.userId
+            id: res.data.id
           }
         });
         if(res.status == 200){
-          callback();
+          // callback();
         }else{
           errCallback();
         }
       })
       .catch(function(err){
         console.log('error is ' + err);
-        dispatch({
-          type : "updateUser",
-          user : {
-            id: err.response.data.userId
-          }
-        });
         errCallback();
       });
+    },
+
+    navigateToHome: () => {
+      dispatch(push(
+        {pathname : "/home"}
+      ));
     },
 
     navigateToLogin: () => {
@@ -245,12 +245,12 @@ class HomeComponent extends Component {
             <Col sm={2}>
             <br/><br/>
               <Row sm={2}>
-                <Col className="col-sm-3">
+                <Col sm={3}>
                 </Col>
-                <Col className="col-sm-6">
+                <Col sm={6}>
                   <button className="dropbox-btn"></button>
                 </Col>
-                <Col className="col-sm-3">
+                <Col sm={3}>
                 </Col>
               </Row>
               <br/><br/>

@@ -9,6 +9,7 @@ import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 import {replace, push} from "react-router-redux";
+import StarRatingComponent from 'react-star-rating-component';
 import {
   Modal,
   ModalHeader,
@@ -133,7 +134,14 @@ class HomeViewComponent extends Component {
     var fileName = (out[1] != undefined) ? out[1] : out[0];
     console.log(fileName);
     return (
-      <span className="file-name"> {fileName}</span>
+      <span className="file-name">
+      <a href="#">{fileName}</a>
+      <span> <StarRatingComponent
+                    name="rate1"
+                    starCount={1}
+                    value={0}
+                /></span>
+      </span>
     );
   }
 
@@ -208,7 +216,7 @@ dialogStyles = {
               <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
                striped={false} sortable={true} data={this.props.files} keyField='name'>
                 <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
-                <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
+                <TableHeaderColumn className="slim-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
                 <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
                 <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
               </BootstrapTable>

@@ -51,14 +51,14 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     isLoggedIn: (callback) => {
-      axios.get('http://localhost:3000/api/login/isLoggedIn')
+      axios.get('http://localhost:8080/api/user/isLoggedIn')
       .then(function (response) {
         console.log('result is ' + response.data);
         if(response.status == 200){
           dispatch({
             type : "updateUser",
             user : {
-              id: response.data.userId
+              id: response.data.id
             }
           });
           callback();
@@ -68,7 +68,7 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err);
         dispatch({
           type : "error",
-          isLoggedIn: err.response.data.isLoggedIn
+          isLoggedIn: false
         });
       });
     },
