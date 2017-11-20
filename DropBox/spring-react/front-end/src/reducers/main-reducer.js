@@ -28,7 +28,8 @@ export const initialState = {
   showAddGroupMemberModal: false,
   newGroupMember: '',
   newGroupName: '',
-  createGroupActive: false
+  createGroupActive: false,
+  rating : 0
 };
 
 export default function update(state = initialState, action = null) {
@@ -135,6 +136,10 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "toggleCreateGroupModal") {
     const nextState = R.clone(state);
     nextState.createGroupActive = !nextState.createGroupActive;
+    return nextState;
+  }else if(action.type === "toggleRating") {
+    const nextState = R.clone(state);
+    nextState.rating = nextState.rating == 0 ? 1 : 0;
     return nextState;
   }
   return state;changeNewGroupMember

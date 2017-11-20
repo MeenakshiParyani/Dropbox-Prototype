@@ -9,7 +9,7 @@ import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 import {replace, push} from "react-router-redux";
-import StarRatingComponent from 'react-star-rating-component';
+import StarRatings from 'react-star-ratings';
 import {
   Modal,
   ModalHeader,
@@ -29,7 +29,8 @@ const mapStateToProps = (state) => {
     sharedFileFolderIsDir: state.update.sharedFileFolderIsDir,
     shareFileUserName: state.update.shareFileUserName,
     shareLinkCreated: state.update.shareLinkCreated,
-    shareLinkCopied: state.update.shareLinkCopied
+    shareLinkCopied: state.update.shareLinkCopied,
+    rating: state.update.rating
   };
 };
 
@@ -62,6 +63,10 @@ const mapDispatchToProps = (dispatch) => {
 
     toggleShareLinkCopied: (isActive) => {
       dispatch({type: "toggleShareLinkCopied", shareLinkCopied: !isActive});
+    },
+
+    toggleRating: (newRating) => {
+      dispatch({type: "toggleRating", rating: newRating});
     }
   };
 };
@@ -71,6 +76,11 @@ class HomeViewComponent extends Component {
   constructor(props){
     super(props);
     this.shareFormatter = this.shareFormatter.bind(this);
+    this.toggleRating = this.toggleRating.bind(this);
+    this.fileNameFormatter = this.fileNameFormatter.bind(this);
+    this.state = {
+      rating: 0
+    };
   }
 
   shareFileFolder = (fileName, isDir) => {
@@ -126,6 +136,20 @@ class HomeViewComponent extends Component {
     );
   }
 
+  toggleRating(newRating) {
+    this.props.toggleRating(newRating);
+  }
+
+  onStarRatingChange(rating) {
+    if(rating == 0)
+      rating = 1;
+    else
+      rating =0;
+    this.setState({
+      rating: rating
+    });
+  }
+
   fileNameFormatter(cell, row) {
     var temp=cell.split('_');
     var out=[];
@@ -133,14 +157,17 @@ class HomeViewComponent extends Component {
       out.push(temp.slice(i,i+2).join('_'));
     var fileName = (out[1] != undefined) ? out[1] : out[0];
     console.log(fileName);
+    var rating = row != undefined ? row.stared ? 1 : 0 : 0;
     return (
       <span className="file-name">
       <a href="#">{fileName}</a>
-      <span> <StarRatingComponent
-                    name="rate1"
-                    starCount={1}
-                    value={0}
-                /></span>
+      <span> <StarRatings
+          rating={rating}
+          isSelectable={true}
+          isAggregateRating={false}
+          numOfStars={ 1 } starRatedColor="rgb(244, 215, 66)" starWidthAndHeight="25px" starSelectingHoverColor="yellow"
+          changeRating ={ (rating) => this.onStarRatingChange(rating)}
+        /></span>
       </span>
     );
   }
@@ -313,7 +340,8 @@ HomeViewComponent.PropTypes = {
   shareLinkCreated: PropTypes.bool.isRequired,
   shareLinkCopied: PropTypes.bool.isRequired,
   toggleShareLinkCreated: PropTypes.func.isRequired,
-  toggleShareLinkCopied: PropTypes.func.isRequired
+  toggleShareLinkCopied: PropTypes.func.isRequired,
+  rating: PropTypes.string.isRequired
 };
 
 const HomeView = connect(
