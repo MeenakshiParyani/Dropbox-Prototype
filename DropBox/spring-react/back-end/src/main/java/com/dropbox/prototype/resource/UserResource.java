@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +33,12 @@ public class UserResource {
 
     @RequestMapping(value = "/login", headers = "Accept=application/json", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> login(@RequestBody User user){
+    public ResponseEntity<?> login(@RequestBody User user, HttpSession session){
         User dbUser = userService.loginUser(user);
-        if(dbUser != null)
+        if(dbUser != null) {
+            session.setAttribute("userId", dbUser.getId());
             return new ResponseEntity(dbUser, HttpStatus.OK);
+        }
         else
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }

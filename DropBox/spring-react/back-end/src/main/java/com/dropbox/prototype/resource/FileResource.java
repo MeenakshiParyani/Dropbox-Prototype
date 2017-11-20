@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
@@ -22,11 +23,14 @@ public class FileResource {
     private FileService fileService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<?> listDir(@RequestHeader String currentPath){
-        List<UserFile> files = fileService.getUserFiles("5a1113ff9b7c9508e6328d6c", currentPath);
-        if(files != null )
-            return new ResponseEntity(files, HttpStatus.OK);
-        else
+    public ResponseEntity<?> listDir(@RequestHeader String currentPath, HttpSession session){
+        if(session.getAttribute("userId") == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else{
+            String userId = session.getAttribute("userId").toString();
+            List<UserFile> files = fileService.getUserFiles(userId, currentPath);
+            return new ResponseEntity(files, HttpStatus.OK);
+        }
+
     }
 }

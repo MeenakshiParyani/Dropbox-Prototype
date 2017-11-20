@@ -195,7 +195,7 @@ class HomeComponent extends Component {
   componentWillMount() {
     console.log('Mounting home!!');
     Modal.setAppElement('body');
-    //this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
+    this.props.isLoggedIn(this.props.navigateToHome, this.props.navigateToLogin);
     this.showFiles();
   }
 
