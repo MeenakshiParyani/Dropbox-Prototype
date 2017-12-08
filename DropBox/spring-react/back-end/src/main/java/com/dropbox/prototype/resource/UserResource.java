@@ -64,7 +64,4 @@ public class UserResource {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    static class SessionObject {
-        String userId;
-    }
 }

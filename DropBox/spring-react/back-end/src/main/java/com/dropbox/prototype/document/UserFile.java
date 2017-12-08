@@ -11,6 +11,10 @@ public class UserFile {
     private String currentPath;
     private Boolean isStared;
 
+    public UserFile(){
+
+    }
+
     public UserFile(String name, Boolean isDir, Boolean isShared, ArrayList<String> sharedWithUsers, ArrayList<String> sharedWithGroups, String currentPath, Boolean isStared) {
         this.name = name;
         this.isDir = isDir;
