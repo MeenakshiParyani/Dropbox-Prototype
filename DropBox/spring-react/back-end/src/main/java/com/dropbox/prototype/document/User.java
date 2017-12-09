@@ -99,4 +99,14 @@ public class User {
     public void setGroups(ArrayList<UserGroup> groups) {
         this.groups = groups;
     }
+
+    public void addGroup(UserGroup group){
+        if(this.getGroups() == null){
+            ArrayList<UserGroup> groups = new ArrayList<UserGroup>();
+            groups.add(group);
+            this.setGroups(groups);
+        }else{
+            this.getGroups().add(group);
+        }
+    }
 }
