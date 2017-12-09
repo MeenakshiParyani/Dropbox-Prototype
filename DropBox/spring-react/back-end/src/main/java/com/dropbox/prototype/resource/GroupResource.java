@@ -23,7 +23,7 @@ public class GroupResource {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<?> createGroup(HttpSession session, @RequestBody UserGroup userGroup) {
-        String userId = session.getAttribute("userId").toString();
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {

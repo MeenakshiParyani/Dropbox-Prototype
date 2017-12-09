@@ -1,6 +1,7 @@
 package com.dropbox.prototype.document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.tools.javac.code.Attribute;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,9 @@ public class UserFile {
 
     @JsonProperty("isStared")
     private Boolean isStared;
+
+
+
 
     public UserFile(){
 

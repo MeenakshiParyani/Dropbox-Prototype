@@ -130,25 +130,24 @@ const mapDispatchToProps = (dispatch) => {
       ));
     },
     handleCreateNewFolder: (currentPath, folderName, isActive) => {
-      axios('http://localhost:3000/api/file/newFolder',{
-        method: 'post',
-        withCredentials : true,
-        headers : {
-          currentPath : currentPath,
-          folderName : folderName
-        }
-      })
+      var options = {
+        withCredentials : true
+      }
+      axios.post('http://localhost:8080/api/files/createDir',{
+        dirpath : currentPath,
+        dirname : folderName
+      },options)
       .then(function (response) {
-        if(response.status == 200){
-          var files = response.data.result;
-          console.log(response.data.result);
+        if(response.status == 201){
+          var files = response.data;
+          console.log(response.data);
           dispatch({
             type : "updateFiles",
             userFiles : files
           });
           dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});
         }else{
-          var err = response.data.error;
+          var err = response;
           console.log('error is ' + err);
           dispatch({type: "error", errorMessage: err.response.data.error});
           dispatch({type: "toggleCreateFolderModal", createFolderActive: !isActive});

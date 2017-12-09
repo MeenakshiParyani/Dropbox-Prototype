@@ -30,10 +30,10 @@ public class FileResource {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> listDir(@RequestHeader String currentPath, HttpSession session) {
-        if (session.getAttribute("userId") == null)
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if (userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
-            String userId = session.getAttribute("userId").toString();
             List<UserFile> files = fileService.getUserFiles(userId, currentPath);
             return new ResponseEntity(files, HttpStatus.OK);
         }
@@ -42,7 +42,8 @@ public class FileResource {
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public ResponseEntity<?> downloadFile(HttpSession session, @RequestParam String filepath) {
-        if (session.getAttribute("userId") == null)
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if (userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
 
@@ -51,7 +52,6 @@ public class FileResource {
             headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
             headers.add("Pragma", "no-cache");
             headers.add("Expires", "0");
-            String userId = session.getAttribute("userId").toString();
             File file = fileService.getUserFile(userId, filepath);
             InputStreamResource resource = null;
             try {
@@ -70,7 +70,7 @@ public class FileResource {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ResponseEntity<?> uploadFile(HttpSession session, @RequestBody MultipartFile[] files, @RequestHeader String currentpath) {
-        String userId = session.getAttribute("userId").toString();
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
@@ -84,18 +84,19 @@ public class FileResource {
 
     @RequestMapping(value = "/createDir", method = RequestMethod.POST)
     public ResponseEntity<?> createDir(HttpSession session,@RequestBody  Map<String, Object> payload) {
-        String userId = session.getAttribute("userId").toString();
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
             boolean dirCreated = fileService.createDir(userId, payload.get("dirpath").toString(), payload.get("dirname").toString());
-            return new ResponseEntity(HttpStatus.CREATED);
+            List<UserFile> files = fileService.getUserFiles(userId, payload.get("dirpath").toString());
+            return new ResponseEntity(files, HttpStatus.CREATED);
         }
     }
 
     @RequestMapping(value = "/star", method = RequestMethod.PUT)
     public ResponseEntity<?> starFileOrDir(HttpSession session,@RequestBody  UserFile userFile) {
-        String userId = session.getAttribute("userId").toString();
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
@@ -109,7 +110,7 @@ public class FileResource {
 
     @RequestMapping(value = "/shareWithUser", method = RequestMethod.PUT)
     public ResponseEntity<?> shareFileOrDirWithUser(HttpSession session, @RequestBody  UserFile file, @RequestHeader ArrayList<String> sharewithuserids) {
-        String userId = session.getAttribute("userId").toString();
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {

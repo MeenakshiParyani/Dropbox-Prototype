@@ -33,6 +33,19 @@ public class User {
     @JsonProperty("groups")
     private ArrayList<UserGroup> groups;
 
+    public enum Permissions {
+        READ("Read"), WRITE("Write"), OWNER("Owner");
+        private String name; // price of each apple
+
+        // Constructor
+        Permissions(String n) { name = n; }
+
+        // Overloaded constructor
+        Permissions() { name = ""; }
+
+        String getName() { return name; }
+    };
+
     public User(){
     }
 
