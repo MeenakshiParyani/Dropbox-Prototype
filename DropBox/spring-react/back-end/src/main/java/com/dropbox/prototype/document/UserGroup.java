@@ -12,7 +12,6 @@ public class UserGroup {
     @JsonProperty("name")
     private String groupName;
 
-    @Field("sub")
     @JsonProperty("members")
     private ArrayList<User> groupMembers;
 
@@ -33,6 +32,7 @@ public class UserGroup {
         this.groupName = groupName;
     }
 
+
     public ArrayList<User> getGroupMembers() {
         return groupMembers;
     }
@@ -50,5 +50,28 @@ public class UserGroup {
                     this.groupMembers.add(user);
             }
         }
+    }
+
+    public void addGroupMember(User newGroupMember){
+        if(this.groupMembers == null){
+            this.groupMembers = new ArrayList<User>();
+            this.groupMembers.add(newGroupMember);
+        }else{
+            if(!groupHasMember(this.groupMembers,newGroupMember))
+                this.groupMembers.add(newGroupMember);
+        }
+    }
+
+    private boolean groupHasMember(ArrayList<User> groupMembers, User newGroupMember) {
+        if(groupMembers != null){
+            for(User member : groupMembers){
+                if(member.getId().equals(newGroupMember.getId()))
+                    return true;
+            }
+            return false;
+        }else{
+            return false;
+        }
+
     }
 }

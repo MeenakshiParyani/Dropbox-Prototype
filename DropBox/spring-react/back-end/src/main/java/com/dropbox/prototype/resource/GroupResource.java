@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -33,24 +34,18 @@ public class GroupResource {
         }
     }
 
-    @RequestMapping(value = "/addMembers", method = RequestMethod.POST)
-    public ResponseEntity<?> addMembers(HttpSession session, @RequestBody String groupName, @RequestBody ArrayList<String> userIds) {
-        if(session != null){
-            String userId = session.getAttribute("userId").toString();
-            if ( userId == null)
-                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-            else {
-                boolean membersAdded = groupService.addGroupMembers(groupName, userId, userIds);
-                if(membersAdded)
-                    return new ResponseEntity<Object>(HttpStatus.OK);
-                else
-                    return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-            }
-
-        }else{
-            return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
+    @RequestMapping(value = "/addMembers", method = RequestMethod.PUT)
+    public ResponseEntity<?> addMembers(HttpSession session, @RequestBody Map<String, Object> payload) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean membersAdded = groupService.addGroupMembers(payload.get("groupName").toString(), userId, (ArrayList<String>) payload.get("userIds"));
+            if(membersAdded)
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            else
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
 

@@ -41,7 +41,25 @@ public class GroupService {
         return false;
     }
 
-    public boolean addGroupMembers(String groupName, String userId, ArrayList<String> userIds) {
+    public boolean addGroupMembers(String groupName, String userId, ArrayList<String> memberIds) {
+        User user = userRepository.findOne(userId);
+        ArrayList<UserGroup> groups = user.getGroups();
+        for(UserGroup userGroup : groups){
+            if(userGroup.getGroupName().equals(groupName)){
+                for(String groupMemberId : memberIds) {
+                    User groupMember = userRepository.findOne(groupMemberId);
+                    groupMember.setGroups(null);
+                    groupMember.setFiles(null);
+                    userGroup.addGroupMember(groupMember);
+                }
+                user.setGroups(groups);
+                userRepository.save(user);
+                return true;
+            }else{
+                return false;
+            }
+
+        }
         return false;
     }
 }
