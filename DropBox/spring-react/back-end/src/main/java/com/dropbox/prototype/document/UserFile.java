@@ -15,10 +15,10 @@ public class UserFile {
     private Boolean isShared;
 
     @JsonProperty("sharedWithUsers")
-    private ArrayList<String> sharedWithUsers;
+    private ArrayList<User> sharedWithUsers;
 
     @JsonProperty("sharedWithGroups")
-    private ArrayList<String> sharedWithGroups;
+    private ArrayList<UserGroup> sharedWithGroups;
 
     @JsonProperty("currentPath")
     private String currentPath;
@@ -30,7 +30,7 @@ public class UserFile {
 
     }
 
-    public UserFile(String name, Boolean isDir, Boolean isShared, ArrayList<String> sharedWithUsers, ArrayList<String> sharedWithGroups, String currentPath, Boolean isStared) {
+    public UserFile(String name, Boolean isDir, Boolean isShared, ArrayList<User> sharedWithUsers, ArrayList<UserGroup> sharedWithGroups, String currentPath, Boolean isStared) {
         this.name = name;
         this.isDir = isDir;
         this.isShared = isShared;
@@ -64,19 +64,19 @@ public class UserFile {
         isShared = shared;
     }
 
-    public ArrayList<String> getSharedWithUsers() {
+    public ArrayList<User> getSharedWithUsers() {
         return sharedWithUsers;
     }
 
-    public void setSharedWithUsers(ArrayList<String> sharedWithUsers) {
+    public void setSharedWithUsers(ArrayList<User> sharedWithUsers) {
         this.sharedWithUsers = sharedWithUsers;
     }
 
-    public ArrayList<String> getSharedWithGroups() {
+    public ArrayList<UserGroup> getSharedWithGroups() {
         return sharedWithGroups;
     }
 
-    public void setSharedWithGroups(ArrayList<String> sharedWithGroups) {
+    public void setSharedWithGroups(ArrayList<UserGroup> sharedWithGroups) {
         this.sharedWithGroups = sharedWithGroups;
     }
 

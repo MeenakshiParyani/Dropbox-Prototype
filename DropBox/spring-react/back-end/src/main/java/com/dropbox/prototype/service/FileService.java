@@ -4,6 +4,7 @@ import com.dropbox.prototype.document.User;
 import com.dropbox.prototype.document.UserFile;
 import com.dropbox.prototype.repository.UserRepository;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,26 +123,36 @@ public class FileService {
         }
     }
 
-    public boolean shareFileOrDir(String userId, UserFile userFile, String sharewithuserid) {
+    public boolean shareFileOrDirWithUsers(String userId, UserFile userFile, ArrayList<String> sharewithuserids) {
         User user = userRepository.findOne(userId);
-        try{
-            setFileAsShared(userFile, user);
-            shareFileBetweenUsers(userId, sharewithuserid, userFile);
-        }catch(Exception e){
-            e.printStackTrace();
-            return false;
+        for(String sharewithuserid : sharewithuserids) {
+            try {
+                User shareWithUser = userRepository.findOne(sharewithuserid);
+                setFileAsSharedWithUser(userFile, user, shareWithUser);
+                shareFileBetweenUsers(userId, sharewithuserid, userFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
         return true;
     }
 
-    private void setFileAsShared(UserFile userFile, User user) {
+    private void setFileAsSharedWithUser(UserFile userFile, User user, User shareWithUser) {
         // Save the file in db with isShared = True for the owner
         ArrayList<UserFile> files = user.getFiles();
-        UserFile sharedFile = new UserFile();
         for (UserFile file : files) {
             if (file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName())) {
                 file.setShared(true);
-                sharedFile = file;
+                ArrayList<User> sharedWithUsers = file.getSharedWithUsers();
+                if(sharedWithUsers == null){
+                    sharedWithUsers = new ArrayList<>();
+                    shareWithUser.setFiles(null);
+                    sharedWithUsers.add(shareWithUser);
+                }else{
+                    sharedWithUsers.add(shareWithUser);
+                }
+                file.setSharedWithUsers(sharedWithUsers);
             }
         }
         user.setFiles(files);
@@ -153,7 +164,10 @@ public class FileService {
         FileOutputStream fos = null;
         File sourceFile = new File(userFileDir + File.separator + fromUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
         File destFile = new File(userFileDir + File.separator + toUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
-        org.apache.commons.io.FileUtils.copyFile(sourceFile, destFile);
+        if(file.getDir())
+            FileUtils.copyDirectory(sourceFile, destFile);
+        else
+            org.apache.commons.io.FileUtils.copyFile(sourceFile, destFile);
         file.setShared(true);
         if(toUser.getFiles() != null)
             toUser.getFiles().add(file);

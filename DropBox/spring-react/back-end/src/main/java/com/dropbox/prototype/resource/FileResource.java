@@ -1,9 +1,7 @@
 package com.dropbox.prototype.resource;
 
-import com.dropbox.prototype.document.User;
 import com.dropbox.prototype.document.UserFile;
 import com.dropbox.prototype.service.FileService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.math.BigInteger;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +82,17 @@ public class FileResource {
         }
     }
 
+    @RequestMapping(value = "/createDir", method = RequestMethod.POST)
+    public ResponseEntity<?> createDir(HttpSession session,@RequestBody  Map<String, Object> payload) {
+        String userId = session.getAttribute("userId").toString();
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean dirCreated = fileService.createDir(userId, payload.get("dirpath").toString(), payload.get("dirname").toString());
+            return new ResponseEntity(HttpStatus.CREATED);
+        }
+    }
+
     @RequestMapping(value = "/star", method = RequestMethod.PUT)
     public ResponseEntity<?> starFileOrDir(HttpSession session,@RequestBody  UserFile userFile) {
         String userId = session.getAttribute("userId").toString();
@@ -101,12 +108,12 @@ public class FileResource {
     }
 
     @RequestMapping(value = "/shareWithUser", method = RequestMethod.PUT)
-    public ResponseEntity<?> shareFileOrDirWithUser(HttpSession session,@RequestBody  UserFile file, @RequestHeader String sharewithuserid) {
+    public ResponseEntity<?> shareFileOrDirWithUser(HttpSession session, @RequestBody  UserFile file, @RequestHeader ArrayList<String> sharewithuserids) {
         String userId = session.getAttribute("userId").toString();
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
-            boolean fileOrDirShared = fileService.shareFileOrDir(userId, file, sharewithuserid);
+            boolean fileOrDirShared = fileService.shareFileOrDirWithUsers(userId, file, sharewithuserids);
             if(fileOrDirShared)
                 return new ResponseEntity(HttpStatus.OK);
             else
