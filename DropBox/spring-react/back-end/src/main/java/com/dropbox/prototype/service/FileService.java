@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -189,5 +190,40 @@ public class FileService {
         }
         System.out.println("Upload the file successfully at " + destFile.getCanonicalPath());
         userRepository.save(toUser);
+    }
+
+    public boolean deleteDir(String userId, String dirPath, String dirName) {
+
+        User user = userRepository.findOne(userId);
+        try{
+            String dirRelativePath = dirPath + File.separator + dirName;
+            String deletedirPath = userFileDir + File.separator + userId + File.separator + dirPath + File.separator + dirName;
+            File dir = new File(deletedirPath);
+            if (dir.exists()) {
+                if (dir.delete()) {
+                    System.out.println("Directory is Deleted at " + dir.getAbsolutePath());
+                    ArrayList<UserFile> childFiles = new ArrayList<UserFile>();
+                    if (user.getFiles() != null){
+                        for(UserFile file : user.getFiles()){
+                            if(file.getCurrentPath().contains(dirRelativePath)){
+                                childFiles.add(file);
+                            }
+                        }
+                    }
+                    user.getFiles().removeAll(childFiles);
+                    userRepository.save(user);
+                    return true;
+                } else {
+                    System.out.println("Failed to delete directory!");
+                    return false;
+                }
+            }else{
+                return true;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

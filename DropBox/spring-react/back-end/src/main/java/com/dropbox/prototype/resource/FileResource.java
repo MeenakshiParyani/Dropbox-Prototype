@@ -94,6 +94,18 @@ public class FileResource {
         }
     }
 
+    @RequestMapping(value = "/deleteDir", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteDir(HttpSession session,@RequestBody  Map<String, Object> payload) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean dirDeleted = fileService.deleteDir(userId, payload.get("dirpath").toString(), payload.get("dirname").toString());
+            List<UserFile> files = fileService.getUserFiles(userId, payload.get("dirpath").toString());
+            return new ResponseEntity(files, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/star", method = RequestMethod.PUT)
     public ResponseEntity<?> starFileOrDir(HttpSession session,@RequestBody  UserFile userFile) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
