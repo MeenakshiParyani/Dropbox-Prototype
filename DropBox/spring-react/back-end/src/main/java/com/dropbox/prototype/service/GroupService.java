@@ -62,4 +62,51 @@ public class GroupService {
         }
         return false;
     }
+
+    public boolean deleteGroup(String userId, String groupName) {
+        User user = userRepository.findOne(userId);
+        ArrayList<UserGroup> groups = user.getGroups();
+        UserGroup groupToRemove = new UserGroup();
+        for(UserGroup group: groups){
+            if(group.getGroupName().equals(groupName)){
+                groupToRemove = group;
+                System.out.println("Group Deleted");
+            }
+        }
+        groups.remove(groupToRemove);
+        user.setGroups(groups);
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean deleteGroupMembers(String groupName, String userId, ArrayList<String> userIds) {
+        User user = userRepository.findOne(userId);
+        ArrayList<UserGroup> groups = user.getGroups();
+        for(UserGroup userGroup : groups){
+            if(userGroup.getGroupName().equals(groupName)){
+                for(String groupMemberId : userIds) {
+                    User groupMember = userRepository.findOne(groupMemberId);
+                    userGroup.removeGroupMember(groupMember);
+                }
+                user.setGroups(groups);
+                userRepository.save(user);
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+        return false;
+    }
+
+    public ArrayList<User> getGroupMembers(String groupName, String userId) {
+        User user = userRepository.findOne(userId);
+        ArrayList<UserGroup> groups = user.getGroups();
+        for(UserGroup userGroup : groups){
+            if(userGroup.getGroupName().equals(groupName)){
+                return userGroup.getGroupMembers();
+            }
+        }
+        return null;
+    }
 }

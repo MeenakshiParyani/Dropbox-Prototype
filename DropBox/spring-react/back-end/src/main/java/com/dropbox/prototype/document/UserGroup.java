@@ -57,12 +57,32 @@ public class UserGroup {
             this.groupMembers = new ArrayList<User>();
             this.groupMembers.add(newGroupMember);
         }else{
-            if(!groupHasMember(this.groupMembers,newGroupMember))
+            if(!groupHasMember(newGroupMember))
                 this.groupMembers.add(newGroupMember);
         }
     }
 
-    private boolean groupHasMember(ArrayList<User> groupMembers, User newGroupMember) {
+    public void removeGroupMember(User groupMember){
+        if(this.groupMembers != null){
+            if(groupHasMember(groupMember)){
+                this.groupMembers.remove(removeMember(groupMember));
+            }
+
+        }
+    }
+
+    private User removeMember(User groupMember) {
+        User userToRemove = null;
+        if(groupMembers != null){
+            for(User member : groupMembers){
+                if(member.getId().equals(groupMember.getId()))
+                    userToRemove = member;
+            }
+        }
+        return userToRemove;
+    }
+
+    private boolean groupHasMember( User newGroupMember) {
         if(groupMembers != null){
             for(User member : groupMembers){
                 if(member.getId().equals(newGroupMember.getId()))
@@ -74,4 +94,6 @@ public class UserGroup {
         }
 
     }
+
+
 }

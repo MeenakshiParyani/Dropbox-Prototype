@@ -1,5 +1,6 @@
 package com.dropbox.prototype.resource;
 
+import com.dropbox.prototype.document.User;
 import com.dropbox.prototype.document.UserGroup;
 import com.dropbox.prototype.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,45 @@ public class GroupResource {
                 return new ResponseEntity<Object>(HttpStatus.OK);
             else
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteGroup(HttpSession session, @RequestBody Map<String, Object> payload) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean groupDeleted = groupService.deleteGroup(userId, payload.get("name").toString());
+            if(groupDeleted)
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            else
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/deleteMembers", method = RequestMethod.PUT)
+    public ResponseEntity<?> deleteMembers(HttpSession session, @RequestBody Map<String, Object> payload) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean membersDeleted = groupService.deleteGroupMembers(payload.get("groupName").toString(), userId, (ArrayList<String>) payload.get("userIds"));
+            if(membersDeleted)
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            else
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/getMembers", method = RequestMethod.PUT)
+    public ResponseEntity<?> getMembers(HttpSession session, @RequestBody Map<String, Object> payload) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            ArrayList<User> members = groupService.getGroupMembers(payload.get("groupName").toString(), userId);
+            return new ResponseEntity<Object>(members, HttpStatus.OK);
         }
     }
 
