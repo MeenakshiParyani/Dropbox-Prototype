@@ -138,6 +138,18 @@ public class FileService {
         return true;
     }
 
+    private UserFile getUpdatedUserFile(String userId, UserFile file){
+        User user = userRepository.findOne(userId);
+        ArrayList<UserFile> files = user.getFiles();
+        for(UserFile userFile : files){
+            if(userFile.getName().equals(file.getName()) && userFile.getCurrentPath().equals(file.getCurrentPath()))
+                return userFile;
+        }
+        return file;
+    }
+
+
+
     private void setFileAsSharedWithUser(UserFile userFile, User user, User shareWithUser) {
         // Save the file in db with isShared = True for the owner
         ArrayList<UserFile> files = user.getFiles();
@@ -145,11 +157,11 @@ public class FileService {
             if (file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName())) {
                 file.setShared(true);
                 ArrayList<User> sharedWithUsers = file.getSharedWithUsers();
-                if(sharedWithUsers == null){
+                if (sharedWithUsers == null) {
                     sharedWithUsers = new ArrayList<>();
                     shareWithUser.setFiles(null);
                     sharedWithUsers.add(shareWithUser);
-                }else{
+                } else {
                     sharedWithUsers.add(shareWithUser);
                 }
                 file.setSharedWithUsers(sharedWithUsers);
@@ -164,11 +176,10 @@ public class FileService {
         FileOutputStream fos = null;
         File sourceFile = new File(userFileDir + File.separator + fromUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
         File destFile = new File(userFileDir + File.separator + toUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
-        if(file.getDir())
+        if(file.isDir())
             FileUtils.copyDirectory(sourceFile, destFile);
         else
             org.apache.commons.io.FileUtils.copyFile(sourceFile, destFile);
-        file.setShared(true);
         if(toUser.getFiles() != null)
             toUser.getFiles().add(file);
         else{

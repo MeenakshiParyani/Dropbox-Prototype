@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class UserFile {
+
     @JsonProperty("name")
     private String name;
 
@@ -48,7 +49,7 @@ public class UserFile {
         this.name = name;
     }
 
-    public Boolean getDir() {
+    public Boolean isDir() {
         return isDir;
     }
 
