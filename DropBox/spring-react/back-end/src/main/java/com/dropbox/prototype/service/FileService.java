@@ -3,15 +3,12 @@ package com.dropbox.prototype.service;
 import com.dropbox.prototype.document.User;
 import com.dropbox.prototype.document.UserFile;
 import com.dropbox.prototype.repository.UserRepository;
-import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,30 +41,30 @@ public class FileService {
                 FileOutputStream fos = null;
                 String fileName = file.getOriginalFilename();
                 File convFile = new File(userFileDir + File.separator + userId + File.separator + path + File.separator + fileName);
-                try {
-                    convFile.createNewFile();
-                    fos = new FileOutputStream(convFile);
-                    fos.write(file.getBytes());
-                    fos.close();
-                    if(user.getFiles() != null)
-                        user.getFiles().add(new UserFile(fileName, false, false, null, null, path ,false));
-                    else{
-                        ArrayList<UserFile> userfiles = new ArrayList<UserFile>();
-                        userfiles.add(new UserFile(fileName, false, false, null, null, path ,false));
-                        user.setFiles(userfiles);
-                    }
-                    System.out.println("Upload the file successfully at " + convFile.getCanonicalPath());
-                } catch (FileNotFoundException e) {
-                    System.out.println("Failed to upload the file");
-                    e.printStackTrace();
-                    return false;
-                } catch (IOException e) {
-                    System.out.println("Failed to upload the file");
-                    e.printStackTrace();
-                    return false;
+
+                convFile.createNewFile();
+                fos = new FileOutputStream(convFile);
+                fos.write(file.getBytes());
+                fos.close();
+                if(user.getFiles() != null)
+                    user.getFiles().add(new UserFile(fileName, false, false, null, null, path ,false));
+                else{
+                    ArrayList<UserFile> userfiles = new ArrayList<UserFile>();
+                    userfiles.add(new UserFile(fileName, false, false, null, null, path ,false));
+                    user.setFiles(userfiles);
                 }
+                System.out.println("Upload the file successfully at " + convFile.getCanonicalPath());
+
             }
             userRepository.save(user);
+        }catch (FileNotFoundException e) {
+            System.out.println("Failed to upload the file");
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            System.out.println("Failed to upload the file");
+            e.printStackTrace();
+            return false;
         }catch(Exception e){
             e.printStackTrace();
             return false;
@@ -123,5 +120,49 @@ public class FileService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean shareFileOrDir(String userId, UserFile userFile, String sharewithuserid) {
+        User user = userRepository.findOne(userId);
+        try{
+            setFileAsShared(userFile, user);
+            shareFileBetweenUsers(userId, sharewithuserid, userFile);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private void setFileAsShared(UserFile userFile, User user) {
+        // Save the file in db with isShared = True for the owner
+        ArrayList<UserFile> files = user.getFiles();
+        UserFile sharedFile = new UserFile();
+        for (UserFile file : files) {
+            if (file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName())) {
+                file.setShared(true);
+                sharedFile = file;
+            }
+        }
+        user.setFiles(files);
+        userRepository.save(user);
+    }
+
+    private void shareFileBetweenUsers(String fromUserId, String toUserId, UserFile file) throws IOException {
+        User toUser = userRepository.findOne(toUserId);
+        FileOutputStream fos = null;
+        File sourceFile = new File(userFileDir + File.separator + fromUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
+        File destFile = new File(userFileDir + File.separator + toUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
+        org.apache.commons.io.FileUtils.copyFile(sourceFile, destFile);
+        file.setShared(true);
+        if(toUser.getFiles() != null)
+            toUser.getFiles().add(file);
+        else{
+            ArrayList<UserFile> userFiles = new ArrayList<UserFile>();
+            userFiles.add(file);
+            toUser.setFiles(userFiles);
+        }
+        System.out.println("Upload the file successfully at " + destFile.getCanonicalPath());
+        userRepository.save(toUser);
     }
 }

@@ -99,4 +99,18 @@ public class FileResource {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/shareWithUser", method = RequestMethod.PUT)
+    public ResponseEntity<?> shareFileOrDirWithUser(HttpSession session,@RequestBody  UserFile file, @RequestHeader String sharewithuserid) {
+        String userId = session.getAttribute("userId").toString();
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            boolean fileOrDirShared = fileService.shareFileOrDir(userId, file, sharewithuserid);
+            if(fileOrDirShared)
+                return new ResponseEntity(HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

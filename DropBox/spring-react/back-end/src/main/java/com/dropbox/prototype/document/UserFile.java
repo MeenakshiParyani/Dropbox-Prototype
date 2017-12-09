@@ -1,14 +1,29 @@
 package com.dropbox.prototype.document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class UserFile {
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("isDir")
     private Boolean isDir;
+
+    @JsonProperty("isShared")
     private Boolean isShared;
+
+    @JsonProperty("sharedWithUsers")
     private ArrayList<String> sharedWithUsers;
+
+    @JsonProperty("sharedWithGroups")
     private ArrayList<String> sharedWithGroups;
+
+    @JsonProperty("currentPath")
     private String currentPath;
+
+    @JsonProperty("isStared")
     private Boolean isStared;
 
     public UserFile(){
