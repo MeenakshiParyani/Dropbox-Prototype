@@ -29,6 +29,7 @@
     "axios": "^0.16.2",
     "babel-preset-stage-1": "^6.1.18",
     "history": "^4.7.2",
+    "js-file-download": "^0.4.1",
     "lodash": "^3.10.1",
     "prop-types": "^15.6.0",
     "ramda": "^0.25.0",

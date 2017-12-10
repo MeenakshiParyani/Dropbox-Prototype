@@ -4,6 +4,8 @@ import com.dropbox.prototype.document.User;
 import com.dropbox.prototype.document.UserFile;
 import com.dropbox.prototype.repository.UserRepository;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class FileService {
@@ -30,10 +33,26 @@ public class FileService {
         return files;
     }
 
-    public File getUserFile(String userId, String filePath){
-        String directory = userFileDir + File.separator + userId + File.separator + filePath;
-        File file = new File(directory);
-        return file;
+    public File getUserFile(String userId, String filePath, String fileName, boolean isDir){
+        String fileOrDir = userFileDir + File.separator + userId + File.separator + filePath + File.separator + fileName;
+        if(!isDir){
+            File file = new File(fileOrDir);
+            return file;
+        }else{
+            ZipFile zip = null;
+            try{
+                // Zip the directory and send it
+                zip = new ZipFile("./tmp"+ File.separator + fileName+ ".zip");
+                zip.addFolder(fileOrDir, null);
+                System.out.println("Created the zip file");
+            }catch(ZipException e){
+                e.printStackTrace();
+            }
+            return zip.getFile();
+        }
+
+
+
     }
 
     public boolean uploadFiles(MultipartFile[] files, String userId, String path) {

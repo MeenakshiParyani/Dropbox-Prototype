@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory'
 import {PageHeader, Grid, Row, Col, Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import fileDownlaoder from 'react-file-download';
+// import fileDownlaoder from 'react-file-download';
+import fileDownlaoder from'js-file-download';
 import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -226,21 +227,21 @@ class HomeViewComponent extends Component {
 
   dowloadFile(homeView, row){
     console.log(this.props.user);
-    const url = 'http://localhost:3000/api/file/download?filename=' + row.name + '&isDir=' + row.isDir;
-    window.open(url, "_blank");
-    // axios.get('http://localhost:3000/api/file/download',{
-    //   params: {
-    //     userid  : this.props.user.id,
-    //     filename : row.name,
-    //     isDir    : row.isDir
-    //   }
-    // })
-    // .then(function (response) {
-    //   fileDownlaoder(response.data, row.name);
-    // })
-    // .catch(function(err){
-    //   console.log('error is ' + err);
-    // });
+    // const url = 'http://localhost:8080/api/files/download?filePath=' + row.currentPath + '&fileName=' + row.name + '&isDir=' + row.isDir;
+    // window.open(url, "_blank");
+    axios.get('http://localhost:8080/api/files/download',{
+      params: {
+        filePath  : row.currentPath,
+        fileName : row.name,
+        isDir    : row.isDir
+      }
+    })
+    .then(function (response) {
+      fileDownlaoder(response.data, row.name);
+    })
+    .catch(function(err){
+      console.log('error is ' + err);
+    });
 
   }
 

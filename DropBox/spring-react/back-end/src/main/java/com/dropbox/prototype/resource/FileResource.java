@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,19 +41,19 @@ public class FileResource {
 
     }
 
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadFile(HttpSession session, @RequestParam String filepath) {
+    @RequestMapping(value = "/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<?> downloadFile(HttpSession session, @RequestParam String filePath, @RequestParam String fileName, @RequestParam boolean isDir ) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if (userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
-
+            File file = fileService.getUserFile(userId,filePath , fileName, isDir);
             // Define the headers
             HttpHeaders headers = new HttpHeaders();
             headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
             headers.add("Pragma", "no-cache");
             headers.add("Expires", "0");
-            File file = fileService.getUserFile(userId, filepath);
+            headers.add("Content-Type", new MimetypesFileTypeMap().getContentType(file));
             InputStreamResource resource = null;
             try {
                 resource = new InputStreamResource(new FileInputStream(file));
