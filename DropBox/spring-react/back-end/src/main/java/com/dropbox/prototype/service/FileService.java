@@ -25,8 +25,8 @@ public class FileService {
     private static String userFileDir = "./user_files";
 
     public List<UserFile> getUserFiles(String userId, String currentPath){
-        List<User> user = userRepository.findByIdAndFilesCurrentPath(userId, currentPath);
-        List<UserFile> files = user.get(0).getFiles().stream().filter( file -> file.getCurrentPath().equals(currentPath)).collect(Collectors.toList());
+        User user = userRepository.findOne(userId);
+        List<UserFile> files = user.getFiles().stream().filter( file -> file.getCurrentPath().equals(currentPath)).collect(Collectors.toList());
         return files;
     }
 
@@ -198,23 +198,29 @@ public class FileService {
         try{
             String dirRelativePath = ((dirPath.equals("/")) ? "" : dirPath ) + File.separator + dirName;
             String deletedirPath = userFileDir + File.separator + userId + File.separator + dirPath + File.separator + dirName;
-            File dir = new File(deletedirPath);
-            if (dir.exists()) {
-                FileUtils.deleteDirectory(dir);
-                System.out.println("Directory is Deleted at " + dir.getAbsolutePath());
-                ArrayList<UserFile> childFiles = new ArrayList<UserFile>();
-                if (user.getFiles() != null){
-                    for(UserFile file : user.getFiles()){
-                        if(file.getCurrentPath().contains(dirRelativePath)){
-                            childFiles.add(file);
+            File fileOrDir = new File(deletedirPath);
+            if(fileOrDir.exists()){
+                if (fileOrDir.isDirectory()) {
+                    FileUtils.deleteDirectory(fileOrDir);
+                    System.out.println("Directory is Deleted at " + fileOrDir.getAbsolutePath());
+                    ArrayList<UserFile> childFiles = new ArrayList<UserFile>();
+                    if (user.getFiles() != null){
+                        for(UserFile file : user.getFiles()){
+                            if(file.getCurrentPath().contains(dirRelativePath)){
+                                childFiles.add(file);
+                            }
                         }
                     }
+                    user.getFiles().removeAll(childFiles);
+                }else{
+                    fileOrDir.delete();
+                    System.out.println("File is Deleted at " + fileOrDir.getAbsolutePath());
                 }
-                user.getFiles().remove(user.getFileByPathAndName(dirPath, dirName));
-                user.getFiles().removeAll(childFiles);
-                userRepository.save(user);
-                return true;
             }
+
+            user.getFiles().remove(user.getFileByPathAndName(dirPath, dirName));
+            userRepository.save(user);
+            return true;
         }catch(IOException e){
             e.printStackTrace();
             return false;
@@ -222,6 +228,6 @@ public class FileService {
             e.printStackTrace();
             return false;
         }
-        return false;
+
     }
 }

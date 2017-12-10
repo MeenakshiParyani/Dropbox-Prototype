@@ -67,7 +67,36 @@ const mapDispatchToProps = (dispatch) => {
 
     toggleRating: (newRating) => {
       dispatch({type: "toggleRating", rating: newRating});
-    }
+    },
+
+    handleDeleteFileOrDir: (currentPath, fileOrDir) => {
+      var options = {
+        withCredentials : true
+      }
+      axios.post('http://localhost:8080/api/files/deleteFileOrDir',{
+        dirpath : currentPath,
+        dirname : fileOrDir
+      },options)
+      .then(function (response) {
+        if(response.status == 200){
+          var files = response.data;
+          console.log(response.data);
+          dispatch({
+            type : "updateFiles",
+            userFiles : files
+          });
+        }else{
+          var err = response;
+          console.log('error is ' + err);
+          dispatch({type: "error", errorMessage: err.response.data.error});
+        }
+
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({type: "error", errorMessage: err.response.data.error});
+      });
+    },
   };
 };
 
@@ -140,6 +169,11 @@ class HomeViewComponent extends Component {
     return (
       <button className="delete-btn btn btn-default" onClick={ () => this.formatExtraData.deleteFileOrFolder(this.formatExtraData, row)}>Delete</button>
     );
+  }
+
+  deleteFileOrFolder(homeView, row){
+    console.log(row);
+    this.props.handleDeleteFileOrDir(row.currentPath, row.name);
   }
 
   toggleRating(newRating) {
@@ -348,6 +382,7 @@ HomeViewComponent.PropTypes = {
   shareLinkCopied: PropTypes.bool.isRequired,
   toggleShareLinkCreated: PropTypes.func.isRequired,
   toggleShareLinkCopied: PropTypes.func.isRequired,
+  handleDeleteFileOrDir: PropTypes.func.isRequired,
   rating: PropTypes.string.isRequired
 };
 

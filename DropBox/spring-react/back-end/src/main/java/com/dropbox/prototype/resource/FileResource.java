@@ -96,7 +96,7 @@ public class FileResource {
         }
     }
 
-    @RequestMapping(value = "/deleteDir", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deleteFileOrDir", method = RequestMethod.POST)
     public ResponseEntity<?> deleteDir(HttpSession session,@RequestBody  Map<String, Object> payload) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
