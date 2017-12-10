@@ -122,4 +122,15 @@ public class User {
             this.getGroups().add(group);
         }
     }
+
+    public UserFile getFileByPathAndName(String dirPath, String dirName){
+        if(files != null){
+            for(UserFile file : files){
+                if(file.getCurrentPath().equals(dirPath) && file.getName().equals(dirName)){
+                    return file;
+                }
+            }
+        }
+        return null;
+    }
 }

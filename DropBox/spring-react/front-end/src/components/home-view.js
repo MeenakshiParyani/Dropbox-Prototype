@@ -136,6 +136,12 @@ class HomeViewComponent extends Component {
     );
   }
 
+  deleteFormatter(cell, row) {
+    return (
+      <button className="delete-btn btn btn-default" onClick={ () => this.formatExtraData.deleteFileOrFolder(this.formatExtraData, row)}>Delete</button>
+    );
+  }
+
   toggleRating(newRating) {
     this.props.toggleRating(newRating);
   }
@@ -243,9 +249,10 @@ dialogStyles = {
               <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
                striped={false} sortable={true} data={this.props.files} keyField='name'>
                 <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
-                <TableHeaderColumn className="slim-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
+                <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
                 <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
                 <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
+                <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.deleteFormatter } formatExtraData={ this.deleteFileOrFolder, this }></TableHeaderColumn>
               </BootstrapTable>
           </div>
           <div className ='shareModal'>

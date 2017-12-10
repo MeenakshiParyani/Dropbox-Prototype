@@ -75,26 +75,24 @@ const mapDispatchToProps = (dispatch) => {
       var options = {
         withCredentials : true,
         headers: {
-          currentpath : currentPath
+          currentpath : currentPath,
+          'Content-Type': 'multipart/form-data'
         }
       }
       var imageFiles = document.querySelector("#files");
       var imgFiles = imageFiles.files;
-      for(var file in imgFiles) {
-        if(imgFiles.hasOwnProperty(file)) {
-          var data = new FormData();
-          data.append('files', imgFiles[file]);
-          axios.post('http://localhost:3000/api/file/upload',data, options)
-          .then(response => {
-            console.log(response);
-            dispatch({ type: "updateFiles", userFiles: response.data.files});
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        }
 
-      }
+      var data = new FormData();
+      data.append('file', imgFiles[0]);
+      axios.post('http://localhost:8080/api/files/upload',data, options)
+      .then(response => {
+        console.log(response);
+        dispatch({ type: "updateFiles", userFiles: response.data});
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     },
     isLoggedIn: (callback, errCallback) => {
       axios.get('http://localhost:8080/api/user/isLoggedIn')

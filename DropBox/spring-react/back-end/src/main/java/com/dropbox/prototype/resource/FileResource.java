@@ -69,15 +69,17 @@ public class FileResource {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadFile(HttpSession session, @RequestBody MultipartFile[] files, @RequestHeader String currentpath) {
+    public ResponseEntity<?> uploadFile(HttpSession session, @RequestBody MultipartFile file, @RequestHeader String currentpath) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
+            MultipartFile[] files = {file};
             boolean fileUploaded = fileService.uploadFiles(files, userId, currentpath);
-            if(fileUploaded)
-                return new ResponseEntity(HttpStatus.OK);
-            else
+            if(fileUploaded){
+                List<UserFile> userFiles = fileService.getUserFiles(userId, currentpath);
+                return new ResponseEntity(userFiles, HttpStatus.OK);
+            } else
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
