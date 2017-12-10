@@ -98,6 +98,32 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({type: "error", errorMessage: err.response.data.error});
       });
     },
+
+    handleStarFileOrDir : (file) => {
+      var options = {
+        withCredentials : true
+      }
+      axios.put('http://localhost:8080/api/files/star',file ,options)
+      .then(function (response) {
+        if(response.status == 200){
+          var files = response.data;
+          console.log(response.data);
+          dispatch({
+            type : "updateFiles",
+            userFiles : files
+          });
+        }else{
+          var err = response;
+          console.log('error is ' + err);
+          dispatch({type: "error", errorMessage: err.response.data.error});
+        }
+
+      })
+      .catch(function(err){
+        console.log('error is ' + err);
+        dispatch({type: "error", errorMessage: err.response.data.error});
+      });
+    }
   };
 };
 
@@ -181,24 +207,14 @@ class HomeViewComponent extends Component {
     this.props.toggleRating(newRating);
   }
 
-  onStarRatingChange(rating) {
-    if(rating == 0)
-      rating = 1;
-    else
-      rating =0;
-    this.setState({
-      rating: rating
-    });
+  onStarRatingChange(row) {
+    this.props.handleStarFileOrDir(row);
   }
 
   fileNameFormatter(cell, row) {
-    var temp=cell.split('_');
-    var out=[];
-    for(var i=0; i<temp.length;i=i+2)
-      out.push(temp.slice(i,i+2).join('_'));
-    var fileName = (out[1] != undefined) ? out[1] : out[0];
+    var fileName = cell;
     console.log(fileName);
-    var rating = row != undefined ? row.stared ? 1 : 0 : 0;
+    var rating = row != undefined ? row.isStared ? 1 : 0 : 0;
     return (
       <span className="file-name">
       <a href="#">{fileName}</a>
@@ -206,8 +222,8 @@ class HomeViewComponent extends Component {
           rating={rating}
           isSelectable={true}
           isAggregateRating={false}
-          numOfStars={ 1 } starRatedColor="rgb(244, 215, 66)" starWidthAndHeight="25px" starSelectingHoverColor="yellow"
-          changeRating ={ (rating) => this.onStarRatingChange(rating)}
+          numOfStars={ 1 } starRatedColor="rgb(244, 215, 66)" starWidthAndHeight="27px" starSelectingHoverColor="yellow"
+          changeRating ={ (rating) => this.onStarRatingChange(row)}
         /></span>
       </span>
     );
@@ -283,11 +299,11 @@ dialogStyles = {
               <PageHeader className="header"><h3>Home</h3></PageHeader>
               <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
                striped={false} sortable={true} data={this.props.files} keyField='name'>
-                <TableHeaderColumn className="slim-width" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
-                <TableHeaderColumn className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
-                <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
-                <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
-                <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.deleteFormatter } formatExtraData={ this.deleteFileOrFolder, this }></TableHeaderColumn>
+                <TableHeaderColumn width="20px" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
+                <TableHeaderColumn width="140px" className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
+                <TableHeaderColumn width="30px" className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
+                <TableHeaderColumn width="30px" className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
+                <TableHeaderColumn width="28px" className="slim-width" dataField='name' dataFormat={ this.deleteFormatter } formatExtraData={ this.deleteFileOrFolder, this }></TableHeaderColumn>
               </BootstrapTable>
           </div>
           <div className ='shareModal'>
@@ -384,7 +400,8 @@ HomeViewComponent.PropTypes = {
   toggleShareLinkCreated: PropTypes.func.isRequired,
   toggleShareLinkCopied: PropTypes.func.isRequired,
   handleDeleteFileOrDir: PropTypes.func.isRequired,
-  rating: PropTypes.string.isRequired
+  rating: PropTypes.string.isRequired,
+  handleDeleteFileOrDir : PropTypes.func.isRequired
 };
 
 const HomeView = connect(

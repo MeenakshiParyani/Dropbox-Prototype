@@ -110,14 +110,16 @@ public class FileResource {
     }
 
     @RequestMapping(value = "/star", method = RequestMethod.PUT)
-    public ResponseEntity<?> starFileOrDir(HttpSession session,@RequestBody  UserFile userFile) {
+    public ResponseEntity<?> starOrUnstarFileOrDir(HttpSession session,@RequestBody  UserFile userFile) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
             boolean fileOrdirStared = fileService.starFileOrDir(userId, userFile);
-            if(fileOrdirStared)
-                return new ResponseEntity(HttpStatus.OK);
+            if(fileOrdirStared){
+                List<UserFile> files = fileService.getUserFiles(userId, userFile.getCurrentPath());
+                return new ResponseEntity(files, HttpStatus.OK);
+            }
             else
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }

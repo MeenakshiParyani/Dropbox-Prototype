@@ -132,7 +132,7 @@ public class FileService {
             ArrayList<UserFile> files = user.getFiles();
             files.forEach(file -> {
                 if(file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName()))
-                    file.setStared(true);
+                    file.setStared(!file.getStared());
             });
             user.setFiles(files);
             userRepository.save(user);
