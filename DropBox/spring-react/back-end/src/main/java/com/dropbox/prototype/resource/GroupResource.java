@@ -44,8 +44,11 @@ public class GroupResource {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
             boolean membersAdded = groupService.addGroupMembers(payload.get("groupName").toString(), userId, (ArrayList<String>) payload.get("userIds"));
-            if(membersAdded)
-                return new ResponseEntity<Object>(HttpStatus.OK);
+            if(membersAdded){
+                ArrayList<UserGroup> groups = groupService.getUserGroups(userId);
+                return new ResponseEntity<Object>(groups, HttpStatus.OK);
+            }
+
             else
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }

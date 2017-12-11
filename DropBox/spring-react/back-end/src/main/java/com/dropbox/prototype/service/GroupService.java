@@ -52,6 +52,7 @@ public class GroupService {
                     groupMember.setGroups(null);
                     groupMember.setFiles(null);
                     userGroup.addGroupMember(groupMember);
+                    System.out.println("Added " + groupMember.getFullname() + " to the " + userGroup.getGroupName() + " group");
                 }
                 user.setGroups(groups);
                 userRepository.save(user);

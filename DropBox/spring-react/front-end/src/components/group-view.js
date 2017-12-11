@@ -17,6 +17,8 @@ import {
   ModalBody,
   ModalFooter
 } from 'react-modal-bootstrap';
+import Select from 'react-select';
+import fetch from 'isomorphic-fetch';
 
 const mapStateToProps = (state) => {
   return {
@@ -25,7 +27,8 @@ const mapStateToProps = (state) => {
     showGroupMembers: state.update.showGroupMembers,
     selectedGroup: state.update.selectedGroup,
     selectedGroupMembers: state.update.selectedGroupMembers,
-    showAddGroupMemberModal: state.update.showAddGroupMemberModal
+    showAddGroupMemberModal: state.update.showAddGroupMemberModal,
+    newGroupMember: state.update.newGroupMember
   };
 };
 
@@ -61,8 +64,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({type: "toggleShowAddGroupMemberModal", selectedGroup: group, selectedGroupMembers: members});
     },
 
-    changeNewGroupMember: (e) => {
-      dispatch({type: "changeNewGroupMember", member: e.target.value});
+    changeNewGroupMember: (member) => {
+      dispatch({type: "changeNewGroupMember", member: member});
     }
   };
 };
@@ -79,6 +82,7 @@ class GroupViewComponent extends Component {
     this.addMemberToGroup= this.addMemberToGroup.bind(this);
     this.toggleShowAddGroupMemberModal = this.toggleShowAddGroupMemberModal.bind(this);
     this.updateUserGroups = this.updateUserGroups.bind(this);
+    this.changeNewGroupMember = this.changeNewGroupMember.bind(this);
   }
 
   updateUserGroups(){
@@ -232,10 +236,12 @@ deleteGroup(group){
       console.log('error is ' + err);
     }
     groupView.props.deleteGroup(group);
+    updateUserGroups();
   })
   .catch(function(err){
     console.log('error is ' + err);
     groupView.props.deleteGroup(group);
+    updateUserGroups()
   });
 }
 
@@ -262,9 +268,55 @@ toggleShowAddGroupMemberModal(group,members){
   this.props.toggleShowAddGroupMemberModal(group,members);
 }
 
+getUserIds(users){
+  var userids = [];
+  for (var i = 0; i < users.length; i++) {
+    userids.push(users[i].id);
+  }
+  return userids;
+}
+
 addMemberToGroup(){
-  this.props.addMemberToGroup();
-  this.props.toggleShowAddGroupMemberModal();
+  var groupView = this;
+  var userids = this.getUserIds(this.props.newGroupMember);
+  var options = {
+    withCredentials : true
+  }
+  var data = {
+    groupName : this.props.selectedGroup,
+    userIds : userids
+  }
+  axios.put('http://localhost:8080/api/groups/addMembers',data,options)
+  .then(function (response) {
+    if(response.status == 200){
+      var files = response.data;
+      console.log(response.data);
+      this.props.addMemberToGroup();
+    }else{
+      var err = response;
+      console.log('error is ' + err);
+    }
+    this.props.toggleShowAddGroupMemberModal();
+  })
+  .catch(function(err){
+    console.log('error is ' + err);
+    this.props.toggleShowAddGroupMemberModal();
+  });
+
+}
+
+getUsers(){
+  return fetch(`http://localhost:8080/api/user/listAllExceptSelf`,{
+      credentials: 'include'
+  })
+  .then((response) => response.json())
+  .then((json) => {
+    return { options: json };
+  });
+}
+
+changeNewGroupMember(member){
+  this.props.changeNewGroupMember(member);
 }
 
   render() {
@@ -322,8 +374,7 @@ addMemberToGroup(){
           </ModalTitle>
         </ModalHeader>
         <ModalBody>
-          <input type="text" id="newMember" name="newMemberName" placeholder="Email Or Name" value = {this.props.newGroupMember}
-          className="form-control" onChange={this.props.changeNewGroupMember} required/>
+          <Select.Async multi={true} value={this.props.newGroupMember} onChange={this.changeNewGroupMember}  valueKey="id" labelKey="email" loadOptions={this.getUsers} />
         </ModalBody>
         <ModalFooter>
           <button className='btn btn-primary' onClick={this.addMemberToGroup}>
@@ -352,7 +403,8 @@ GroupViewComponent.PropTypes = {
   deleteGroup: PropTypes.func.isRequired,
   addMemberToGroup: PropTypes.func.isRequired,
   showAddGroupMemberModal: PropTypes.bool.isRequired,
-  changeNewGroupMember: PropTypes.func.isRequired
+  changeNewGroupMember: PropTypes.func.isRequired,
+  newGroupMember: PropTypes.array
 };
 
 const GroupView = connect(

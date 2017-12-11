@@ -103,6 +103,8 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "updateUserGroups") {
     const nextState = R.clone(state);
     nextState.userGroups = action.userGroups;
+    nextState.selectedGroup = null;
+    nextState.selectedGroupMembers = null;
     return nextState;
   }else if(action.type === "toggleShowGroupMembers") {
     const nextState = R.clone(state);
