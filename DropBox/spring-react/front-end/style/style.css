@@ -177,6 +177,13 @@
     height: 32px;
 }
 
+.group-share-btn{
+  float:right;
+  border: 2px;
+  width: 105px;
+  height: 32px;
+}
+
 .delete-btn {
     float:right;
     border: 2px;

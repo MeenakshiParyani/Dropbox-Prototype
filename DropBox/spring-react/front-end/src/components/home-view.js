@@ -197,6 +197,16 @@ class HomeViewComponent extends Component {
     );
   }
 
+  shareGroupFormatter(cell, row) {
+    var fileName = row.name;
+    var isDir = row.isDir;
+    var file = row;
+    console.log(row);
+      return (
+        <a className="group-share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir, file) }}>Group-Share</a>
+      );
+  }
+
   overlayFormatter(cell, row) {
     return (
       <button className="overlay-btn btn btn-default" onClick={ () => this.formatExtraData.dowloadFile(this.formatExtraData, row)}>Download</button>
@@ -356,9 +366,10 @@ dialogStyles = {
               <PageHeader className="header"><h3>Home</h3></PageHeader>
               <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
                striped={false} sortable={true} data={this.props.files} keyField='name'>
-                <TableHeaderColumn width="20px" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
+                <TableHeaderColumn width="15px" dataField='isDir' dataFormat={ this.dirFormatter }></TableHeaderColumn>
                 <TableHeaderColumn width="140px" className="wide-width file-name" dataField='name' dataFormat={ this.fileNameFormatter }>Name</TableHeaderColumn>
-                <TableHeaderColumn width="30px" className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
+                <TableHeaderColumn width="25px" className="slim-width" dataField='name' dataFormat={ this.shareFormatter }></TableHeaderColumn>
+                <TableHeaderColumn width="40px" className="slim-width" dataField='name' dataFormat={ this.shareGroupFormatter }></TableHeaderColumn>
                 <TableHeaderColumn width="30px" className="slim-width" dataField='name' dataFormat={ this.overlayFormatter } formatExtraData={ this.dowloadFile, this }></TableHeaderColumn>
                 <TableHeaderColumn width="28px" className="slim-width" dataField='name' dataFormat={ this.deleteFormatter } formatExtraData={ this.deleteFileOrFolder, this }></TableHeaderColumn>
               </BootstrapTable>
