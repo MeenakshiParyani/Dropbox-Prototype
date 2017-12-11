@@ -49,7 +49,7 @@ public class GroupResource {
         }
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteGroup(HttpSession session, @RequestBody Map<String, Object> payload) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)

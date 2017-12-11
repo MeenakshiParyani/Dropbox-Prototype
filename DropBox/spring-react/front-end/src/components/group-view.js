@@ -214,7 +214,29 @@ deleteGroupMember(memberName, member){
 }
 
 deleteGroup(group){
-  this.props.deleteGroup(group);
+  var groupView = this;
+  var options = {
+    withCredentials : true
+  }
+  var data = {
+    name : group
+  };
+
+  axios.post('http://localhost:8080/api/groups/delete',data,options)
+  .then(function (response) {
+    if(response.status == 200){
+      var files = response.data;
+      console.log(response.data);
+    }else{
+      var err = response;
+      console.log('error is ' + err);
+    }
+    groupView.props.deleteGroup(group);
+  })
+  .catch(function(err){
+    console.log('error is ' + err);
+    groupView.props.deleteGroup(group);
+  });
 }
 
 deleteGroupFormatter(cell, row){

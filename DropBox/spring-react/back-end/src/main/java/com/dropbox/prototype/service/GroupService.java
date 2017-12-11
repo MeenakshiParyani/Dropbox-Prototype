@@ -70,7 +70,7 @@ public class GroupService {
         for(UserGroup group: groups){
             if(group.getGroupName().equals(groupName)){
                 groupToRemove = group;
-                System.out.println("Group Deleted");
+                System.out.println("Group " + groupName + " Deleted");
             }
         }
         groups.remove(groupToRemove);
