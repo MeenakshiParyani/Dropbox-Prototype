@@ -88,5 +88,16 @@ public class GroupResource {
         }
     }
 
+    @RequestMapping(value = "/getGroups", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroups(HttpSession session) {
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if ( userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else {
+            ArrayList<UserGroup> groups = groupService.getUserGroups(userId);
+            return new ResponseEntity<Object>(groups, HttpStatus.OK);
+        }
+    }
+
 
 }

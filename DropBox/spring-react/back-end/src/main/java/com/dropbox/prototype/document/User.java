@@ -21,6 +21,7 @@ public class User {
     @JsonProperty("lastname")
     private String lastname;
 
+    @JsonProperty("fullname")
     private String fullname;
 
     @JsonProperty("email")

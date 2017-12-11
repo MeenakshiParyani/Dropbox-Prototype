@@ -78,25 +78,34 @@ class GroupViewComponent extends Component {
     this.addMemberFormatter = this.addMemberFormatter.bind(this);
     this.addMemberToGroup= this.addMemberToGroup.bind(this);
     this.toggleShowAddGroupMemberModal = this.toggleShowAddGroupMemberModal.bind(this);
+    this.updateUserGroups = this.updateUserGroups.bind(this);
   }
 
   updateUserGroups(){
-    var groups = this.getUserGroups();
-    this.props.updateUserGroups(groups);
+    var groupView = this;
+    var groups = [];
+     fetch(`http://localhost:8080/api/groups/getGroups`,{
+        credentials: 'include'
+    })
+		.then((response) => response.json())
+		.then((json) => {
+			groupView.props.updateUserGroups(json);
+		});
+
   }
 
   getUserGroups(){
-    var groups = [];
-    groups.push({
-      groupName: 'Personal-Group',
-      members: [{name : 'Meenakshi Paryani'}, {name : 'Nikhil Rajpal'} , {name: 'Murli Rajpal'}]
-    })
-    groups.push({
-      groupName: 'Work-Group',
-      members: [{name : 'Meenakshi Paryani'}, {name : 'Frank Gerber'} , {name: 'Prashant Rajput'}]
-    });
 
-    return groups;
+    // groups.push({
+    //   groupName: 'Personal-Group',
+    //   members: [{name : 'Meenakshi Paryani'}, {name : 'Nikhil Rajpal'} , {name: 'Murli Rajpal'}]
+    // })
+    // groups.push({
+    //   groupName: 'Work-Group',
+    //   members: [{name : 'Meenakshi Paryani'}, {name : 'Frank Gerber'} , {name: 'Prashant Rajput'}]
+    // });
+
+    // return groups;
   }
 
   componentWillMount(){
@@ -129,7 +138,7 @@ class GroupViewComponent extends Component {
   groupMembersFormatter(cell, row){
 
     return (
-      <a href="#"  onClick = { () => {this.toggleShowMembersModal(row.groupName,row.members)}}>Members</a>
+      <a href="#"  onClick = { () => {this.toggleShowMembersModal(row.name,row.members)}}>Members</a>
     );
   }
 
@@ -195,7 +204,7 @@ deleteGroupFormatter(cell, row){
 addMemberFormatter(cell,row){
   return (
     <div>
-      <button className="add-member-btn btn btn-default" onClick = {() => { this.toggleShowAddGroupMemberModal(row.groupName,row.members) }}>Add Members</button>
+      <button className="add-member-btn btn btn-default" onClick = {() => { this.toggleShowAddGroupMemberModal(row.name,row.members) }}>Add Members</button>
     </div>
   );
 }
@@ -216,11 +225,11 @@ addMemberToGroup(){
       <div className = "container-fluid ">
           <PageHeader className="header"><h3>Groups</h3></PageHeader>
           <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
-           striped={false} sortable={true} data={this.props.userGroups} keyField='groupName'>
-            <TableHeaderColumn className="slim-width" dataField='groupName' dataFormat={ this.groupNameFormatter }></TableHeaderColumn>
+           striped={false} sortable={true} data={this.props.userGroups} keyField='name'>
+            <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.groupNameFormatter }></TableHeaderColumn>
             <TableHeaderColumn className="wide-width file-name" dataField='members' dataFormat={ this.groupMembersFormatter }>Name</TableHeaderColumn>
             <TableHeaderColumn className="slim-width" dataField='members' dataFormat={ this.addMemberFormatter }></TableHeaderColumn>
-            <TableHeaderColumn className="slim-width" dataField='groupName' dataFormat={ this.deleteGroupFormatter }></TableHeaderColumn>
+            <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.deleteGroupFormatter }></TableHeaderColumn>
           </BootstrapTable>
       </div>
       <Modal isOpen={this.props.showGroupMembers} onRequestHide={this.toggleShowMembersModal}
@@ -239,8 +248,8 @@ addMemberToGroup(){
         </ModalHeader>
         <ModalBody>
           <BootstrapTable headerStyle={{ display: 'none' }} tableStyle={{ margin: 0, borderRadius: 0, border: 0 }}
-           striped={false} sortable={true} data={this.props.selectedGroupMembers} keyField='name'>
-            <TableHeaderColumn className="slim-width" dataField='name' dataFormat={ this.groupMemberNameFormatter }></TableHeaderColumn>
+           striped={false} sortable={true} data={this.props.selectedGroupMembers} keyField='fullname'>
+            <TableHeaderColumn className="slim-width" dataField='fullname' dataFormat={ this.groupMemberNameFormatter }></TableHeaderColumn>
           </BootstrapTable>
         </ModalBody>
         <ModalFooter>

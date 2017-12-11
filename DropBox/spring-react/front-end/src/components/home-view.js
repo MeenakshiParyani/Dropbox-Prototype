@@ -241,7 +241,7 @@ class HomeViewComponent extends Component {
   }
 
   getShareFileDownloadLink = () => {
-    return 'http://localhost:3000/api/file/download?filename=' + this.props.sharedFileFolderName + '&isDir=' + this.props.sharedFileFolderIsDir;
+    return 'http://localhost:8080/api/file/download?filename=' + this.props.sharedFileFolderName + '&isDir=' + this.props.sharedFileFolderIsDir;
   }
 
   toggleShareLinkCreated = () => {

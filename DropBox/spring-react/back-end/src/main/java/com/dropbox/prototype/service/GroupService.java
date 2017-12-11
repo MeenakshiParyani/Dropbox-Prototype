@@ -109,4 +109,10 @@ public class GroupService {
         }
         return null;
     }
+
+    public ArrayList<UserGroup> getUserGroups(String userId) {
+        User user = userRepository.findOne(userId);
+        ArrayList<UserGroup> groups = user.getGroups();
+        return groups;
+    }
 }
