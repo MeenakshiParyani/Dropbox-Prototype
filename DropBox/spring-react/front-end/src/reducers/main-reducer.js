@@ -31,7 +31,8 @@ export const initialState = {
   createGroupActive: false,
   rating : 0,
   selectedFile :{},
-  shareWithUsers : []
+  shareWithUsers : [],
+  activities : []
 };
 
 export default function update(state = initialState, action = null) {
@@ -153,6 +154,10 @@ export default function update(state = initialState, action = null) {
     const nextState = R.clone(state);
     nextState.shareWithUsers = action.shareWithUsers;
     return nextState;
+  }else if(action.type === "updateUserActivities") {
+    const nextState = R.clone(state);
+    nextState.activities = action.activities;
+    return nextState;
   }
-  return state;changeNewGroupMember
+  return state;
 }

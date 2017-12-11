@@ -36,6 +36,9 @@ public class User {
     @JsonProperty("groups")
     private ArrayList<UserGroup> groups;
 
+    @JsonProperty("activities")
+    private ArrayList<UserActivity> activities;
+
     public enum Permissions {
         READ("Read"), WRITE("Write"), OWNER("Owner");
         private String name; // price of each apple
@@ -143,5 +146,23 @@ public class User {
             }
         }
         return null;
+    }
+
+    public ArrayList<UserActivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(ArrayList<UserActivity> activities) {
+        this.activities = activities;
+    }
+
+    public void addActivity(UserActivity activity){
+        if(this.getActivities() == null){
+            ArrayList<UserActivity> activities = new ArrayList<UserActivity>();
+            activities.add(activity);
+            this.setActivities(activities);
+        }else{
+            this.getActivities().add(activity);
+        }
     }
 }

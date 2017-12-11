@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {TabContainer, Tab, Row, Col, NavItem, TabContent, TabPane, Nav} from 'react-bootstrap'
 import HomeView from './home-view';
 import GroupView from './group-view';
+import ActivityView from './activity.js';
 import {connect} from  "react-redux";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -294,6 +295,9 @@ class HomeComponent extends Component {
                 <NavItem eventKey="third">
                   Group Sharing
                 </NavItem>
+                <NavItem eventKey="fourth">
+                  User Activity
+                </NavItem>
               </Nav>
               </Row>
 
@@ -308,6 +312,9 @@ class HomeComponent extends Component {
                 </TabPane>
                 <TabPane eventKey="third">
                   <GroupView userId={userId}/>
+                </TabPane>
+                <TabPane eventKey="fourth">
+                  <ActivityView userId={userId}/>
                 </TabPane>
               </TabContent>
             </Col>

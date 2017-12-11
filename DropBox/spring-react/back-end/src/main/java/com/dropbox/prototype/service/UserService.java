@@ -1,6 +1,7 @@
 package com.dropbox.prototype.service;
 
 import com.dropbox.prototype.document.User;
+import com.dropbox.prototype.document.UserActivity;
 import com.dropbox.prototype.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class UserService {
             return users.get(0);
         }
         return null;
+    }
+
+    public List<UserActivity> getActivities(String userId) {
+        User user = userRepository.findOne(userId);
+        return user.getActivities();
     }
 }

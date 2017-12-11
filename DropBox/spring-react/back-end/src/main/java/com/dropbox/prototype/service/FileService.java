@@ -1,6 +1,7 @@
 package com.dropbox.prototype.service;
 
 import com.dropbox.prototype.document.User;
+import com.dropbox.prototype.document.UserActivity;
 import com.dropbox.prototype.document.UserFile;
 import com.dropbox.prototype.repository.UserRepository;
 
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,7 @@ public class FileService {
                     userfiles.add(new UserFile(fileName, false, false, null, null, path ,false));
                     user.setFiles(userfiles);
                 }
+                user.addActivity(new UserActivity("You Uploaded file " , fileName, new Date()));
                 System.out.println("Upload the file successfully at " + convFile.getCanonicalPath());
 
             }
@@ -109,6 +112,7 @@ public class FileService {
                         files.add(new UserFile(dirName, true, false, null, null, dirPath ,false));
                         user.setFiles(files);
                     }
+                    user.addActivity(new UserActivity("You Created the Directory " , dirName, new Date()));
                     userRepository.save(user);
                     return true;
                 } else {
@@ -129,11 +133,21 @@ public class FileService {
     public boolean starFileOrDir(String userId, UserFile userFile) {
         User user = userRepository.findOne(userId);
         try{
+            UserFile targetFile = null;
             ArrayList<UserFile> files = user.getFiles();
-            files.forEach(file -> {
-                if(file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName()))
+            for(UserFile file : files){
+                if(file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName())){
                     file.setStared(!file.getStared());
-            });
+                    targetFile = file;
+                }
+            }
+            if(targetFile != null){
+                String op = targetFile.getStared() ? " Stared " : " Unstared ";
+                String fileOrDir = targetFile.isDir() ? " Directory " : " File ";
+                user.addActivity(new UserActivity("You" + op + "the" + fileOrDir,  targetFile.getName(), new Date()));
+                System.out.println("You" + op + "the" + fileOrDir + targetFile.getName());
+            }
+
             user.setFiles(files);
             userRepository.save(user);
             return true;
@@ -176,6 +190,9 @@ public class FileService {
         for (UserFile file : files) {
             if (file.getCurrentPath().equals(userFile.getCurrentPath()) && file.getName().equals(userFile.getName())) {
                 file.setShared(true);
+                String fileOrDir = file.isDir() ? " Directory " : " File ";
+                user.addActivity(new UserActivity("You Shared the" + fileOrDir,  file.getName() + " with " + shareWithUser.getFullname(), new Date()));
+                System.out.println("You Shared the" + fileOrDir + file.getName() + " with " + shareWithUser.getFullname());
                 ArrayList<User> sharedWithUsers = file.getSharedWithUsers();
                 if (sharedWithUsers == null) {
                     sharedWithUsers = new ArrayList<>();
@@ -223,6 +240,7 @@ public class FileService {
                 if (fileOrDir.isDirectory()) {
                     FileUtils.deleteDirectory(fileOrDir);
                     System.out.println("Directory is Deleted at " + fileOrDir.getAbsolutePath());
+                    user.addActivity(new UserActivity("You Deleted the directory " , dirName, new Date()));
                     ArrayList<UserFile> childFiles = new ArrayList<UserFile>();
                     if (user.getFiles() != null){
                         for(UserFile file : user.getFiles()){

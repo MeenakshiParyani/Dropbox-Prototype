@@ -1,12 +1,14 @@
 package com.dropbox.prototype.service;
 
 import com.dropbox.prototype.document.User;
+import com.dropbox.prototype.document.UserActivity;
 import com.dropbox.prototype.document.UserGroup;
 import com.dropbox.prototype.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class GroupService {
@@ -19,7 +21,9 @@ public class GroupService {
             User user = userRepository.findOne(userId);
             if(!groupExists(userGroup.getGroupName(),user)){
                 user.addGroup(userGroup);
+                user.addActivity(new UserActivity("You Created the Group " , userGroup.getGroupName(), new Date()));
                 userRepository.save(user);
+
                 System.out.println("Created group " + userGroup.getGroupName() + " for " + user.getFullname());
                 return true;
             }else{
@@ -52,6 +56,7 @@ public class GroupService {
                     groupMember.setGroups(null);
                     groupMember.setFiles(null);
                     userGroup.addGroupMember(groupMember);
+                    user.addActivity(new UserActivity("You added " + groupMember.getFullname() + " to the group " , groupName, new Date()));
                     System.out.println("Added " + groupMember.getFullname() + " to the " + userGroup.getGroupName() + " group");
                 }
                 user.setGroups(groups);
@@ -72,10 +77,11 @@ public class GroupService {
         for(UserGroup group: groups){
             if(group.getGroupName().equals(groupName)){
                 groupToRemove = group;
+                groups.remove(groupToRemove);
+                user.addActivity(new UserActivity("You Deleted the group " + groupToRemove.getGroupName() , groupName, new Date()));
                 System.out.println("Group " + groupName + " Deleted");
             }
         }
-        groups.remove(groupToRemove);
         user.setGroups(groups);
         userRepository.save(user);
         return true;
@@ -89,6 +95,7 @@ public class GroupService {
                 for(String groupMemberId : userIds) {
                     User groupMember = userRepository.findOne(groupMemberId);
                     userGroup.removeGroupMember(groupMember);
+                    user.addActivity(new UserActivity("You Removed " + groupMember.getFullname() + " from the group " , groupName, new Date()));
                     System.out.println(groupMember.getFullname() + " removed from " + userGroup.getGroupName());
                 }
                 user.setGroups(groups);

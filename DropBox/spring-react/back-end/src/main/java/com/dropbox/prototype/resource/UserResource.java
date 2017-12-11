@@ -72,4 +72,13 @@ public class UserResource {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getUserActivities", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getUserActivities(HttpSession session){
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        if(userId == null)
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        else
+            return new ResponseEntity(userService.getActivities(userId), HttpStatus.OK);
+    }
+
 }
