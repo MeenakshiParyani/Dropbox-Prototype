@@ -76,6 +76,9 @@ public class User {
         this.firstname = firstname;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
 
     public void setFullname() {
         this.fullname = this.getFirstname() + " " + this.getLastname();

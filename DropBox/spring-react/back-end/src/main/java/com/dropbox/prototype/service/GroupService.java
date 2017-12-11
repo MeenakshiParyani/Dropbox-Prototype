@@ -87,9 +87,11 @@ public class GroupService {
                 for(String groupMemberId : userIds) {
                     User groupMember = userRepository.findOne(groupMemberId);
                     userGroup.removeGroupMember(groupMember);
+                    System.out.println(groupMember.getFullname() + " removed from " + userGroup.getGroupName());
                 }
                 user.setGroups(groups);
                 userRepository.save(user);
+
                 return true;
             }else{
                 return false;

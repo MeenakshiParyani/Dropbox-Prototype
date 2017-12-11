@@ -167,14 +167,14 @@ dialogStyles = {
   }
 };
 
-groupMemberNameFormatter(cell){
+groupMemberNameFormatter(cell,row){
   return (
     <div>
     <div className="col-sm-10">
       {cell}
     </div>
     <div className="col-sm-2">
-    <button className="close-button" data-close aria-label="Close modal" type="button" onClick={ () => {this.deleteGroupMember(cell)}}>
+    <button className="close-button" data-close aria-label="Close modal" type="button" onClick={ () => {this.deleteGroupMember(cell,row)}}>
       <span aria-hidden="true">&times;</span>
     </button>
     </div>
@@ -183,8 +183,34 @@ groupMemberNameFormatter(cell){
   );
 }
 
-deleteGroupMember(member){
-  this.props.deleteGroupMember(member);
+deleteGroupMember(memberName, member){
+  var groupView = this;
+  // delete group member
+  var options = {
+    withCredentials : true
+  }
+  var data = {
+    groupName : this.props.selectedGroup,
+    userIds : [member.id]
+  };
+
+  axios.put('http://localhost:8080/api/groups/deleteMembers',data,options)
+  .then(function (response) {
+    if(response.status == 200){
+      var files = response.data;
+      console.log(response.data);
+    }else{
+      var err = response;
+      console.log('error is ' + err);
+    }
+    groupView.props.deleteGroupMember(member);
+  })
+  .catch(function(err){
+    console.log('error is ' + err);
+    groupView.props.deleteGroupMember(member);
+
+  });
+
 }
 
 deleteGroup(group){

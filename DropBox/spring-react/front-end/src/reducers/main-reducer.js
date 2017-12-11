@@ -113,7 +113,7 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "deleteGroupMember") {
     const nextState = R.clone(state);
     var members = nextState.selectedGroupMembers;
-    nextState.selectedGroupMembers.pop({'name' : action.member});
+    nextState.selectedGroupMembers.pop({'id' : action.member.id});
     nextState.selectedGroupMembers = nextState.selectedGroupMembers;
     return nextState;
   }else if(action.type === "deleteGroup") {
