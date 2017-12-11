@@ -20,6 +20,7 @@ public class GroupService {
             if(!groupExists(userGroup.getGroupName(),user)){
                 user.addGroup(userGroup);
                 userRepository.save(user);
+                System.out.println("Created group " + userGroup.getGroupName() + " for " + user.getFullname());
                 return true;
             }else{
                 return true;

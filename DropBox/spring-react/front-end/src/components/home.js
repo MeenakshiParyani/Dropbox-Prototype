@@ -173,6 +173,11 @@ const mapDispatchToProps = (dispatch) => {
 
 class HomeComponent extends Component {
 
+  constructor(props){
+    super(props);
+    this.createNewGroup = this.createNewGroup.bind(this);
+  }
+
   showFiles = () => {
     this.props.handleShowFiles(this.props.currentPath);
   }
@@ -202,6 +207,33 @@ class HomeComponent extends Component {
 
   toggleCreateGroupModal = () => {
     this.props.toggleCreateGroupModal(this.props.createGroupActive);
+  }
+
+  createNewGroup() {
+    var groupName = this.props.newGroupName;
+    var options = {
+      withCredentials : true
+    }
+    axios.post('http://localhost:8080/api/groups/create',{
+      name : groupName
+    },options)
+    .then(function (response) {
+      if(response.status == 201){
+        var groups = response.data;
+        console.log(response.data);
+        dispatch({
+          type : "updateUserGroups",
+          userGroups : groups
+        });
+      }else{
+        var err = response;
+        console.log('error is ' + err);
+      }
+
+    })
+    .catch(function(err){
+      console.log('error is ' + err);
+    });
   }
 
   modalStyle = {

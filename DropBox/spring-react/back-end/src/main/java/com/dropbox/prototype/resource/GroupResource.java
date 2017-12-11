@@ -28,8 +28,10 @@ public class GroupResource {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         else {
             boolean groupCreated = groupService.createGroup(userGroup, userId);
-            if(groupCreated)
-                return new ResponseEntity<Object>(HttpStatus.CREATED);
+            if(groupCreated){
+                ArrayList<UserGroup> groups = groupService.getUserGroups(userId);
+                return new ResponseEntity<Object>(groups, HttpStatus.CREATED);
+            }
             else
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
