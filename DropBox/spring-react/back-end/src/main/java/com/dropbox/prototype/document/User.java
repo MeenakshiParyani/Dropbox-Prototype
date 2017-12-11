@@ -21,6 +21,8 @@ public class User {
     @JsonProperty("lastname")
     private String lastname;
 
+    private String fullname;
+
     @JsonProperty("email")
     private String email;
 
@@ -71,6 +73,11 @@ public class User {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
+    }
+
+
+    public void setFullname() {
+        this.fullname = this.getFirstname() + " " + this.getLastname();
     }
 
     public String getLastname() {

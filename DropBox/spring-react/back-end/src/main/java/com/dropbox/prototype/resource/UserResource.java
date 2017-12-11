@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -31,6 +32,13 @@ public class UserResource {
     @GetMapping("/listAll")
     public ResponseEntity<?> getAll(){
         return new ResponseEntity(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/listAllExceptSelf")
+    public ResponseEntity<?> getAllExceptSelf(HttpSession session){
+        String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
+        List<User> users  = userService.getAllUsers().stream().filter(user -> !user.getId().equals(userId)).collect(Collectors.toList());
+        return new ResponseEntity(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/login", headers = "Accept=application/json", method = RequestMethod.POST, produces = "application/json")

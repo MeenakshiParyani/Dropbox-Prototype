@@ -125,7 +125,7 @@ public class FileResource {
         }
     }
 
-    @RequestMapping(value = "/shareWithUser", method = RequestMethod.PUT)
+    @RequestMapping(value = "/shareWithUser", method = RequestMethod.POST)
     public ResponseEntity<?> shareFileOrDirWithUser(HttpSession session, @RequestBody  UserFile file, @RequestHeader ArrayList<String> sharewithuserids) {
         String userId = session.getAttribute("userId") != null ? session.getAttribute("userId").toString() : null;
         if ( userId == null)

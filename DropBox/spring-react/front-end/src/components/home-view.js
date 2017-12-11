@@ -19,6 +19,8 @@ import {
   ModalBody,
   ModalFooter
 } from 'react-modal-bootstrap';
+import Select from 'react-select';
+import fetch from 'isomorphic-fetch';
 
 const mapStateToProps = (state) => {
   return {
@@ -31,7 +33,9 @@ const mapStateToProps = (state) => {
     shareFileUserName: state.update.shareFileUserName,
     shareLinkCreated: state.update.shareLinkCreated,
     shareLinkCopied: state.update.shareLinkCopied,
-    rating: state.update.rating
+    rating: state.update.rating,
+    shareWithUsers : state.update.shareWithUsers,
+    selectedFile : state.update.selectedFile
   };
 };
 
@@ -47,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
       console.log(row);
     },
 
-    toggleShareFileFolderModal: (isActive, fileName, isDir) => {
+    toggleShareFileFolderModal: (isActive, fileName, isDir, file) => {
       console.log(' create folder modal is active ? ' + isActive );
       if(isActive){
         dispatch({type: "toggleShareFileFolderModal", shareFileFolderActive: !isActive,
@@ -56,6 +60,7 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({type: "toggleShareFileFolderModal", shareFileFolderActive: !isActive,
           sharedFileFolderName : fileName, sharedFileFolderIsDir : isDir});
       }
+      dispatch({type: "updateSelectedFile", selectedFile: file});
     },
 
     toggleShareLinkCreated: (isActive) => {
@@ -123,9 +128,15 @@ const mapDispatchToProps = (dispatch) => {
         console.log('error is ' + err);
         dispatch({type: "error", errorMessage: err.response.data.error});
       });
+    },
+
+    handleShareWithUsers(users){
+      dispatch({type: "updateShareWithUsers", shareWithUsers: users});
     }
   };
 };
+
+
 
 class HomeViewComponent extends Component {
 
@@ -134,17 +145,16 @@ class HomeViewComponent extends Component {
     this.shareFormatter = this.shareFormatter.bind(this);
     this.toggleRating = this.toggleRating.bind(this);
     this.fileNameFormatter = this.fileNameFormatter.bind(this);
-    this.state = {
-      rating: 0
-    };
+    this.onChangeShareWithUsers = this.onChangeShareWithUsers.bind(this);
+    this.shareWithUsers =  this.shareWithUsers.bind(this);
   }
 
   shareFileFolder = (fileName, isDir) => {
     this.props.shareFileFolder(fileName, isDir);
   }
 
-  toggleShareFileFolderModal = (fileName, isDir) => {
-    this.props.toggleShareFileFolderModal(this.props.shareFileFolderActive, fileName, isDir);
+  toggleShareFileFolderModal = (fileName, isDir, file) => {
+    this.props.toggleShareFileFolderModal(this.props.shareFileFolderActive, fileName, isDir, file);
   }
 
   dirFormatter(cell, row) {
@@ -174,15 +184,16 @@ class HomeViewComponent extends Component {
   shareFormatter(cell, row) {
     var fileName = row.name;
     var isDir = row.isDir;
+    var file = row;
     console.log(row);
     // var filename = row.
     if(fileName=="Shared-Folder"){
       return (
-        <a className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir) }}>Shared</a>
+        <a className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir, file) }}>Shared</a>
       );
     }
     return (
-      <button className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir) }}>Share</button>
+      <button className="share-btn btn btn-default" onClick = {(row) => { this.toggleShareFileFolderModal(fileName, isDir, file) }}>Share</button>
     );
   }
 
@@ -286,7 +297,53 @@ dialogStyles = {
   }
 };
 
+  getUsers(){
+    return fetch(`http://localhost:8080/api/user/listAllExceptSelf`,{
+        credentials: 'include'
+    })
+		.then((response) => response.json())
+		.then((json) => {
+			return { options: json };
+		});
+  }
 
+  onChangeShareWithUsers(users){
+    this.props.handleShareWithUsers(users);
+  }
+
+  getUserIds(users){
+    var userids = [];
+    for (var i = 0; i < users.length; i++) {
+      userids.push(users[i].id);
+    }
+    return userids;
+  }
+
+  shareWithUsers(){
+    var homeView = this;
+    var userids = this.getUserIds(this.props.shareWithUsers);
+    var options = {
+      withCredentials : true,
+      headers: {
+        sharewithuserids : userids
+      }
+    }
+    axios.post('http://localhost:8080/api/files/shareWithUser',this.props.selectedFile,options)
+    .then(function (response) {
+      if(response.status == 200){
+        var files = response.data;
+        console.log(response.data);
+      }else{
+        var err = response;
+        console.log('error is ' + err);
+      }
+      homeView.toggleShareFileFolderModal();
+    })
+    .catch(function(err){
+      console.log('error is ' + err);
+      homeView.toggleShareFileFolderModal();
+    });
+  }
 
 
   render() {
@@ -332,8 +389,11 @@ dialogStyles = {
                             <label htmlFor="username">To:</label>
                         </div>
                         <div className="col-sm-11">
-                            <input type="text" id="shareFileUserName" name="shareFileUserName" placeholder="Email Or Name" value = {this.props.shareFileUserName}
-                            className="form-control" onChange={this.props.handleInputChange} required/>
+                        <div className="section">
+
+                          <Select.Async multi={true} value={this.props.shareWithUsers} onChange={this.onChangeShareWithUsers}  valueKey="id" labelKey="email" loadOptions={this.getUsers} />
+
+                        </div>
                         </div>
                     </div>
             </form>
@@ -370,7 +430,7 @@ dialogStyles = {
             </div>
             </ModalBody>
             <ModalFooter>
-              <button className='btn btn-primary'>
+              <button className='btn btn-primary' onClick = {this.shareWithUsers}>
                 Share
               </button>
             </ModalFooter>
@@ -401,7 +461,9 @@ HomeViewComponent.PropTypes = {
   toggleShareLinkCopied: PropTypes.func.isRequired,
   handleDeleteFileOrDir: PropTypes.func.isRequired,
   rating: PropTypes.string.isRequired,
-  handleDeleteFileOrDir : PropTypes.func.isRequired
+  handleDeleteFileOrDir : PropTypes.func.isRequired,
+  shareWithUsers : PropTypes.array,
+  selectedFile : PropTypes.object.isRequired
 };
 
 const HomeView = connect(

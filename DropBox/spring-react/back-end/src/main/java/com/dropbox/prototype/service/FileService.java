@@ -193,6 +193,7 @@ public class FileService {
 
     private void shareFileBetweenUsers(String fromUserId, String toUserId, UserFile file) throws IOException {
         User toUser = userRepository.findOne(toUserId);
+        file.setStared(false);
         FileOutputStream fos = null;
         File sourceFile = new File(userFileDir + File.separator + fromUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());
         File destFile = new File(userFileDir + File.separator + toUserId + File.separator + file.getCurrentPath() + File.separator + file.getName());

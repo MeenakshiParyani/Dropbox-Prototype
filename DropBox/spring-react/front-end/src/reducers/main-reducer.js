@@ -29,7 +29,9 @@ export const initialState = {
   newGroupMember: '',
   newGroupName: '',
   createGroupActive: false,
-  rating : 0
+  rating : 0,
+  selectedFile :{},
+  shareWithUsers : []
 };
 
 export default function update(state = initialState, action = null) {
@@ -140,6 +142,14 @@ export default function update(state = initialState, action = null) {
   }else if(action.type === "toggleRating") {
     const nextState = R.clone(state);
     nextState.rating = nextState.rating == 0 ? 1 : 0;
+    return nextState;
+  }else if(action.type === "updateSelectedFile") {
+    const nextState = R.clone(state);
+    nextState.selectedFile = action.selectedFile;
+    return nextState;
+  }else if(action.type === "updateShareWithUsers") {
+    const nextState = R.clone(state);
+    nextState.shareWithUsers = action.shareWithUsers;
     return nextState;
   }
   return state;changeNewGroupMember

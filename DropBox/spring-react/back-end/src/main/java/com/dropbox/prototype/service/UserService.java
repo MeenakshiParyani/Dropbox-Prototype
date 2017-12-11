@@ -18,6 +18,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public User signupUser(User user){
+        user.setFullname();
         return userRepository.save(user);
     }
 
