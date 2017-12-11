@@ -31,8 +31,12 @@ public class FileService {
 
     public List<UserFile> getUserFiles(String userId, String currentPath){
         User user = userRepository.findOne(userId);
-        List<UserFile> files = user.getFiles().stream().filter( file -> file.getCurrentPath().equals(currentPath)).collect(Collectors.toList());
-        return files;
+        if(user.getFiles() != null){
+            List<UserFile> files = user.getFiles().stream().filter( file -> file.getCurrentPath().equals(currentPath)).collect(Collectors.toList());
+            System.out.println("Listing files for user " + user.getFullname());
+            return files;
+        }
+        return null;
     }
 
     public File getUserFile(String userId, String filePath, String fileName, boolean isDir){
@@ -225,7 +229,7 @@ public class FileService {
             userFiles.add(file);
             toUser.setFiles(userFiles);
         }
-        System.out.println("Upload the file successfully at " + destFile.getCanonicalPath());
+        System.out.println("Shared the file " + destFile.getName() + " with User " + toUser.getFullname());
         userRepository.save(toUser);
     }
 

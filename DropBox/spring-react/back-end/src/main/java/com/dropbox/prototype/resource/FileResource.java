@@ -60,6 +60,7 @@ public class FileResource {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            System.out.println("User downloaded the file " + file.getName());
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentLength(file.length())
