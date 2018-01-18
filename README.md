@@ -1,4 +1,4 @@
-# Dropbox-CalculatorPrototype
+# Dropbox-Prototype
 
 
 #### Steps for installing the project		
